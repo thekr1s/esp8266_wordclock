@@ -1,0 +1,23 @@
+build/mbedtls//mbedtls/library/pk.o: \
+ /home/robert/proj/wc/esp-open-rtos/extras/mbedtls/mbedtls/library/pk.c \
+ ../esp-open-rtos/extras/mbedtls/include/mbedtls/config.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/check_config.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/limits.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/newlib.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/pk.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/config.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/md.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/rsa.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/bignum.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/stdint.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/machine/_default_types.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/features.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/_intsup.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/ecp.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/ecdsa.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/pk_internal.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/pk.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/bignum.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/rsa.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/ecp.h \
+ ../esp-open-rtos/extras/mbedtls/mbedtls/include/mbedtls/ecdsa.h

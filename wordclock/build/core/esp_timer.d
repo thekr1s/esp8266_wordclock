@@ -1,0 +1,33 @@
+build/core//esp_timer.o: \
+ /home/robert/proj/wc/esp-open-rtos/core/esp_timer.c \
+ ../esp-open-rtos/core/include/esp/timer.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/errno.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/errno.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/reent.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/_ansi.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/newlib.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/config.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/machine/ieeefp.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/features.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/xtensa/config/core-isa.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/_types.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/machine/_types.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/machine/_default_types.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/lock.h \
+ ../esp-open-rtos/core/include/esp/timer_regs.h \
+ ../esp-open-rtos/core/include/esp/types.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/stdint.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/_intsup.h \
+ ../esp-open-rtos/core/include/common_macros.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/cdefs.h \
+ ../esp-open-rtos/core/include/esp/interrupts.h \
+ ../esp-open-rtos/FreeRTOS/Source/portable/esp8266/xtruntime.h \
+ ../esp-open-rtos/core/include/esp/dport_regs.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/stdio.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/_ansi.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/types.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/machine/types.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/sys/stdio.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/stdlib.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/machine/stdlib.h \
+ ../esp-open-rtos/libc/xtensa-lx106-elf/include/alloca.h

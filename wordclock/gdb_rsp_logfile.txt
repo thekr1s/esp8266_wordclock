@@ -1,0 +1,39 @@
+
+w +$qSupported:multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+#df
+r <Timeout: 2 seconds>
+w $qSupported:multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+#df
+r <Timeout: 2 seconds>
+w $qSupported:multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+#df
+r <Timeout: 2 seconds>
+w $qSupported:multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+#df
+r <Timeout: 2 seconds><Timeout: 2 seconds>
+w -
+r <Timeout: 2 seconds>
+w -
+r <Timeout: 2 seconds>
+w -+$Hg0#df
+r <Timeout: 2 seconds>
+w $Hg0#df
+r <Timeout: 2 seconds>
+w $Hg0#df
+r <Timeout: 2 seconds>
+w $Hg0#df
+r <Timeout: 2 seconds><Timeout: 2 seconds>
+w -
+r <Timeout: 2 seconds>
+w -
+r <Timeout: 2 seconds>
+w -+$qTStatus#49
+r <Timeout: 2 seconds>
+w $qTStatus#49
+r <Timeout: 2 seconds>
+w $qTStatus#49
+r <Timeout: 2 seconds>
+w $qTStatus#49
+r <Timeout: 2 seconds><Timeout: 2 seconds>
+w -
+r <Timeout: 2 seconds>
+w -
+r <Timeout: 2 seconds>
+w -+
+End of log

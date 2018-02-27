@@ -1,0 +1,122 @@
+"<!DOCTYPE html><html lang=\"en\">"
+"<head>"
+"<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\">"
+"<script src=\"/script.js\"></script>"
+"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+"</head>"
+"<body>"
+"<ul class=\"topnav\" id=\"myTopnav\">"
+"<li></li>"
+"<li><a href=\"/wificfg/sta.html\">WiFi Config</a></li>"
+"<li><a href=\"/wificfg/clockcfg.html\">Clock Config</a></li>"
+"<li class=\"icon\">"
+"<a href=\"javascript:void(0);\" onclick=\"myFunction()\">&#8801;</a>"
+"</li>"
+"</ul>"
+"<form action=\"/wificfg/clockcfg.html\" method=\"post\">"
+"<fieldset>",
+"<legend>Woordklok Configuratie</legend>"
+"<dl class=\"dlh\">"
+"<dt><label for=\"co\">Kleur</label></dt>"
+"<dd><select id=\"co\" name=\"cl_color\">"
+"<option class=\"white\" value=\"0\"",
+">white</option>"
+"<option class=\"bitPurple\" value=\"1\"",
+">bitPurple</option>"
+"<option class=\"purple\" value=\"2\"",
+">purple</option>"
+"<option class=\"magenta\" value=\"3\"",
+">magenta</option>"
+"<option class=\"pink\" value=\"4\"",
+">pink</option>"
+"<option class=\"red\" value=\"5\"",
+">red</option>"
+"<option class=\"orange\" value=\"6\"",
+">orange</option>"
+"<option class=\"yellow\" value=\"7\"",
+">yellow</option>"
+"<option class=\"yellowGreen\" value=\"8\"",
+">yellowGreen</option>"
+"<option class=\"green\" value=\"9\"",
+">green</option>"
+"<option class=\"blueGreen\" value=\"10\"",
+">blueGreen</option>"
+"<option class=\"cyan\" value=\"11\"",
+">cyan</option>"
+"<option class=\"lightBlue\" value=\"12\"",
+">lightBlue</option>"
+"<option class=\"blue\" value=\"13\"",
+">blue</option>"
+"</select></dd>"
+"<dt><label for=\"ch\">Helderheid</label></dt>"
+"<dd><input id=\"ch\" type=\"number\" size=\"1\" min=\"0\" max=\"5\" step=\"1\" "
+"name=\"cl_brightness\" placeholder=\"1\" value=\"",
+"\"></dd>"
+"<dt><label for=\"co\">Achtergrondkleur</label></dt>"
+"<dd><select id=\"co\" name=\"cl_bgcolor\">"
+"<option class=\"white\" value=\"0\"",
+">white</option>"
+"<option class=\"bitPurple\" value=\"1\"",
+">bitPurple</option>"
+"<option class=\"purple\" value=\"2\"",
+">purple</option>"
+"<option class=\"magenta\" value=\"3\"",
+">magenta</option>"
+"<option class=\"pink\" value=\"4\"",
+">pink</option>"
+"<option class=\"red\" value=\"5\"",
+">red</option>"
+"<option class=\"orange\" value=\"6\"",
+">orange</option>"
+"<option class=\"yellow\" value=\"7\"",
+">yellow</option>"
+"<option class=\"yellowGreen\" value=\"8\"",
+">yellowGreen</option>"
+"<option class=\"green\" value=\"9\"",
+">green</option>"
+"<option class=\"blueGreen\" value=\"10\"",
+">blueGreen</option>"
+"<option class=\"cyan\" value=\"11\"",
+">cyan</option>"
+"<option class=\"lightBlue\" value=\"12\"",
+">lightBlue</option>"
+"<option class=\"blue\" value=\"13\"",
+">blue</option>"
+"</select></dd>"
+"<dt><label for=\"enable\">Zomertijd</label></dt>"
+"<dd><input id=\"enable\" type=\"radio\" name=\"cl_dst\" value=\"1\" ",
+" /></dd>"
+"<dt><label for=\"disable\">Wintertijd</label></dt>"
+"<dd><input id=\"disable\" type=\"radio\" name=\"cl_dst\" value=\"0\" ",
+" /></dd>"
+"<dt><label for=\"an\">Animaties</label></dt>"
+"<dd><select id=\"an\" name=\"cl_animations\">"
+"<option value=\"0\"",
+">Uit</option>"
+"<option value=\"1\"",
+">Alleen minuutovergang</option>"
+"<option value=\"2\"",
+">Alles</option>"
+"<option value=\"3\"",
+">Vuurtje</option>"
+"<option value=\"4\"",
+">Alle LEDS aan</option>"
+"<option value=\"5\"",
+">Tetris</option>"
+"<option value=\"6\"",
+">Tekst</option>"
+"</select></dd>"
+"<dt><label for=\"ssid\">Tekst</label></dt>"
+"<dd><input id=\"message\" type=\"text\" maxlength=\"60\" name=\"cl_message\" "
+"placeholder=\"Happy birthday!!\" value=\"",
+"\"></dd>"
+"</dl>"
+"<center>"
+"<button name=\"cl_command\" type=\"submit\" value=\"OtaUpdate\">sw update</button>"
+"<button name=\"cl_command\" type=\"submit\" value=\"Reset\">Reset</button>"
+"<button name=\"cl_command\" type=\"submit\" value=\"Save\">Save</button>"
+"</center>"
+"</fieldset>"
+"</form>"
+"</body></html>",
+""

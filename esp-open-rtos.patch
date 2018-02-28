@@ -1,3 +1,20 @@
+diff --git a/core/include/esp/gpio.h b/core/include/esp/gpio.h
+old mode 100644
+new mode 100755
+index f3f6308..97e1b86
+--- a/core/include/esp/gpio.h
++++ b/core/include/esp/gpio.h
+@@ -89,6 +89,10 @@ static inline void gpio_write(const uint8_t gpio_num, const bool set)
+         GPIO.OUT_CLEAR = BIT(gpio_num) & GPIO_OUT_PIN_MASK;
+ }
+ 
++#define OUTPUT_SET(gpio_num, set)\
++    if (set) GPIO.OUT_SET = BIT(gpio_num) & GPIO_OUT_PIN_MASK; else \
++        GPIO.OUT_CLEAR = BIT(gpio_num) & GPIO_OUT_PIN_MASK;
++
+ /* Toggle output of a pin
+  *
+  * Only works if pin has been set to GPIO_OUTPUT or GPIO_OUT_OPEN_DRAIN via
 diff --git a/core/newlib_syscalls.c b/core/newlib_syscalls.c
 old mode 100644
 new mode 100755

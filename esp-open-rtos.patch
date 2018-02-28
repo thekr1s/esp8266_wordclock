@@ -386,12 +386,6 @@ index 6f37b5a..44486f6
  #endif /* LWIP_NETIF_HOSTNAME */
  
    /*
-diff --git a/lwip/lwip b/lwip/lwip
---- a/lwip/lwip
-+++ b/lwip/lwip
-@@ -1 +1 @@
--Subproject commit 3cf8d514bd76e6ef77e6fa514d0ec6d96da7fd9a
-+Subproject commit 3cf8d514bd76e6ef77e6fa514d0ec6d96da7fd9a-dirty
 diff --git a/open_esplibs/libmain/user_interface.c b/open_esplibs/libmain/user_interface.c
 old mode 100644
 new mode 100755

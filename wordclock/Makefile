@@ -1,7 +1,7 @@
 # Makefile for the ws2812 buffer write
 
 
-SVNVERSION=$(shell svnversion -qn .)
+SVNVERSION="todo"
 BUILD_DATE=$(shell date +"%Y%m%d-%H:%M")
 $(info svn version $(SVNVERSION))
 $(info build date $(BUILD_DATE))

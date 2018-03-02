@@ -351,6 +351,97 @@ static void RefreshWipe(void)
 
 }
 
+float map(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+static void RainbowSetColor(uint16_t nrOfActiveLeds, uint16_t currentLedIndex, uint8_t* r, uint8_t* g, uint8_t* b)
+{
+    // Input a value 0 to 255 to get a color value.
+    // The colours are a transition r - g - b - back to r.
+    uint8_t PotTemp;
+
+    uint16_t colorWheelIdx = map(currentLedIndex, 0, nrOfActiveLeds, 0, 1024);
+    if((colorWheelIdx >= 0) && (colorWheelIdx <= 341)) {
+        //PotTemp = (uint8_t)((float)colorWheelIdx * 0.7470703125);
+        PotTemp = map(colorWheelIdx, 0, 1024, 0, 255);
+        *r  = 255 - PotTemp;
+        *g = 0 + PotTemp;
+        *b = 0;
+    }
+    else if((colorWheelIdx >= 342) && (colorWheelIdx <= 683)) {
+        //PotTemp = (uint8_t)(((float)colorWheelIdx - 342.0)*0.7470703125);
+        PotTemp = map(colorWheelIdx - 342, 0, 1024, 0, 255);
+        *r  = 0;
+        *g = 255 - PotTemp;
+        *b = 0   + PotTemp;
+    } else if ((colorWheelIdx >= 684) && (colorWheelIdx <= 1024)) {
+        //PotTemp = (uint8_t)(((float)colorWheelIdx - 684.0)*0.7470703125);
+        PotTemp = map(colorWheelIdx - 684, 0, 1024, 0, 255);
+        *r  = 0   + PotTemp;
+        *g = 0;
+        *b = 255 - PotTemp;
+    } else {
+        *r  = 0;
+        *g = 0;
+        *b = 0;
+    }
+}
+
+static uint16_t getNrOfActiveLeds(void)
+{
+    uint8_t row, col;
+    uint8_t r, g, b;
+    uint16_t nrOfLedsOn = 0;
+
+    for (row = 0; row < _rows; row++) {
+        for (col = 0; col < _cols; col++) {
+            GetLedFromFrame(_nextFrame, row, col, &r, &g, &b);
+            if ((r + g + b) > 0) {
+                nrOfLedsOn ++;
+            }
+        }
+    }
+    return nrOfLedsOn;
+}
+
+static void FilterRainbow(void)
+{
+    uint8_t row, col;
+    uint8_t r, g, b;
+    uint16_t nrOfActiveLeds = getNrOfActiveLeds();
+    uint16_t currentLed = 0;
+    for (row = 0; row < _rows; row++) {
+        for (col = 0; col < _cols; col++) {
+            GetLedFromFrame(_nextFrame, row, col, &r, &g, &b);
+            if ((r + g + b) > 0) {
+                RainbowSetColor(nrOfActiveLeds, currentLed, &r, &g, &b);
+                SetLedInFrame(_nextFrame, row, col, r, g, b);
+                currentLed ++;
+            }
+        }
+    }
+    //_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+}
+
+void AlsApplyFilter(TAlsFilters filter)
+{
+    if (filter == ALSFILTER_RANDOM_FILTER) {
+        //currently only 1 filter so this will not do anything
+        filter = rand() % 1 + ALSFILTER_RANDOM_FILTER + 1;
+    }
+    switch(filter) {
+    case ALSFILTER_NONE:
+        break;
+    case ALSFILTER_RAINBOW:
+        FilterRainbow();
+        break;
+    default:
+        break;
+    }
+}
+
 void AlsRefresh(TAlsEffects effect)
 { 
 	if (effect == ALSEFFECT_RANDOM_EFFECT) {

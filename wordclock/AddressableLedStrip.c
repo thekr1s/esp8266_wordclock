@@ -304,11 +304,57 @@ static void RefreshFade(void)
 
 }
 
+static void RefreshWipe(void)
+{
+	uint8_t wipedR[_rows];
+	uint8_t wipedG[_rows];
+	uint8_t wipedB[_rows];
+
+	for (int i = 0; i < _cols + 9; i++) {
+		if (i > 0) {
+			// restore previous wiped line
+			for (int yy = 0; yy < _rows; yy++) {
+				SetLedInFrame(_currFrame, yy, i-1, wipedR[yy], wipedG[yy], wipedB[yy]);
+			}
+		}
+		for (int x = 0; x < _cols; x++) {
+			for (int y = 0; y < _rows; y++){
+				uint8_t r, g, b;
+				GetLedFromFrame(_currFrame, y, x, &r, &g, &b);
+				if (x == i) {
+					uint32_t maxcol = r > g ? r : g;
+					maxcol = maxcol > b ? maxcol : b;
+					if (maxcol > 0) {
+						uint32_t factor = (255 * 1000) / maxcol;
+						wipedR[y] = (r * factor) / 1000;
+						wipedG[y] = (g * factor) / 1000;
+						wipedB[y] = (b * factor) / 1000;
+						SetLedInFrame(_currFrame, y, x, wipedR[y], wipedG[y], wipedB[y]);
+					} else {
+						wipedR[y] = 0;
+						wipedG[y] = 0;
+						wipedB[y] = 0;
+						SetLedInFrame(_currFrame, y, x, RGB_FROM_SETTING);
+					}
+				} else if (x < i) {
+					r /= 2;
+					g /= 2;
+					b /= 2;
+					SetLedInFrame(_currFrame, y, x, r, g, b);
+				}
+			}
+		}
+		_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		Sleep(80);
+	}
+	_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+
+}
 
 void AlsRefresh(TAlsEffects effect)
 { 
 	if (effect == ALSEFFECT_RANDOM_EFFECT) {
-		effect = rand() % 4 + ALSEFFECT_RANDOM_EFFECT + 1;
+		effect = rand() % 6 + ALSEFFECT_RANDOM_EFFECT + 1;
 	}
 	switch(effect) {
 	case ALSEFFECT_NONE:
@@ -338,7 +384,12 @@ void AlsRefresh(TAlsEffects effect)
 		
 	case ALSEFFECT_MATRIX:
 		break;
-		
+
+	case ALSEFFECT_WIPEDOWN:
+	case ALSEFFECT_WIPERIGHT:
+		RefreshWipe();
+		break;
+
 	
 	default:
 		_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);

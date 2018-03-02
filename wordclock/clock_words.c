@@ -192,8 +192,8 @@ static const TKlocWord _klockWords_13x13[] = {
         {"twee", DIR_HORIZONTAL, 3, 0, 0b1111},
         {"drie", DIR_HORIZONTAL, 4, 9, 0b1111},
         {"vier", DIR_HORIZONTAL, 1, 1, 0b1111},
-        {"vijf", DIR_HORIZONTAL, 2, 4, 0b1111},
-        {"zes", DIR_HORIZONTAL, 4, 0, 0b111},
+        {"vijf", DIR_HORIZONTAL, 4, 0, 0b1111},
+        {"zes", DIR_HORIZONTAL, 3, 5, 0b111},
         {"zeven", DIR_HORIZONTAL, 3, 8, 0b11111},
         {"acht", DIR_HORIZONTAL, 4, 5, 0b1111},
         {"negen", DIR_HORIZONTAL, 1, 5, 0b11111},
@@ -372,7 +372,7 @@ void CWDisplayAccurateTime(uint32_t hours, uint32_t minutes,  uint32_t seconds, 
 	}
     */
 	// Display the current hour up to quarter past... After that show the next hour
-	if (minutes > 15) {
+	if (minutes > 19) {
 		hours += 1;
 	}
 	hours %= 12;
@@ -394,7 +394,7 @@ void CWDisplayAccurateTime(uint32_t hours, uint32_t minutes,  uint32_t seconds, 
 	if (minutes == 30) {
 		CWSet("half", r, g, b);
 	}
-	if (minutes >= 31 && minutes <= 44) {
+	if (minutes >= 31 && minutes <= 40) {
 		CWSet(_minutesNames[minutes % 15], r, g, b);
 		CWSet("over", r, g, b);
 		CWSet("half", r, g, b);
@@ -403,8 +403,13 @@ void CWDisplayAccurateTime(uint32_t hours, uint32_t minutes,  uint32_t seconds, 
 		CWSet("kwart", r, g, b);
 		CWSet("voor", r, g, b);
 	}
+	if (minutes >=41 && minutes <= 44) {
+		//12:41 == 19 voor 1
+		CWSet(_minutesNames[20 - (minutes % 10)], r, g, b);
+		CWSet("voor", r, g, b);
+	}
 	if (minutes >=46 && minutes <= 59) {
-		//12:46 == veertien voor 1
+		//12:48 == 12 voor 1
 		CWSet(_minutesNames[15 - (minutes % 15)], r, g, b);
 		CWSet("voor", r, g, b);
 	}

@@ -20,9 +20,13 @@
 #include "espressif/esp_common.h"
 
 #include "esp_glue.h"
+#include "settings.h"
 
 #define WEB_SERVER "hierbenik.wssns.nl"
-#define WEB_PORT 80
+#define WEB_SERVER_REQ "GET /get_with_age.php HTTP/1.1\r\nHost: hierbenik.wssns.nl\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n"
+#define WEB_SERVER_RUTGER "schoonheidssalonsuzanne.nl"
+#define WEB_SERVER_REQ_RUTGER "GET /here_am_i/get_with_age.php HTTP/1.1\r\nHost: schoonheidssalonsuzanne.nl\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n"
+#define WEB_PORT "80"
 
 uint32_t _dist = 10000;
 uint32_t _age = 10000;
@@ -42,7 +46,9 @@ static void ParseResponse(char* pResp){
 	int t, t2;
 
 	p = strstr(pResp, ageTag);
-
+	if (p == NULL){
+	    return; //return else this result in hard fault
+	}
 	if (sscanf(p, "age:%d", &t) == 1) {
 		_age = t;
 		printf("age: %d\n", t);
@@ -59,13 +65,17 @@ static void GetHierBenIk() {
 	printf("%s %d enter\n", __FUNCTION__, __LINE__);
 	static struct sockaddr addr;
 	static int addrLen = 0;
-
+	int err;
 	if (addrLen == 0) {
 		struct addrinfo *res = NULL;
 		const struct addrinfo hints = { .ai_family = AF_INET, .ai_socktype =
 				SOCK_STREAM, };
 
-		int err = getaddrinfo(WEB_SERVER, "80", &hints, &res);
+		if (ownerOfClock == USER_RUTGER_HUIJGEN) {
+		    err = getaddrinfo(WEB_SERVER_RUTGER, WEB_PORT, &hints, &res);
+		} else {
+		    err = getaddrinfo(WEB_SERVER, WEB_PORT, &hints, &res);
+		}
 
 		if (err != 0 || res == NULL ) {
 			printf("DNS lookup failed err=%d res=%p\r\n", err, res);
@@ -97,11 +107,12 @@ static void GetHierBenIk() {
 		return;
 	}
 
-
-	const char *req =
-			"GET /get_with_age.php HTTP/1.1\r\n"
-					"Host: hierbenik.wssns.nl\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n";
-	if (write(s, req, strlen(req)) < 0) {
+	if (ownerOfClock == USER_RUTGER_HUIJGEN) {
+	    err = write(s, WEB_SERVER_REQ_RUTGER, strlen(WEB_SERVER_REQ_RUTGER));
+	} else {
+	    err = write(s, WEB_SERVER_REQ, strlen(WEB_SERVER_REQ));
+	}
+	if (err < 0) {
 		printf("... socket send failed\r\n");
 		close(s);
 		vTaskDelay(4000 / portTICK_RATE_MS);

@@ -345,7 +345,7 @@ static void RefreshWipe(void)
 			}
 		}
 		_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
-		Sleep(80);
+		Sleep(50);
 	}
 	_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
 

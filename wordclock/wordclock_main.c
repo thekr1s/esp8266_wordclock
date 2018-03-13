@@ -230,9 +230,13 @@ void ShowTime(int delayMS) {
 			if (age < 120 ) {
 				ShowDist(dist);
 			}
-			// Set some random incorrect led. The Gerda bug
-			if (rand() % 50 == 0) {
-				AlsSetRandom(g_brightness);
+			if (ownerOfClock != USER_RUTGER_HUIJGEN) {
+				if (rand() % 50 == 0) {
+					AlsSetRandom(g_brightness);
+				}
+			}
+			if (g_settings.colorIdx == COLOR_INDEX_RAINBOW) {
+				AlsApplyFilter(ALSFILTER_RAINBOW);
 			}
 			AlsRefresh(effect);
 		}

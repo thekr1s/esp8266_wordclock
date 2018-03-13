@@ -530,7 +530,7 @@ static void handle_clock_cfg(int s, wificfg_method method,
     if (method != HTTP_METHOD_HEAD) {
     	if (wificfg_write_string(s, http_clock_cfg_content[idx]) < 0) return;
     	// Color
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < COLOR_COUNT; i++) {
         	if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
         	if (g_settings.colorIdx == i) wificfg_write_string(s, "selected");
         }

@@ -7,6 +7,8 @@ git clone https://github.com/thekr1s/esp8266_wordclock.git
 
 cd esp8266_wordclock/esp-open-rtos
 
+git submodule update --init --recursive
+
 git apply ../esp-open-rtos.patch
 
 cd ..

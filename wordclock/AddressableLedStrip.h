@@ -24,6 +24,12 @@ typedef enum {
 	ALSEFFECT_MATRIX,
 } TAlsEffects;
 
+typedef enum {
+    ALSFILTER_NONE,
+    ALSFILTER_RANDOM_FILTER,
+    ALSFILTER_RAINBOW,
+} TAlsFilters;
+
 typedef void (*TAlsWriteFunction)(uint8_t* pData, uint32_t byteCount);
 
 void AlsInit(uint32_t rows, uint32_t cols, TAlsWriteFunction writeFunction, 
@@ -32,6 +38,7 @@ uint32_t AlsGetRows();
 uint32_t AlsGetCols();
 void AlsFill(uint8_t red, uint8_t green, uint8_t blue);
 void AlsSetLed(uint32_t row, uint32_t col, uint8_t red, uint8_t green, uint8_t blue);
+void AlsApplyFilter(TAlsFilters filter);
 void AlsRefresh(TAlsEffects effect);
 
 void AlsSetRandom(uint8_t brightness);

@@ -46,6 +46,7 @@ TSettings g_settings_default __attribute__((aligned(4))) = {
         {000,255,255},
         {000,128,255},
         {000,000,255},
+        {255,255,255},//dummy used for rainbow
      },
 };
 

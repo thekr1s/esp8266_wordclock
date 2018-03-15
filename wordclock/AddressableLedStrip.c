@@ -427,9 +427,9 @@ static void FilterRainbow(void)
 
 void AlsApplyFilter(TAlsFilters filter)
 {
-    if (filter == ALSFILTER_RANDOM_FILTER) {
+    if (filter == ALSFILTER_RANDOM) {
         //currently only 1 filter so this will not do anything
-        filter = rand() % 1 + ALSFILTER_RANDOM_FILTER + 1;
+        filter = rand() % 1 + ALSFILTER_RANDOM + 1;
     }
     switch(filter) {
     case ALSFILTER_NONE:

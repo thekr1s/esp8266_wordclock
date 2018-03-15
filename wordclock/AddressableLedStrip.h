@@ -26,7 +26,7 @@ typedef enum {
 
 typedef enum {
     ALSFILTER_NONE,
-    ALSFILTER_RANDOM_FILTER,
+    ALSFILTER_RANDOM,
     ALSFILTER_RAINBOW,
 } TAlsFilters;
 

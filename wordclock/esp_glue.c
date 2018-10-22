@@ -149,7 +149,8 @@ void user_init(void)
 	if (!sdk_wifi_set_opmode(STATION_MODE)){
 		printf("Error sdk_wifi_set_opmode\n");
 	}
-	sdk_wifi_station_connect();
+	sdk_wifi_station_set_auto_connect(TRUE);
+//	sdk_wifi_station_connect();
 
 	EvtHdlInit();
 

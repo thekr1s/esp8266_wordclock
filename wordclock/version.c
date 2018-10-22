@@ -8,12 +8,12 @@
 
 #include <stdint.h>
 
-#if defined(SVNVERSION)
+#if defined(VERSION)
 #define quote(name) #name
 #define str(macro) quote(macro)
-const char svnVersion[] = str(SVNVERSION);
+const char version[] = str(VERSION);
 #else
-#error SVNVERSION should be defined
+#error VERSION should be defined
 #endif
 
 #if defined(BUILD_DATE)

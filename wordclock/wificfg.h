@@ -58,7 +58,7 @@ typedef struct {
 } wificfg_dispatch;
 
 //This variable are updated eatch build by the makefile, and version.c
-extern const char svnVersion[];
+extern const char version[];
 extern const char buildDate[];
 
 /*

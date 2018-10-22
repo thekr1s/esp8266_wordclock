@@ -24,4 +24,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>esp-open-rtos</name>
+			<type>2</type>
+			<location>../esp-open-rtos</location>
+		</link>
+	</linkedResources>
 </projectDescription>

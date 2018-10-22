@@ -571,8 +571,8 @@ static void handle_clock_cfg(int s, wificfg_method method,
         wificfg_write_string(s, buildDate);
         
         wificfg_write_string(s, "<br/>rev. : ");
-        wificfg_write_string(s, svnVersion);
-        printf("svn:%s", svnVersion);
+        wificfg_write_string(s, version);
+        printf("svn:%s", version);
     }
 }
 

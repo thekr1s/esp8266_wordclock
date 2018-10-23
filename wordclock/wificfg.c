@@ -1058,4 +1058,13 @@ void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
     params->wificfg_dispatch = wificfg_dispatch_list;
     params->dispatch = dispatch;
     xTaskCreate(server_task, (signed char *)"WiFi Cfg HTTP", 1024, params, 2, NULL);
+
+	if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+		while (1) {
+			DisplayWord("No WiFi!");
+			DisplayWord("Connect to Wordclock WiFi, then browse to:");
+			DisplayWord(_wifi_ap_ip_addr);
+
+		}
+	}
 }

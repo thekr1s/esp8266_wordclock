@@ -34,8 +34,14 @@ build project 'wordclock'
 
 program ESP
 ============
+Install ESP8266Flasher : https://github.com/nodemcu/nodemcu-flasher
+Install the driver for the USB2Sereial http://www.wch.cn/download/CH341SER_ZIP.html
+
+Start the ESP8266Flasher.exe en vul het onderstaande in:
+
 esp\esp-open-rtos\bootloader\firmware_prebuilt\rboot.bin            @ 0x00000
 
 esp\esp-open-rtos\bootloader\firmware_prebuilt\blank_config.bin     @ 0x01000
 
 esp\wordclock\firmware\ws2812_buffer.bin                            @ 0x02000
+

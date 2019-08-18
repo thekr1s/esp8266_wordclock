@@ -1,0 +1,89 @@
+import FreeCAD, Draft
+
+# For the 13X13 wordclock we use the {product key) with 30 led on a meter.
+# This result in a distens between the leds of 100/30=3.333cm
+# For a wordclock of 13x13 we need a frame of 13x3.3 + spacing this result in 45 cm 
+# I want the front plate to overlap the rear panal, so the front plant needs to be at least 49cm
+
+#FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/ARIAL.TTF"
+#FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/stencil.TTF"
+#FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/Taurus-Mono-Stencil-Bold.ttf"
+#FONT_SCALE = 0.3
+FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/Muar-Stencil.ttf"
+FONT_SCALE = 0.5
+
+
+INSERT_TEXT = True
+INSERT_SQUARES = False
+INSERT_HOLE_SQUARES = False
+INSERT_OUTER_LINES = True
+INSERT_LDR = True
+
+NUMBER_OF_LEDS = 13
+LED_OFFSET = 100.0/30.0
+LED_HOLE_WITH = 2.7
+FRONT_PLATE_SIZE = 49.0
+
+LDR_DIAMETER = 0.5	
+LDR_OFFSET_TOP = 1.0 #the offset from the top op the front plate
+
+
+WORDCLOCK_TEXT = ["HETGISENUZELF",
+"BIJNAWDERTIEN",
+"DRIENEGENTIEN",
+"ZEVENTIENVIJF",
+"TWEENVIERTIEN",
+"ACHTTIENKWART",
+"ZESTIENTWAALF",
+"OVERVOOROHALF",
+"VIJFWACHTDRIE",
+"TWEENZESZEVEN",
+"TIENTWAALFELF",
+"BVIERNEGENRWA",
+"VUURAGEWEESTU"]
+#WORDCLOCK_TEXT = ["HETGISENUZELF"]
+
+CenterClock = FreeCAD.Vector(FRONT_PLATE_SIZE/2.0, FRONT_PLATE_SIZE/2.0, 0)
+PosFirstLetterBottemLeft = FreeCAD.Vector(CenterClock.x - ((NUMBER_OF_LEDS /2.0) * LED_OFFSET), CenterClock.y + (((NUMBER_OF_LEDS/2.0) -1) * LED_OFFSET), 0)
+
+#Caculate the needed correction for a nice Symmetric letters,
+TestLetter = Draft.makeShapeString('H', FONT, LED_HOLE_WITH * FONT_SCALE)
+LetterCenter = App.activeDocument().addObject('PartDesign::Point','DatumPoint')
+LetterCenter.Support = TestLetter
+LetterCenter.MapMode = 'CenterOfMass'
+TestLetter.Document.removeObject(TestLetter.Name)
+
+if INSERT_LDR:
+	TopOfFirstLine = PosFirstLetterBottemLeft.y + LED_OFFSET
+	SpaceBeteenTopEnFirstLine = FRONT_PLATE_SIZE - TopOfFirstLine
+	positionLdr = FreeCAD.Vector(CenterClock.x, FRONT_PLATE_SIZE - (SpaceBeteenTopEnFirstLine/2.0), 0)
+	PlaceLdr = FreeCAD.Placement(positionLdr, FreeCAD.Rotation(0,0,0))
+	FrontPlateRectangle = Draft.makeCircle(LDR_DIAMETER/2.0, PlaceLdr)
+
+for line_nr, line in enumerate(WORDCLOCK_TEXT):
+	for letter_nr, letter in enumerate(line):
+		PosBottemLeft = FreeCAD.Vector(PosFirstLetterBottemLeft.x + (LED_OFFSET * letter_nr), PosFirstLetterBottemLeft.y - (LED_OFFSET * line_nr), 0)
+		CenterSquare = FreeCAD.Vector(PosBottemLeft.x + (LED_OFFSET/2), PosBottemLeft.y + (LED_OFFSET/2))
+		if INSERT_TEXT:
+			#The font is not alwayse 1:1 so scale it.
+			text = Draft.makeShapeString(letter, FONT, LED_HOLE_WITH * FONT_SCALE)
+			AdjCenter = FreeCAD.Vector(CenterSquare.x - LetterCenter.Placement.Base.x, CenterSquare.y - LetterCenter.Placement.Base.y)
+			text.Placement.Base = AdjCenter
+		if INSERT_SQUARES:
+			RecBottemLeft = FreeCAD.Vector(CenterSquare.x - (LED_OFFSET/2), CenterSquare.y - (LED_OFFSET/2))
+			Place = FreeCAD.Placement(RecBottemLeft,FreeCAD.Rotation(0,0,0))
+			Rectangle = Draft.makeRectangle(LED_OFFSET, LED_OFFSET, Place)
+		if INSERT_HOLE_SQUARES:
+			HoleBottemLeft = FreeCAD.Vector(CenterSquare.x - (LED_HOLE_WITH/2), CenterSquare.y - (LED_HOLE_WITH/2))
+			Place = FreeCAD.Placement(HoleBottemLeft,FreeCAD.Rotation(0,0,0))
+			HoleRectangle = Draft.makeRectangle(LED_HOLE_WITH, LED_HOLE_WITH, Place)
+		if INSERT_SQUARES and INSERT_HOLE_SQUARES:
+			myCut=App.activeDocument().addObject("Part::Cut","Cut")
+			myCut.Base = Rectangle
+			myCut.Tool = HoleRectangle
+
+if INSERT_OUTER_LINES:
+	position = FreeCAD.Placement(FreeCAD.Vector(0, 0, 0), FreeCAD.Rotation(0,0,0))
+	FrontPlateRectangle = Draft.makeRectangle(FRONT_PLATE_SIZE, FRONT_PLATE_SIZE, position)
+
+LetterCenter.Document.removeObject(LetterCenter.Name)

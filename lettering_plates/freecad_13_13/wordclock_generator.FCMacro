@@ -10,7 +10,7 @@ import FreeCAD, Draft
 #FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/Taurus-Mono-Stencil-Bold.ttf"
 #FONT_SCALE = 0.3
 FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/Muar-Stencil.ttf"
-FONT_SCALE = 0.5
+FONT_SCALE = 0.55
 
 
 INSERT_TEXT = True
@@ -18,15 +18,19 @@ INSERT_SQUARES = False
 INSERT_HOLE_SQUARES = False
 INSERT_OUTER_LINES = True
 INSERT_LDR = True
+INSERT_SCOTS = False
 
 NUMBER_OF_LEDS = 13
 LED_OFFSET = 100.0/30.0
 LED_HOLE_WITH = 2.7
-FRONT_PLATE_SIZE = 49.0
+FRONT_PLATE_SIZE = 50.0
+#FRONT_PLATE_SIZE = 49.0
 
 LDR_DIAMETER = 0.5	
 LDR_OFFSET_TOP = 1.0 #the offset from the top op the front plate
 
+SCOTS_DEPTH = 2.0
+SCOTS_WIDTH = 0.4 #materiaal dikte
 
 WORDCLOCK_TEXT = ["HETGISENUZELF",
 "BIJNAWDERTIEN",
@@ -41,17 +45,18 @@ WORDCLOCK_TEXT = ["HETGISENUZELF",
 "TIENTWAALFELF",
 "BVIERNEGENRWA",
 "VUURAGEWEESTU"]
-#WORDCLOCK_TEXT = ["HETGISENUZELF"]
+#WORDCLOCK_TEXT = ["HETWISENUZELF"]
 
 CenterClock = FreeCAD.Vector(FRONT_PLATE_SIZE/2.0, FRONT_PLATE_SIZE/2.0, 0)
 PosFirstLetterBottemLeft = FreeCAD.Vector(CenterClock.x - ((NUMBER_OF_LEDS /2.0) * LED_OFFSET), CenterClock.y + (((NUMBER_OF_LEDS/2.0) -1) * LED_OFFSET), 0)
 
-#Caculate the needed correction for a nice Symmetric letters,
-TestLetter = Draft.makeShapeString('H', FONT, LED_HOLE_WITH * FONT_SCALE)
-LetterCenter = App.activeDocument().addObject('PartDesign::Point','DatumPoint')
-LetterCenter.Support = TestLetter
-LetterCenter.MapMode = 'CenterOfMass'
-TestLetter.Document.removeObject(TestLetter.Name)
+if INSERT_TEXT:
+	#Caculate the needed correction for a nice Symmetric letters,
+	TestLetter = Draft.makeShapeString('H', FONT, LED_HOLE_WITH * FONT_SCALE)
+	LetterCenter = App.activeDocument().addObject('PartDesign::Point','DatumPoint')
+	LetterCenter.Support = TestLetter
+	LetterCenter.MapMode = 'CenterOfMass'
+	TestLetter.Document.removeObject(TestLetter.Name)
 
 if INSERT_LDR:
 	TopOfFirstLine = PosFirstLetterBottemLeft.y + LED_OFFSET
@@ -86,4 +91,43 @@ if INSERT_OUTER_LINES:
 	position = FreeCAD.Placement(FreeCAD.Vector(0, 0, 0), FreeCAD.Rotation(0,0,0))
 	FrontPlateRectangle = Draft.makeRectangle(FRONT_PLATE_SIZE, FRONT_PLATE_SIZE, position)
 
-LetterCenter.Document.removeObject(LetterCenter.Name)
+if INSERT_TEXT:
+	LetterCenter.Document.removeObject(LetterCenter.Name)
+
+
+########################################################
+########################################################
+if INSERT_SCOTS:
+	part = App.activeDocument().addObject('App::Part','Part')	
+
+	BottemLeft = FreeCAD.Vector(0,0,0)
+	Place = FreeCAD.Placement(BottemLeft, FreeCAD.Rotation(0,0,0))
+	BaseRectangle = Draft.makeRectangle(SCOTS_DEPTH, NUMBER_OF_LEDS*LED_OFFSET + (SCOTS_WIDTH), Place)
+	part.addObject(BaseRectangle)
+
+	PRV_CUT = None
+	firstCut=App.activeDocument().addObject("Part::Cut", "Cut")
+	for index in range(NUMBER_OF_LEDS+1):
+		cutBottemLeft = FreeCAD.Vector(0, index*LED_OFFSET, 0)
+		Place = FreeCAD.Placement(cutBottemLeft, FreeCAD.Rotation(0,0,0))
+		cutRectangle = Draft.makeRectangle(SCOTS_DEPTH/2.0, SCOTS_WIDTH, Place)
+		part.addObject(cutRectangle)
+		
+		if PRV_CUT == None:
+			firstCut.Base = BaseRectangle	
+			firstCut.Tool = cutRectangle
+			PRV_CUT = firstCut
+		else:
+			newCut=App.activeDocument().addObject("Part::Cut", "Cut")
+			newCut.Base = PRV_CUT
+			newCut.Tool = cutRectangle
+			PRV_CUT = newCut
+		App.ActiveDocument.recompute()
+	complete_scot = PRV_CUT
+	part.addObject(complete_scot)
+	
+	#we need Horizontaal and vertical scots
+	for i in range(2*(NUMBER_OF_LEDS+1)):
+		new_scot = App.ActiveDocument.copyObject(complete_scot, False)
+		new_scot.Placement.Base = FreeCAD.Vector(i*(SCOTS_DEPTH), 0, 0)
+		part.addObject(complete_scot)

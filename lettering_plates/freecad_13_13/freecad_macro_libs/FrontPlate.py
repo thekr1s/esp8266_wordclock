@@ -7,12 +7,13 @@ try:
 except:
     import SnijlabSetting
 
-INSERT_TEXT = True
-INSERT_SQUARES = True
-INSERT_HOLE_SQUARES = True
-
 class front_plate:
     def __init__(self, part, text, font, fontScale, ledOffset, length, height, ldrDiameter, scots_thickness):
+        self.drawText = True
+        self.drawSquares = False
+        self.drawSquaresHoles = False
+        self.drawLdr = True
+        self.drawOutline = True
         self.part = part
         self.text = text
         self.font = font
@@ -33,11 +34,20 @@ class front_plate:
         print (self.letterCorrection)
         print (self.frontPlateCenter)
         print (self.posFirstLetterBottemLeft)
+
+    def change_draw_settings(self, drawText, drawSquares, drawSquaresHoles, drawLdr, drawOutline):
+        self.drawText = drawText
+        self.drawSquares = drawSquares
+        self.drawSquaresHoles = drawSquaresHoles
+        self.drawLdr = drawLdr
+        self.drawOutline = drawOutline
     
     def create(self):
-        self.make_hole_for_ldr()
+        if self.drawLdr:
+            self.make_hole_for_ldr()
         self.front_plate_iterator()
-        self.make_outline()
+        if self.drawOutline:
+            self.make_outline()
     
     def make_outline(self):
         position = FreeCAD.Placement(FreeCAD.Vector(0, 0, 0), FreeCAD.Rotation(0,0,0))
@@ -70,23 +80,23 @@ class front_plate:
             for letter_nr, letter in enumerate(line):
                 PosBottemLeft = FreeCAD.Vector(self.posFirstLetterBottemLeft.x + (self.ledOffset * letter_nr), self.posFirstLetterBottemLeft.y - (self.ledOffset * line_nr), 0)
                 CenterSquare = FreeCAD.Vector(PosBottemLeft.x + (self.ledOffset/2), PosBottemLeft.y + (self.ledOffset/2))
-                if INSERT_TEXT:
+                if self.drawText:
                     #The font is not alwayse 1:1 so scale it.
                     text = Draft.makeShapeString(letter, self.font, self.ledHoleWith * self.fontScale)
                     AdjCenter = FreeCAD.Vector(CenterSquare.x - self.letterCorrection['x'], CenterSquare.y - self.letterCorrection['y'])
                     text.Placement.Base = AdjCenter
                     self.part.addObject(text)
-                if INSERT_SQUARES:
+                if self.drawSquares:
                     RecBottemLeft = FreeCAD.Vector(CenterSquare.x - (self.ledOffset/2), CenterSquare.y - (self.ledOffset/2))
                     Place = FreeCAD.Placement(RecBottemLeft,FreeCAD.Rotation(0,0,0))
                     Rectangle = Draft.makeRectangle(self.ledOffset, self.ledOffset, Place)
                     self.part.addObject(Rectangle)
-                if INSERT_HOLE_SQUARES:
+                if self.drawSquaresHoles:
                     HoleBottemLeft = FreeCAD.Vector(CenterSquare.x - (self.ledHoleWith/2), CenterSquare.y - (self.ledHoleWith/2))
                     Place = FreeCAD.Placement(HoleBottemLeft,FreeCAD.Rotation(0,0,0))
                     HoleRectangle = Draft.makeRectangle(self.ledHoleWith, self.ledHoleWith, Place)
                     self.part.addObject(HoleRectangle)
-                if INSERT_SQUARES and INSERT_HOLE_SQUARES:
+                if self.drawSquares and self.drawSquaresHoles:
                     myCut=App.activeDocument().addObject("Part::Cut","Cut")
                     myCut.Base = Rectangle
                     myCut.Tool = HoleRectangle

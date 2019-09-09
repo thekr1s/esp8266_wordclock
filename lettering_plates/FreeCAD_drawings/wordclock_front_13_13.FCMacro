@@ -12,13 +12,8 @@ except:
 # For a wordclock of 13x13 we need a frame of 13x3.3 + spacing this result in 45 cm 
 # I want the front plate to overlap the rear panal, so the front plant needs to be at least 49cm
 
-#FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/ARIAL.TTF"
-#FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/stencil.TTF"
-#FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/Taurus-Mono-Stencil-Bold.ttf"
-#FONT_SCALE = 0.3
-#FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/Muar-Stencil.ttf"
-FONT = "C:/Users/rutger.huijgen/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/Muar-Stencil.ttf"
-FONT_SCALE = 0.55
+FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/LiberationMono-Regular-stencil-50cm.ttf"
+FONT_SCALE = 0.98
 
 INSERT_FRONT_PLATE = True
 INSERT_SCOTS = False
@@ -31,7 +26,7 @@ FRONT_PLATE_SIZE = 500.0
 LDR_DIAMETER = 5.0	
 
 SCOTS_DEPTH = 15.0
-SCOTS_WIDTH = 3.0 #materiaal dikte
+SCOTS_MATERIAL_THICKNESS = 5.0 #materiaal dikte
 
 WORDCLOCK_TEXT = ["HETGISENUZELF",
 "BIJNAWDERTIEN",
@@ -46,14 +41,16 @@ WORDCLOCK_TEXT = ["HETGISENUZELF",
 "TIENTWAALFELF",
 "BVIERNEGENRWA",
 "VUURAGEWEESTU"]
-#WORDCLOCK_TEXT = ["HETWISENUZELF"]
+#WORDCLOCK_TEXT = ["HETABDOPRJIEL"]
 NUMBER_OF_LEDS = len(WORDCLOCK_TEXT[0])
 
 ########################################################
 ########################################################
 if INSERT_FRONT_PLATE:
 	part = App.activeDocument().addObject('App::Part','Part')
-	front_plate = FrontPlate.front_plate( part, WORDCLOCK_TEXT, FONT, FONT_SCALE, LED_OFFSET, FRONT_PLATE_SIZE, FRONT_PLATE_SIZE, LDR_DIAMETER ).create()
+	front_plate_lib = FrontPlate.front_plate( part, WORDCLOCK_TEXT, FONT, FONT_SCALE, LED_OFFSET, FRONT_PLATE_SIZE, FRONT_PLATE_SIZE, LDR_DIAMETER, SCOTS_MATERIAL_THICKNESS)
+#	front_plate_lib.change_draw_settings(drawText = True, drawSquares = True, drawSquaresHoles = True, drawLdr = True, drawOutline = True)
+	front_plate = front_plate_lib.create()
 
 
 ########################################################
@@ -61,7 +58,7 @@ if INSERT_FRONT_PLATE:
 if INSERT_SCOTS:
 	part1 = App.activeDocument().addObject('App::Part','Part')
 	lightDividerLength = NUMBER_OF_LEDS*LED_OFFSET + SCOTS_WIDTH - LASER_CUTTING_WIDTH
-	small_light_divider= LightDivider.light_divider(part1, SCOTS_DEPTH, lightDividerLength, SCOTS_WIDTH, NUMBER_OF_LEDS, LED_OFFSET).create()
+	small_light_divider= LightDivider.light_divider(part1, SCOTS_DEPTH, lightDividerLength, SCOTS_MATERIAL_THICKNESS, NUMBER_OF_LEDS, LED_OFFSET).create()
 	
 	#we need Horizontaal and vertical scots and for both a closing one
 	for i in range(2*(NUMBER_OF_LEDS+1)):
@@ -73,7 +70,7 @@ if INSERT_SCOTS:
 ########################################################
 if INSERT_SCOTS_BIG:
 	part2 = App.activeDocument().addObject('App::Part','Part')
-	big_light_divider = LightDivider.light_divider(part2, SCOTS_DEPTH, FRONT_PLATE_SIZE, SCOTS_WIDTH, NUMBER_OF_LEDS, LED_OFFSET).create()
+	big_light_divider = LightDivider.light_divider(part2, SCOTS_DEPTH, FRONT_PLATE_SIZE, SCOTS_MATERIAL_THICKNESS, NUMBER_OF_LEDS, LED_OFFSET).create()
 	
 	for i in range(4+2):
 		new_scot = App.ActiveDocument.copyObject(big_light_divider, False)

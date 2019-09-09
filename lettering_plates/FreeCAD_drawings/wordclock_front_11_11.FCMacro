@@ -7,7 +7,7 @@ except:
 	import LightDivider
 	import FrontPlate
 
-FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/LiberationMono-Regular_stencil.ttf"
+FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/LiberationMono-Regular-stencil-23cm.ttf"
 FONT_SCALE = 0.98
 
 INSERT_FRONT_PLATE = True

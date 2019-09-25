@@ -22,7 +22,10 @@
 
 
 # Tips & tricks:
-The MDF plate can also be replaced by "Geschuimd pvc"
+- The MDF plate can also be replaced by "Geschuimd pvc"
+- the led strips can be placed by tracing holes from the light divider on the led pannel
+- Use a Flatcable to connect the ledstrips
+- 
 
 # Note:
 The NodeMcu Lolin V3 is needed because the Lolin has a 3v reference voltage for its adc that is used for the LDR all other NodeMC have 1v reference voltage

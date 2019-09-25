@@ -3,9 +3,9 @@ import FreeCAD as App
 import FreeCAD
 
 try:
-    from freecad_macro_libs import SnijlabSetting
+    from freecad_macro_libs.SnijlabSetting  import *
 except:
-    import SnijlabSetting
+    from SnijlabSetting import *
 
 class light_divider:
     def __init__(self, part, depth, length, materialThickness, nrOfLeds, ledOffset):

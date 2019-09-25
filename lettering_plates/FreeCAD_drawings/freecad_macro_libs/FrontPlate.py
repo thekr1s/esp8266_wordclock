@@ -3,9 +3,9 @@ import FreeCAD as App
 import FreeCAD
 
 try:
-    from freecad_macro_libs import SnijlabSetting
+    from freecad_macro_libs.SnijlabSetting  import *
 except:
-    import SnijlabSetting
+    from SnijlabSetting import *
 
 class front_plate:
     def __init__(self, part, text, font, fontScale, ledOffset, length, height, ldrDiameter, scots_thickness):

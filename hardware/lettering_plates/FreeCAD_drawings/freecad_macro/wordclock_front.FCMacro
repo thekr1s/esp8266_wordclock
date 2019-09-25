@@ -1,47 +1,51 @@
 import FreeCAD, Draft
 
-try:
-	from freecad_macro_libs import LightDivider
-	from freecad_macro_libs import FrontPlate
-except:
-	import LightDivider
-	import FrontPlate
+import LightDivider
+import FrontPlate
+from LetterPlateText import *
 
-FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/LiberationMono-Regular-stencil-23cm.ttf"
-FONT_SCALE = 0.98
+GENERATE_RIBBA_13_13 = False 
+GENERATE_RIBBA_11_11 = True
 
 INSERT_FRONT_PLATE = True
 INSERT_SCOTS = False
 INSERT_SCOTS_BIG = False
 
-LED_OFFSET = 1000.0/60.0	#1 meter / 60 leds
-FRONT_PLATE_SIZE = 230.0
+########################################################
+########################################################
+if GENERATE_RIBBA_13_13:
+	FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil-50cm.ttf"
+	FONT_SCALE = 0.97
+	LED_OFFSET = 1000.0/30.0	#1 meter / 30 leds
+	FRONT_PLATE_SIZE = 500.0
+	LDR_DIAMETER = 5.0	
+	SCOTS_DEPTH = 12.0
+	SCOTS_MATERIAL_THICKNESS = 5.0
+	WORDCLOCK_TEXT = WORDCLOCK_TEXT_13_13
+	NUMBER_OF_LEDS = len(WORDCLOCK_TEXT[0]) #TODO we expect a even X and Y nr of leds
 
-LDR_DIAMETER = 5.0	
+########################################################
+########################################################
+if GENERATE_RIBBA_11_11:
+	FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil-23cm.ttf"
+	FONT_SCALE = 0.98
+	LED_OFFSET = 1000.0/60.0	#1 meter / 60 leds
+	FRONT_PLATE_SIZE = 230.0
+	LDR_DIAMETER = 5.0	
+	SCOTS_DEPTH = 12.0
+	SCOTS_MATERIAL_THICKNESS = 5.0
+	WORDCLOCK_TEXT = WORDCLOCK_TEXT_11_11
+	NUMBER_OF_LEDS = len(WORDCLOCK_TEXT[0])
 
-SCOTS_DEPTH = 15.0
-SCOTS_MATERIAL_THICKNESS = 5.0
 
-WORDCLOCK_TEXT = ["HETHISBBĲNA",
-"NUSKWARTIEN",
-"VIJFXRVOORN",
-"OVERXZHALFD",
-"ZESTWAALFSE",
-"DRIEVIEREEN",
-"TWEEEWACHTR",
-"ZEVENEGENBM",
-"TIENELFVIJF",
-"CUURLBYPRMW",
-"ALGEWEESTKP",]
-#WORDCLOCK_TEXT = ["HETABDOPRJI"]
-
-NUMBER_OF_LEDS = len(WORDCLOCK_TEXT[0])
+#WORDCLOCK_TEXT = ["HETABDOPRJI"] #Handy for debugging faster generation!
 
 ########################################################
 ########################################################
 if INSERT_FRONT_PLATE:
 	part = App.activeDocument().addObject('App::Part','Part')
 	front_plate_lib = FrontPlate.front_plate( part, WORDCLOCK_TEXT, FONT, FONT_SCALE, LED_OFFSET, FRONT_PLATE_SIZE, FRONT_PLATE_SIZE, LDR_DIAMETER, SCOTS_MATERIAL_THICKNESS)
+#	Handy for debugging this way the underlying light divider is also drawn
 #	front_plate_lib.change_draw_settings(drawText = True, drawSquares = True, drawSquaresHoles = True, drawLdr = True, drawOutline = True)
 	front_plate = front_plate_lib.create()
 

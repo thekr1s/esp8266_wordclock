@@ -1,7 +1,7 @@
-# esp8266_wordclock
+esp8266_wordclock# esp8266_wordclock
 
 
-get started on ubuntu 14.04 / 16.04 server (64 bits)
+get started on ubuntu (64 bits)
 ===========================================
 git clone https://github.com/thekr1s/esp8266_wordclock.git
 

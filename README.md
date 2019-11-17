@@ -34,8 +34,8 @@ build project 'wordclock'
 
 program ESP
 ============
-esp\esp-open-rtos\bootloader\firmware_prebuilt\rboot.bin            @ 0x00000
+esp8266_wordclock\esp-open-rtos\bootloader\firmware_prebuilt\rboot.bin            @ 0x00000
 
-esp\esp-open-rtos\bootloader\firmware_prebuilt\blank_config.bin     @ 0x01000
+esp8266_wordclock\esp-open-rtos\bootloader\firmware_prebuilt\blank_config.bin     @ 0x01000
 
-esp\wordclock\firmware\ws2812_buffer.bin                            @ 0x02000
+esp8266_wordclock\wordclock\firmware\ws2812_buffer.bin                            @ 0x02000

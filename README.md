@@ -1,7 +1,4 @@
-# esp8266_wordclock
-
-
-get started on ubuntu 14.04 / 16.04 server (64 bits)
+get started on ubuntu 14.04 upto 19.10 (64 bits)
 ===========================================
 git clone https://github.com/thekr1s/esp8266_wordclock.git
 
@@ -34,8 +31,8 @@ build project 'wordclock'
 
 program ESP
 ============
-esp\esp-open-rtos\bootloader\firmware_prebuilt\rboot.bin            @ 0x00000
+esp8266_wordclock\esp-open-rtos\bootloader\firmware_prebuilt\rboot.bin            @ 0x00000
 
-esp\esp-open-rtos\bootloader\firmware_prebuilt\blank_config.bin     @ 0x01000
+esp8266_wordclock\esp-open-rtos\bootloader\firmware_prebuilt\blank_config.bin     @ 0x01000
 
-esp\wordclock\firmware\ws2812_buffer.bin                            @ 0x02000
+esp8266_wordclock\wordclock\firmware\ws2812_buffer.bin                            @ 0x02000

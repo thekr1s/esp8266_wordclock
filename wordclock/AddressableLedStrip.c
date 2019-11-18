@@ -356,8 +356,10 @@ static void RainbowSetColor(uint16_t nrOfActiveLeds, uint16_t currentLedIndex, u
     // Input a value 0 to 255 to get a color value.
     // The colours are a transition r - g - b - back to r.
 
-	uint16_t gIdx = nrOfActiveLeds / 3;
+	uint16_t gIdx = nrOfActiveLeds / 3;       
 	uint16_t bIdx = (nrOfActiveLeds * 2) / 3;
+	uint16_t rIdx = nrOfActiveLeds;
+
 	if (nrOfActiveLeds < 3) {
 		*r = 255; 
 		*g = 0;
@@ -368,17 +370,19 @@ static void RainbowSetColor(uint16_t nrOfActiveLeds, uint16_t currentLedIndex, u
 		*g = 255 * currentLedIndex / gIdx;
 		*b = 0;
 	} else if (currentLedIndex <= bIdx) {
-		// Color between g and b
+		// Color between g and b. Shift gIdx to zero
 		currentLedIndex -= gIdx;
+		bIdx -= gIdx;
 		*r = 0;
-		*g = 255 * (gIdx - currentLedIndex) / gIdx; 
-		*b = 255 * currentLedIndex / gIdx;
+		*g = 255 * (bIdx - currentLedIndex) / bIdx; 
+		*b = 255 * currentLedIndex / bIdx;
 	}else {
-		// Color between b and r
+		// Color between b and r. Shift bIdx to zero
 		currentLedIndex -= bIdx;
+		rIdx -= bIdx;
 		*g = 0;
-		*b = 255 * (gIdx - currentLedIndex) / gIdx; 
-		*r = 255 * currentLedIndex / gIdx;
+		*b = 255 * (rIdx - currentLedIndex) / rIdx; 
+		*r = 255 * currentLedIndex / rIdx;
 	}
 
 	*r = ApplyBrightness(*r);

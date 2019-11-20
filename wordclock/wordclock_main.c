@@ -235,12 +235,9 @@ void ShowTime(int delayMS) {
 					AlsSetRandom(g_brightness);
 				}
 			}
-			if (g_settings.colorIdx == COLOR_INDEX_RAINBOW) {
-				AlsApplyFilter(ALSFILTER_RAINBOW);
-			}
 			AlsRefresh(effect);
 		}
-		DoReDisplay = false;
+		DoReDisplay = false; 
 		Sleep(300);
 	}
 }
@@ -299,9 +296,8 @@ void WordclockMain(void* p)
 		printf("time: %u\n",(uint32_t)time(NULL));
 	}
 
-	ShowIpAddress(user_ip_addr);
-
 	wificfg_init(80, NULL);
+	ShowIpAddress(user_ip_addr);
 
 	while (1) {
 

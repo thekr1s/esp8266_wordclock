@@ -6,6 +6,7 @@
 # Wirring
 - ESP(Rx) -> LedStrip (Data)
 - ESP(GND) -> LedStrip (GND)
+- ESP(VU) -> LedStrip (5v)
 - LDR(1) -> ESP(3v)
 - LDR(2) -> ESP(A0)
 
@@ -29,12 +30,21 @@
 - letterplate (with connection holes)
 - light divider (with hanging hole)
 - led panel on hardboard
+
 #### Assemble
+- Create the led-panel by cutting out a square from a hardboard pannel
 - Place the led-panel en light divider on eatch other
-- Drill (2mm) hole through both panels in between 4 led holes, from the front to the back. These hols can later be used to connect both pannels
 - Trace the holes from the light divider on the led panel hardboard
-- Place the led-strips centerd on the taces on the hardboard
-- Use a Flatcable to connect the ledstrips (follow the arrow)
+- Place the led-strips centerd on the taces on the hardboard by following the this pattern:
+    - Start upper left with Din end place it to the upper Right side end with Dout
+    - The second row start with Dout on the left side and ends with Din
+    - continue this zigzag pattern until all rows are done
+- Use a Flatcable to connect the ledstrips from Dout to Din.
+    - Cut flatcable, strip and tin both ends, cut the ends to they are separeted from eatch other
+    - pre-solder both ends of the ledstrip
+    - Start upper right with Dout solder all 3 pins(GND, Dout, 5V) Fold the flacable 90 degrees down, fold it 90 degrees towarts Din Solder again
+
+- Drill (2mm) hole through both panels in between 4 led holes, from the front to the back. These hols can later be used to connect both pannels
 - Connect the ESP and test the led pannel
 - Connect the letterplate with the light divider
 - Connect the light divider with the led panel with screws (2,5mm)

@@ -1,3 +1,5 @@
+#include "FreeRTOS.h"
+#include "task.h"
 #include "esp_glue.h"
 #include "AddressableLedStrip.h"
 #include "controller.h"
@@ -9,7 +11,7 @@ typedef struct{
     int32_t col;
 } TPos;
 
-const _batWidth = 3;
+const uint32_t _batWidth = 3;
 
 static uint32_t _batPos = 5;
 static TPos _balPos = {1,6};
@@ -61,14 +63,15 @@ static bool BallHitsBat() {
 static bool BallHitsWall() {
     uint8_t r,g,b = 0;
     TPos newPos = _balPos;
-    UpdateBallPos(&newPos);
-    AlsGetLed(newPos.row, newPos.col, &r, &g, &b);
-    AlsSetLed(newPos.row, newPos.col, 0, 0, 0);
-    if ((r + g + b) != 0) {
-        return TRUE;
-    } else {
-        return FALSE;
+    if (_balDir.row > 0) {
+        newPos.row += 1; 
+        AlsGetLed(newPos.row, newPos.col, &r, &g, &b);
+        AlsSetLed(newPos.row, newPos.col, 0, 0, 0);
+        if ((r + g + b) != 0) {
+            return TRUE;
+        } 
     }
+    return FALSE;
 }
 
 static void MoveBall() {
@@ -81,14 +84,13 @@ static void MoveBall() {
         _balDir.row = -_balDir.row;
     } else if (BallHitsWall()) {
         _balDir.row = -_balDir.row;
-    } else if(_balPos.row >= AlsGetRows()-1) {
+    } else if(_balDir.row > 0 && _balPos.row >= AlsGetRows()-1) {
         _balDir.row = -_balDir.row;
-    } else if(_balPos.col >= AlsGetCols()-1 || _balPos.col <= 0) {
+    } else if((_balDir.col > 0 && _balPos.col >= AlsGetCols()-1) || (_balDir.col < 0 && _balPos.col <= 0)) {
         _balDir.col = -_balDir.col;
     }     
     _balPos.row += _balDir.row;
     _balPos.col += _balDir.col;
-
     AlsSetLed(_balPos.row, _balPos.col, br, 0, 0);
 }
 
@@ -96,11 +98,16 @@ static void MoveBall() {
 
 void DoBreakout(){
     uint32_t cycleTime = 300;
+    int lastActionTime = xTaskGetTickCount();
     Init();
     while (ControllerGameGet() == GAME_BREAKOUT) {
         SetInterrupted(FALSE);
         cycleTime = Sleep(cycleTime);
-        switch(ControllerGet()){
+        TControllerAction action = ControllerGet();
+        if (action != CONTROLLER_NONE) {
+            lastActionTime = xTaskGetTickCount();
+        }
+        switch(action){
         case CONTROLLER_LEFT :_batPos = _batPos > 0 ? _batPos - 1: 0; break;
         case CONTROLLER_RIGHT:_batPos = _batPos < (AlsGetCols() - _batWidth) ? _batPos + 1 : AlsGetCols() - _batWidth; break;
         default: break;
@@ -111,5 +118,8 @@ void DoBreakout(){
             cycleTime = 500;
         }
         AlsRefresh(ALSEFFECT_NONE);
+        if (GetTicksDiffMs(lastActionTime, xTaskGetTickCount()) > 60000) {
+            ControllerGameSet(GAME_NONE);
+        }
     }
 }

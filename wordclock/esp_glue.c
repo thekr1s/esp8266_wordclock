@@ -58,7 +58,7 @@ void SleepNI(uint32_t ms) {
  */
 uint32_t Sleep(uint32_t ms) {
 	while ( ms > 0) {
-		if (_isInterrupted) return;
+		if (_isInterrupted) return ms;
 		SetInterrupted(ButtonsAnyPressed());
 		SleepNI(ms > 100 ? 100 : ms);
 		ms = ms > 100 ? ms - 100 : 0;

@@ -26,6 +26,7 @@
 #include "tetris_pieces.h"
 #include "esp_glue.h"
 #include "settings.h"
+#include "controller.h"
 
 #define MAX_MESSAGE_SIZE 60
 static char g_message[MAX_MESSAGE_SIZE]="";
@@ -513,23 +514,39 @@ void fireworks() {
 	}
 	fireworksExplode(row + 2, col);
 }
+void HandleTetrisController(TPiece* piece){
+	switch (ControllerGet()){
+		case CONTROLLER_UP: TetrisRotateCW(piece); break; 
+		case CONTROLLER_DOWN: TetrisMove(piece, DIR_DOWN); break; 
+		case CONTROLLER_LEFT: TetrisMove(piece, DIR_LEFT); break; 
+		case CONTROLLER_RIGHT: TetrisMove(piece, DIR_RIGHT); break; 
+		default: break;
+	}
+}
 
 void DoTetris() {
-
+	uint32_t msLeft = 300;
 	TPiece piece;
 	TetrisNew(&piece);
 	for (int i = 0; i < 15; i++){
 		AlsFill(0,0,0);
 		TetrisDraw(&piece);
 		AlsRefresh(ALSEFFECT_NONE);
-		Sleep(300);
-		TetrisMove(&piece, DIR_DOWN);
-		switch (rand() % 5) {
-		case 0: TetrisRotateCW(&piece); break;
-		case 1: TetrisRotateCCW(&piece); break;
-		case 2: TetrisMove(&piece, DIR_LEFT); break;
-		case 3: TetrisMove(&piece, DIR_RIGHT); break;
+		msLeft = Sleep(msLeft);
+		SetInterrupted(FALSE);
+		if (msLeft > 0) {
+			HandleTetrisController(&piece);
+			i--;
+		} else {
+			TetrisMove(&piece, DIR_DOWN);
+			msLeft = 300;
 		}
+		// switch (rand() % 5) {
+		// case 0: TetrisRotateCW(&piece); break;
+		// case 1: TetrisRotateCCW(&piece); break;
+		// case 2: TetrisMove(&piece, DIR_LEFT); break;
+		// case 3: TetrisMove(&piece, DIR_RIGHT); break;
+		// }
 	}
 
 }

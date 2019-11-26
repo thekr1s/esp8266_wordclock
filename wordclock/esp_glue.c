@@ -53,14 +53,17 @@ void SleepNI(uint32_t ms) {
 
 /**
  * Sleep interruptable by buttonpress or call to SetInterrupted()
+ * 
+ * Returns: number of ms left when interrupted. 0 when not interrupted
  */
-void Sleep(uint32_t ms) {
+uint32_t Sleep(uint32_t ms) {
 	while ( ms > 0) {
 		if (_isInterrupted) return;
 		SetInterrupted(ButtonsAnyPressed());
 		SleepNI(ms > 100 ? 100 : ms);
 		ms = ms > 100 ? ms - 100 : 0;
 	}
+    return ms;
 }
 
 //function is not used any more

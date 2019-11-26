@@ -46,6 +46,7 @@ static char* _wifi_ap_ip_addr = "192.168.1.1";
 
 #include "ota_basic.h"
 #include "settings.h"
+#include "controller.h"
 #include "esp_glue.h"
 
 static char _ad[] = "spcfsuAxttot/om";
@@ -389,6 +390,10 @@ static const char http_redirect_header_clockcfg[] = "HTTP/1.0 302 \r\n"
     "Location: /wificfg/clockcfg.html\r\n"
     "\r\n";
 
+static const char http_redirect_header_controller[] = "HTTP/1.0 302 \r\n"
+    "Location: /wificfg/controller.html\r\n"
+    "\r\n";
+
 static const char http_redirect_header_delayed[] = "<html> <head>"
         "<meta http-equiv=\"refresh\" content=\"10;url=/wificfg/clockcfg.html\" />"
     "</head> <body> <h1>Resetting, refresh manually when clock is up...</h1> </body></html>";
@@ -718,6 +723,104 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
     sdk_system_restart();
 }
 
+static const char *http_controller_content[] = {
+#include "content/wificfg/controller.html"
+};
+
+static void handle_controller(int s, wificfg_method method,
+                                uint32_t content_length,
+                                wificfg_content_type content_type,
+                                char *buf, size_t len)
+{
+	int idx = 0;
+	printf("%s %d\n", __FUNCTION__, __LINE__);
+    if (wificfg_write_string(s, http_success_header) < 0) return;
+	printf("%s %d\n", __FUNCTION__, __LINE__);
+
+    if (method != HTTP_METHOD_HEAD) {
+    	if (wificfg_write_string(s, http_controller_content[idx]) < 0) return;
+    }
+}
+
+static void handle_controller_post(int s, wificfg_method method,
+                                     uint32_t content_length,
+                                     wificfg_content_type content_type,
+                                     char *buf, size_t len)
+{
+    if (content_type != HTTP_CONTENT_TYPE_WWW_FORM_URLENCODED) {
+        wificfg_write_string(s, "HTTP/1.0 400 \r\nContent-Type: text/html\r\n\r\n");
+        return;
+    }
+
+    printf("BUF: %s\n", buf);
+    size_t rem = content_length;
+    bool valp = false;
+
+    while (rem > 0) {
+        int r = wificfg_form_name_value(s, &valp, &rem, buf, len);
+
+        if (r < 0) {
+            break;
+        }
+
+        wificfg_form_url_decode(buf);
+
+        char name[30];
+        bzero(name, sizeof(name));
+        strncpy(name, buf, sizeof(name) - 1);
+
+        if (valp) {
+            int r = wificfg_form_name_value(s, NULL, &rem, buf, len);
+            if (r < 0) {
+                break;
+            }
+
+            wificfg_form_url_decode(buf);
+            printf("%s %s %s\n", __FUNCTION__, name, buf);
+            if (strcmp(name, "cl_command") == 0) {
+            	if (strcmp(buf, "Up") == 0){
+                    ControllerSet(CONTROLLER_UP);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "UpLeft") == 0){
+                    ControllerSet(CONTROLLER_UP_LEFT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "UpRight") == 0){
+                    ControllerSet(CONTROLLER_UP_RIGHT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Left") == 0){
+                    ControllerSet(CONTROLLER_LEFT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Center") == 0){
+                    ControllerSet(CONTROLLER_CENTER);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Right") == 0){
+                    ControllerSet(CONTROLLER_RIGHT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Down") == 0){
+                    ControllerSet(CONTROLLER_DOWN);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "NoGame") == 0){
+                    ControllerGameSet(GAME_NONE);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Tetris") == 0){
+                    ControllerGameSet(GAME_TETRIS);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Breakout") == 0){
+                    ControllerGameSet(GAME_BREAKOUT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Pong") == 0){
+                    ControllerGameSet(GAME_PONG);
+            		SetInterrupted(true);
+            	}
+            }
+        }
+    }
+    wificfg_write_string(s, http_redirect_header_controller);
+    // close(s);
+}
+
+
+
 /* Minimal not-found response. */
 static const char not_found_header[] = "HTTP/1.0 404 \r\n"
     "Content-Type: text/html; charset=utf-8\r\n"
@@ -799,6 +902,8 @@ static const wificfg_dispatch wificfg_dispatch_list[] = {
     {"/wificfg/clockcfg.html", HTTP_METHOD_POST, handle_clock_cfg_post, true},
     {"/wificfg/hwcfg.html", HTTP_METHOD_GET, handle_hw_cfg, true},
     {"/wificfg/hwcfg.html", HTTP_METHOD_POST, handle_hw_cfg_post, true},
+    {"/wificfg/controller.html", HTTP_METHOD_GET, handle_controller, true},
+    {"/wificfg/controller.html", HTTP_METHOD_POST, handle_controller_post, true},
 #if configUSE_TRACE_FACILITY
     {"/tasks", HTTP_METHOD_GET, handle_tasks, false},
     {"/tasks.html", HTTP_METHOD_GET, handle_tasks, false},
@@ -835,7 +940,7 @@ static void server_task(void *pvParameters)
         int s = accept(listenfd, (struct sockaddr *)NULL, (socklen_t *)NULL);
         printf("wificfg accept connection\n");
         if (s >= 0) {
-            int timeout = 3000; /* 10 second timeout */
+            int timeout = 3000; 
             setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
             setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 

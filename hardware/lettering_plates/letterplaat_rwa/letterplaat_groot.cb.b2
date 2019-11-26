@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.9.8.0" Name="letterplaat_groot">
+  <layers>
+    <layer name="0" color="255,255,255">
+      <ModificationCount>0</ModificationCount>
+      <objects>
+        <text id="1" p1="73.4920688359073,253.809523694189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>16</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <line id="2">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0,0</p>
+            <p>500,0</p>
+          </pts>
+        </line>
+        <line id="3">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>500,0</p>
+            <p>500,500</p>
+          </pts>
+        </line>
+        <line id="4">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>500,500</p>
+            <p>0,500</p>
+          </pts>
+        </line>
+        <line id="5">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0,500</p>
+            <p>0,0</p>
+          </pts>
+        </line>
+        <circle id="6" c="283.3333333,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="7" c="250,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="8" c="216.6666667,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="9" c="449.9999998,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="10" c="150.0000001,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="11" c="183.3333334,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="12" c="349.9999999,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="13" c="316.6666666,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="14" c="416.6666665,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="15" c="383.3333332,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="16" c="83.3333335,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="17" c="116.6666668,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="18" c="50.0000002,250,0" d="28">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <text id="19" p1="73.4920688359073,220.476190361189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="20" p1="73.4920688359073,187.142857028189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="21" p1="73.4920688359073,153.809523695189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="22" p1="73.4920688359073,120.476190362189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="23" p1="73.4920688359073,87.1428570291891,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="24" p1="73.4920688359073,287.142857027189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="25" p1="73.4920688359073,320.476190360189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="26" p1="73.4920688359073,353.809523693189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="27" p1="73.4920688359073,387.142857026189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <text id="28" p1="73.4920688359073,420.476190359189,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.325" align="center,left" style="bold">
+          <ModificationCount>7</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+      </objects>
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <Stock>
+      <PMin>0,0</PMin>
+      <PMax>0,0</PMax>
+      <Color>255,165,0</Color>
+    </Stock>
+    <ToolProfile>Unspecified</ToolProfile>
+  </MachiningOptions>
+  <parts />
+  <ActiveLayer>0</ActiveLayer>
+</CADFile>

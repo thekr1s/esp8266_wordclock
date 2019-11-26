@@ -1,0 +1,3153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.9.8.0" Name="gatenboard_groot_kwart">
+  <layers>
+    <layer name="0" color="255,255,255">
+      <ModificationCount>0</ModificationCount>
+      <objects>
+        <line id="1">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-220,251</p>
+            <p>-251,251</p>
+          </pts>
+        </line>
+        <line id="2">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.1E-15,251</p>
+            <p>-40,251</p>
+          </pts>
+        </line>
+        <line id="3">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0,211</p>
+            <p>7.1E-15,251</p>
+          </pts>
+        </line>
+        <line id="4">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0,0</p>
+            <p>-1.42E-14,31</p>
+          </pts>
+        </line>
+        <line id="5">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-265,0</p>
+            <p>-270.333333,-2.84E-14</p>
+          </pts>
+        </line>
+        <line id="6">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-165.0000001,-5.68E-14</p>
+            <p>-170.3333334,0</p>
+          </pts>
+        </line>
+        <line id="7">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-131.6666668,0</p>
+            <p>-137.0000001,0</p>
+          </pts>
+        </line>
+        <line id="8">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-231.6666667,-2.84E-14</p>
+            <p>-237,5.68E-14</p>
+          </pts>
+        </line>
+        <line id="9">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-198.3333334,0</p>
+            <p>-203.6666667,0</p>
+          </pts>
+        </line>
+        <line id="10">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-98.3333334999999,-2.84E-14</p>
+            <p>-103.6666668,0</p>
+          </pts>
+        </line>
+        <line id="11">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0,0</p>
+            <p>-70.3333335,2.84E-14</p>
+          </pts>
+        </line>
+        <circle id="252" c="-235,226,0" d="4">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="253" c="-25,226,0" d="4">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="254" c="-25,16,0" d="4">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="255" c="-235,16,0" d="4">
+          <ModificationCount>8</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <pline id="294" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-137.0000001,27.33333333,0</p>
+            <p b="0.41421356237309503">-137.0000001,39.33333333,0</p>
+            <p>-145.0000001,47.33333333,0</p>
+            <p b="0.41421356237309503">-157.0000001,47.33333333,0</p>
+            <p>-165.0000001,39.33333333,0</p>
+            <p b="0.41421356237309503">-165.0000001,27.33333333,0</p>
+            <p>-157.0000001,19.33333333,0</p>
+            <p b="0.41421356237309492">-145.0000001,19.33333333,0</p>
+          </pts>
+        </pline>
+        <pline id="295" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-131.6666668,160.66666665,0</p>
+            <p>-123.6666668,152.66666665,0</p>
+            <p b="0.41421356237309503">-111.6666668,152.66666665,0</p>
+            <p>-103.6666668,160.66666665,0</p>
+            <p b="0.41421356237309503">-103.6666668,172.66666665,0</p>
+            <p>-111.6666668,180.66666665,0</p>
+            <p b="0.41421356237309503">-123.6666668,180.66666665,0</p>
+            <p>-131.6666668,172.66666665,0</p>
+          </pts>
+        </pline>
+        <pline id="296" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-165.0000001,160.66666665,0</p>
+            <p>-157.0000001,152.66666665,0</p>
+            <p b="0.41421356237309503">-145.0000001,152.66666665,0</p>
+            <p>-137.0000001,160.66666665,0</p>
+            <p b="0.41421356237309503">-137.0000001,172.66666665,0</p>
+            <p>-145.0000001,180.66666665,0</p>
+            <p b="0.41421356237309503">-157.0000001,180.66666665,0</p>
+            <p>-165.0000001,172.66666665,0</p>
+          </pts>
+        </pline>
+        <pline id="297" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-170.3333334,27.33333333,0</p>
+            <p b="0.41421356237309503">-170.3333334,39.33333333,0</p>
+            <p>-178.3333334,47.33333333,0</p>
+            <p b="0.41421356237309503">-190.3333334,47.33333333,0</p>
+            <p>-198.3333334,39.33333333,0</p>
+            <p b="0.41421356237309503">-198.3333334,27.33333333,0</p>
+            <p>-190.3333334,19.33333333,0</p>
+            <p b="0.41421356237309492">-178.3333334,19.33333333,0</p>
+          </pts>
+        </pline>
+        <pline id="298" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-203.6666667,27.3333333300001,0</p>
+            <p b="0.41421356237309503">-203.6666667,39.3333333300001,0</p>
+            <p>-211.6666667,47.3333333300001,0</p>
+            <p b="0.41421356237309503">-223.6666667,47.3333333300001,0</p>
+            <p>-231.6666667,39.3333333300001,0</p>
+            <p b="0.41421356237309503">-231.6666667,27.3333333300001,0</p>
+            <p>-223.6666667,19.3333333300001,0</p>
+            <p b="0.41421356237309492">-211.6666667,19.3333333300001,0</p>
+          </pts>
+        </pline>
+        <pline id="299" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-198.3333334,160.66666665,0</p>
+            <p>-190.3333334,152.66666665,0</p>
+            <p b="0.41421356237309503">-178.3333334,152.66666665,0</p>
+            <p>-170.3333334,160.66666665,0</p>
+            <p b="0.41421356237309503">-170.3333334,172.66666665,0</p>
+            <p>-178.3333334,180.66666665,0</p>
+            <p b="0.41421356237309503">-190.3333334,180.66666665,0</p>
+            <p>-198.3333334,172.66666665,0</p>
+          </pts>
+        </pline>
+        <pline id="300" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-198.3333334,93.99999999,0</p>
+            <p>-190.3333334,85.99999999,0</p>
+            <p b="0.41421356237309503">-178.3333334,85.99999999,0</p>
+            <p>-170.3333334,93.99999999,0</p>
+            <p b="0.41421356237309503">-170.3333334,105.99999999,0</p>
+            <p>-178.3333334,113.99999999,0</p>
+            <p b="0.41421356237309503">-190.3333334,113.99999999,0</p>
+            <p>-198.3333334,105.99999999,0</p>
+          </pts>
+        </pline>
+        <pline id="301" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-257,113.99999999,0</p>
+            <p>-265,105.99999999,0</p>
+            <p b="0.41421356237309503">-265,93.9999999900001,0</p>
+            <p>-257,85.9999999900001,0</p>
+            <p b="0.41421356237309503">-245,85.9999999900001,0</p>
+            <p>-237,93.9999999900001,0</p>
+            <p b="0.41421356237309503">-237,105.99999999,0</p>
+            <p>-245,113.99999999,0</p>
+          </pts>
+        </pline>
+        <pline id="302" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-231.6666667,160.66666665,0</p>
+            <p>-223.6666667,152.66666665,0</p>
+            <p b="0.41421356237309503">-211.6666667,152.66666665,0</p>
+            <p>-203.6666667,160.66666665,0</p>
+            <p b="0.41421356237309503">-203.6666667,172.66666665,0</p>
+            <p>-211.6666667,180.66666665,0</p>
+            <p b="0.41421356237309503">-223.6666667,180.66666665,0</p>
+            <p>-231.6666667,172.66666665,0</p>
+          </pts>
+        </pline>
+        <pline id="303" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-231.6666667,93.9999999900001,0</p>
+            <p>-223.6666667,85.9999999900001,0</p>
+            <p b="0.41421356237309503">-211.6666667,85.9999999900001,0</p>
+            <p>-203.6666667,93.9999999900001,0</p>
+            <p b="0.41421356237309503">-203.6666667,105.99999999,0</p>
+            <p>-211.6666667,113.99999999,0</p>
+            <p b="0.41421356237309503">-223.6666667,113.99999999,0</p>
+            <p>-231.6666667,105.99999999,0</p>
+          </pts>
+        </pline>
+        <pline id="304" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-237,27.3333333300001,0</p>
+            <p b="0.41421356237309503">-237,39.3333333300001,0</p>
+            <p>-245,47.3333333300001,0</p>
+            <p b="0.41421356237309503">-257,47.3333333300001,0</p>
+            <p>-265,39.3333333300001,0</p>
+            <p b="0.41421356237309503">-265,27.3333333300001,0</p>
+            <p>-257,19.3333333300001,0</p>
+            <p b="0.41421356237309492">-245,19.3333333300001,0</p>
+          </pts>
+        </pline>
+        <pline id="305" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-98.3333335,127.33333332,0</p>
+            <p>-90.3333335,119.33333332,0</p>
+            <p b="0.41421356237309503">-78.3333335,119.33333332,0</p>
+            <p>-70.3333335,127.33333332,0</p>
+            <p b="0.41421356237309503">-70.3333335,139.33333332,0</p>
+            <p>-78.3333335,147.33333332,0</p>
+            <p b="0.41421356237309503">-90.3333335,147.33333332,0</p>
+            <p>-98.3333335,139.33333332,0</p>
+          </pts>
+        </pline>
+        <pline id="306" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-98.3333335000001,60.6666666600001,0</p>
+            <p>-90.3333335000001,52.6666666600001,0</p>
+            <p b="0.41421356237309503">-78.3333335000001,52.6666666600001,0</p>
+            <p>-70.3333335000001,60.6666666600001,0</p>
+            <p b="0.41421356237309503">-70.3333335000001,72.6666666600001,0</p>
+            <p>-78.3333335000001,80.6666666600001,0</p>
+            <p b="0.41421356237309503">-90.3333335000001,80.6666666600001,0</p>
+            <p>-98.3333335000001,72.6666666600001,0</p>
+          </pts>
+        </pline>
+        <pline id="307" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-265,60.6666666600001,0</p>
+            <p>-257,52.6666666600001,0</p>
+            <p b="0.41421356237309503">-245,52.6666666600001,0</p>
+            <p>-237,60.6666666600001,0</p>
+            <p b="0.41421356237309503">-237,72.6666666600001,0</p>
+            <p>-245,80.6666666600001,0</p>
+            <p b="0.41421356237309503">-257,80.6666666600001,0</p>
+            <p>-265,72.6666666600001,0</p>
+          </pts>
+        </pline>
+        <pline id="308" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-111.6666668,147.33333332,0</p>
+            <p b="0.41421356237309503">-123.6666668,147.33333332,0</p>
+            <p>-131.6666668,139.33333332,0</p>
+            <p b="0.41421356237309503">-131.6666668,127.33333332,0</p>
+            <p>-123.6666668,119.33333332,0</p>
+            <p b="0.41421356237309503">-111.6666668,119.33333332,0</p>
+            <p>-103.6666668,127.33333332,0</p>
+            <p b="0.41421356237309503">-103.6666668,139.33333332,0</p>
+          </pts>
+        </pline>
+        <pline id="309" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-111.6666668,80.66666666,0</p>
+            <p b="0.41421356237309503">-123.6666668,80.66666666,0</p>
+            <p>-131.6666668,72.66666666,0</p>
+            <p b="0.41421356237309503">-131.6666668,60.66666666,0</p>
+            <p>-123.6666668,52.66666666,0</p>
+            <p b="0.41421356237309503">-111.6666668,52.66666666,0</p>
+            <p>-103.6666668,60.66666666,0</p>
+            <p b="0.41421356237309503">-103.6666668,72.66666666,0</p>
+          </pts>
+        </pline>
+        <pline id="310" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-165.0000001,127.33333332,0</p>
+            <p>-157.0000001,119.33333332,0</p>
+            <p b="0.41421356237309503">-145.0000001,119.33333332,0</p>
+            <p>-137.0000001,127.33333332,0</p>
+            <p b="0.41421356237309503">-137.0000001,139.33333332,0</p>
+            <p>-145.0000001,147.33333332,0</p>
+            <p b="0.41421356237309503">-157.0000001,147.33333332,0</p>
+            <p>-165.0000001,139.33333332,0</p>
+          </pts>
+        </pline>
+        <pline id="311" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-98.3333335,93.99999999,0</p>
+            <p>-90.3333335,85.99999999,0</p>
+            <p b="0.41421356237309503">-78.3333335,85.99999999,0</p>
+            <p>-70.3333335,93.99999999,0</p>
+            <p b="0.41421356237309503">-70.3333335,105.99999999,0</p>
+            <p>-78.3333335,113.99999999,0</p>
+            <p b="0.41421356237309503">-90.3333335,113.99999999,0</p>
+            <p>-98.3333335,105.99999999,0</p>
+          </pts>
+        </pline>
+        <pline id="312" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-165.0000001,60.6666666600001,0</p>
+            <p>-157.0000001,52.6666666600001,0</p>
+            <p b="0.41421356237309503">-145.0000001,52.6666666600001,0</p>
+            <p>-137.0000001,60.6666666600001,0</p>
+            <p b="0.41421356237309503">-137.0000001,72.6666666600001,0</p>
+            <p>-145.0000001,80.6666666600001,0</p>
+            <p b="0.41421356237309503">-157.0000001,80.6666666600001,0</p>
+            <p>-165.0000001,72.6666666600001,0</p>
+          </pts>
+        </pline>
+        <pline id="313" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-198.3333334,127.33333332,0</p>
+            <p>-190.3333334,119.33333332,0</p>
+            <p b="0.41421356237309503">-178.3333334,119.33333332,0</p>
+            <p>-170.3333334,127.33333332,0</p>
+            <p b="0.41421356237309503">-170.3333334,139.33333332,0</p>
+            <p>-178.3333334,147.33333332,0</p>
+            <p b="0.41421356237309503">-190.3333334,147.33333332,0</p>
+            <p>-198.3333334,139.33333332,0</p>
+          </pts>
+        </pline>
+        <pline id="314" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-131.6666668,93.9999999900001,0</p>
+            <p>-123.6666668,85.9999999900001,0</p>
+            <p b="0.41421356237309503">-111.6666668,85.9999999900001,0</p>
+            <p>-103.6666668,93.9999999900001,0</p>
+            <p b="0.41421356237309503">-103.6666668,105.99999999,0</p>
+            <p>-111.6666668,113.99999999,0</p>
+            <p b="0.41421356237309503">-123.6666668,113.99999999,0</p>
+            <p>-131.6666668,105.99999999,0</p>
+          </pts>
+        </pline>
+        <pline id="315" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-198.3333334,60.66666666,0</p>
+            <p>-190.3333334,52.66666666,0</p>
+            <p b="0.41421356237309503">-178.3333334,52.66666666,0</p>
+            <p>-170.3333334,60.66666666,0</p>
+            <p b="0.41421356237309503">-170.3333334,72.66666666,0</p>
+            <p>-178.3333334,80.66666666,0</p>
+            <p b="0.41421356237309503">-190.3333334,80.66666666,0</p>
+            <p>-198.3333334,72.66666666,0</p>
+          </pts>
+        </pline>
+        <pline id="316" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-231.6666667,127.33333332,0</p>
+            <p>-223.6666667,119.33333332,0</p>
+            <p b="0.41421356237309503">-211.6666667,119.33333332,0</p>
+            <p>-203.6666667,127.33333332,0</p>
+            <p b="0.41421356237309503">-203.6666667,139.33333332,0</p>
+            <p>-211.6666667,147.33333332,0</p>
+            <p b="0.41421356237309503">-223.6666667,147.33333332,0</p>
+            <p>-231.6666667,139.33333332,0</p>
+          </pts>
+        </pline>
+        <pline id="317" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-165.0000001,93.99999999,0</p>
+            <p>-157.0000001,85.99999999,0</p>
+            <p b="0.41421356237309503">-145.0000001,85.99999999,0</p>
+            <p>-137.0000001,93.99999999,0</p>
+            <p b="0.41421356237309503">-137.0000001,105.99999999,0</p>
+            <p>-145.0000001,113.99999999,0</p>
+            <p b="0.41421356237309503">-157.0000001,113.99999999,0</p>
+            <p>-165.0000001,105.99999999,0</p>
+          </pts>
+        </pline>
+        <pline id="318" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-231.6666667,60.6666666600001,0</p>
+            <p>-223.6666667,52.6666666600001,0</p>
+            <p b="0.41421356237309503">-211.6666667,52.6666666600001,0</p>
+            <p>-203.6666667,60.6666666600001,0</p>
+            <p b="0.41421356237309503">-203.6666667,72.6666666600001,0</p>
+            <p>-211.6666667,80.6666666600001,0</p>
+            <p b="0.41421356237309503">-223.6666667,80.6666666600001,0</p>
+            <p>-231.6666667,72.6666666600001,0</p>
+          </pts>
+        </pline>
+        <pline id="319" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-265,160.66666665,0</p>
+            <p>-257,152.66666665,0</p>
+            <p b="0.41421356237309503">-245,152.66666665,0</p>
+            <p>-237,160.66666665,0</p>
+            <p b="0.41421356237309503">-237,172.66666665,0</p>
+            <p>-245,180.66666665,0</p>
+            <p b="0.41421356237309503">-257,180.66666665,0</p>
+            <p>-265,172.66666665,0</p>
+          </pts>
+        </pline>
+        <pline id="320" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-265,127.33333332,0</p>
+            <p>-257,119.33333332,0</p>
+            <p b="0.41421356237309503">-245,119.33333332,0</p>
+            <p>-237,127.33333332,0</p>
+            <p b="0.41421356237309503">-237,139.33333332,0</p>
+            <p>-245,147.33333332,0</p>
+            <p b="0.41421356237309503">-257,147.33333332,0</p>
+            <p>-265,139.33333332,0</p>
+          </pts>
+        </pline>
+        <pline id="321" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-131.6666668,27.33333333,0</p>
+            <p>-123.6666668,19.33333333,0</p>
+            <p b="0.41421356237309492">-111.6666668,19.33333333,0</p>
+            <p>-103.6666668,27.33333333,0</p>
+            <p b="0.41421356237309503">-103.6666668,39.33333333,0</p>
+            <p>-111.6666668,47.33333333,0</p>
+            <p b="0.41421356237309503">-123.6666668,47.33333333,0</p>
+            <p>-131.6666668,39.33333333,0</p>
+          </pts>
+        </pline>
+        <pline id="322" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.41421356237309503">-98.3333335,160.66666665,0</p>
+            <p>-90.3333335,152.66666665,0</p>
+            <p b="0.41421356237309503">-78.3333335,152.66666665,0</p>
+            <p>-70.3333335,160.66666665,0</p>
+            <p b="0.41421356237309503">-70.3333335,172.66666665,0</p>
+            <p>-78.3333335,180.66666665,0</p>
+            <p b="0.41421356237309503">-90.3333335,180.66666665,0</p>
+            <p>-98.3333335,172.66666665,0</p>
+          </pts>
+        </pline>
+        <pline id="323" Closed="true">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-90.3333335,19.33333333,0</p>
+            <p b="0.41421356237309492">-78.3333335,19.33333333,0</p>
+            <p>-70.3333335,27.33333333,0</p>
+            <p b="0.41421356237309503">-70.3333335,39.33333333,0</p>
+            <p>-78.3333335,47.33333333,0</p>
+            <p b="0.41421356237309503">-90.3333335,47.33333333,0</p>
+            <p>-98.3333335,39.33333333,0</p>
+            <p b="0.41421356237309503">-98.3333335,27.33333333,0</p>
+          </pts>
+        </pline>
+        <pline id="324">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-137.0000001,0,0</p>
+            <p b="0.414213562373094">-137.0000001,6,0</p>
+            <p>-145.0000001,14,0</p>
+            <p b="0.41421356237309503">-157.0000001,14,0</p>
+            <p>-165.0000001,6.00000000000003,0</p>
+            <p>-165.0000001,3.4E-15,0</p>
+          </pts>
+        </pline>
+        <pline id="325">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-203.6666667,0,0</p>
+            <p b="0.414213562373094">-203.6666667,6,0</p>
+            <p>-211.6666667,14,0</p>
+            <p b="0.41421356237309503">-223.6666667,14,0</p>
+            <p>-231.6666667,6.00000000000003,0</p>
+            <p>-231.6666667,3.4E-15,0</p>
+          </pts>
+        </pline>
+        <pline id="326">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-103.6666668,2.84E-14,0</p>
+            <p b="0.41421356237309453">-103.6666668,6.00000000000003,0</p>
+            <p>-111.6666668,14,0</p>
+            <p b="0.41421356237309503">-123.6666668,14,0</p>
+            <p>-131.6666668,6.00000000000006,0</p>
+            <p>-131.6666668,3.18E-14,0</p>
+          </pts>
+        </pline>
+        <pline id="327">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-70.3333335,8.52E-14,0</p>
+            <p b="0.41421356237309453">-70.3333335,6.00000000000009,0</p>
+            <p>-78.3333335,14.0000000000001,0</p>
+            <p b="0.41421356237309503">-90.3333335,14.0000000000001,0</p>
+            <p>-98.3333335,6.00000000000011,0</p>
+            <p>-98.3333335,8.86E-14,0</p>
+          </pts>
+        </pline>
+        <pline id="328">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-237,8.52E-14,0</p>
+            <p b="0.414213562373094">-237,6.00000000000009,0</p>
+            <p>-245,14.0000000000001,0</p>
+            <p b="0.41421356237309503">-257,14.0000000000001,0</p>
+            <p>-265,6.00000000000011,0</p>
+            <p>-265,8.86E-14,0</p>
+          </pts>
+        </pline>
+        <pline id="329">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-170.3333334,-2.84E-14,0</p>
+            <p b="0.414213562373094">-170.3333334,5.99999999999997,0</p>
+            <p>-178.3333334,14,0</p>
+            <p b="0.41421356237309503">-190.3333334,14,0</p>
+            <p>-198.3333334,6,0</p>
+            <p>-198.3333334,-2.5E-14,0</p>
+          </pts>
+        </pline>
+        <pline id="330">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-220,251,0</p>
+            <p>-220,201,0</p>
+            <p>-70,201,0</p>
+            <p>-40,231,0</p>
+            <p>-40,251,0</p>
+          </pts>
+        </pline>
+        <pline id="331">
+          <ModificationCount>9</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0,211,0</p>
+            <p>-20,211,0</p>
+            <p>-50,181,0</p>
+            <p>-50.0000000000001,31,0</p>
+            <p>-1.42E-14,31,0</p>
+          </pts>
+        </pline>
+      </objects>
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <OutFile>{$cbfile.name}.nc</OutFile>
+    <Stock>
+      <PMin>0,0</PMin>
+      <PMax>0,0</PMax>
+      <Color>255,165,0</Color>
+    </Stock>
+    <ToolProfile>Unspecified</ToolProfile>
+  </MachiningOptions>
+  <parts>
+    <part Name="Part1">
+      <machineops>
+        <profile Enabled="true">
+          <TargetDepth state="Value">-12</TargetDepth>
+          <DepthIncrement state="Value">3</DepthIncrement>
+          <FinalDepthIncrement state="Default">0</FinalDepthIncrement>
+          <CutOrdering state="Default">DepthFirst</CutOrdering>
+          <CutWidth state="Default">0</CutWidth>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">Plunge Feedrate</StepoverFeedrate>
+          <InsideOutside state="Value">Inside</InsideOutside>
+          <MillingDirection state="Default">Conventional</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <CornerOvercut state="Default">False</CornerOvercut>
+          <LeadInMove state="Value">
+            <LeadInType>None</LeadInType>
+            <SpiralAngle>5</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <HoldingTabs state="Value">
+            <TabMethod>Automatic</TabMethod>
+            <Width>4</Width>
+            <Height>3</Height>
+            <MinimumTabs>3</MinimumTabs>
+            <MaximumTabs>8</MaximumTabs>
+            <TabDistance>40</TabDistance>
+            <SizeThreshold>4</SizeThreshold>
+            <UseLeadIns>False</UseLeadIns>
+            <TabStyle>Triangle</TabStyle>
+          </HoldingTabs>
+          <Tabs>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>294</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>294</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>294</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>295</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>295</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>295</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599465</X>
+                <Y>-0.520296023213188</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>296</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>296</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>296</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599465</X>
+                <Y>-0.520296023213188</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>297</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>297</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>297</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>298</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>298</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>298</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>299</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>299</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>299</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599465</X>
+                <Y>-0.520296023213188</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>300</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>300</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>300</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>302</ParentEntityID>
+              <ParametricPoint>0.166666666666669</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>302</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>302</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599465</X>
+                <Y>-0.520296023213188</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>303</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>303</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>303</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599457</X>
+                <Y>-0.5202960232132</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>305</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>305</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>305</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599463</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>306</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>306</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>306</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>308</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0.520296023213191</X>
+                <Y>-0.853985976599463</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>308</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>308</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>309</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0.520296023213192</X>
+                <Y>-0.853985976599463</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>309</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1.77635683940025E-15</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>309</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>310</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>310</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>310</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599463</X>
+                <Y>-0.520296023213191</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>311</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>311</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>311</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>312</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>312</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>312</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>313</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>313</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>313</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599463</X>
+                <Y>-0.520296023213191</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>314</ParentEntityID>
+              <ParametricPoint>0.166666666666668</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>314</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>314</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599457</X>
+                <Y>-0.5202960232132</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>315</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>315</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>315</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>316</ParentEntityID>
+              <ParametricPoint>0.166666666666669</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>316</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>316</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599463</X>
+                <Y>-0.520296023213191</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>317</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>317</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>317</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>318</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>318</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>318</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>321</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>321</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>321</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>322</ParentEntityID>
+              <ParametricPoint>0.166666666666668</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>322</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>322</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599465</X>
+                <Y>-0.520296023213188</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>323</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.520296023213191</X>
+                <Y>0.853985976599463</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>323</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>323</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>325</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.96280475087098</X>
+                <Y>-0.270198097144058</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>325</ParentEntityID>
+              <ParametricPoint>0.500000000000001</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>325</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144055</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>329</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.962804750870981</X>
+                <Y>-0.270198097144056</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>329</ParentEntityID>
+              <ParametricPoint>0.499999999999999</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>329</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.962804750870982</X>
+                <Y>-0.27019809714405</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>324</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.962804750870981</X>
+                <Y>-0.270198097144057</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>324</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>324</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144055</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>326</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.96280475087098</X>
+                <Y>-0.270198097144057</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>326</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>326</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144056</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>327</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.962804750870981</X>
+                <Y>-0.270198097144055</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>327</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>327</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144054</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.0762118425445524</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.228635527633657</ParametricPoint>
+              <Normal>
+                <X>0.707106781186547</X>
+                <Y>-0.707106781186547</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.381059212722762</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>-6.6317322004276E-16</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.533482897811867</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>-6.6317322004276E-16</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.685906582900972</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>-6.6317322004276E-16</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.838330267990076</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.990753953079181</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.0762118425445524</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.228635527633657</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.381059212722762</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.533482897811867</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.685906582900972</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.838330267990077</ParametricPoint>
+              <Normal>
+                <X>-0.707106781186547</X>
+                <Y>0.707106781186547</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.990753953079181</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+          </Tabs>
+          <SideProfile state="Default" />
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Value">5</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Value">10000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>294</prim>
+            <prim>295</prim>
+            <prim>296</prim>
+            <prim>297</prim>
+            <prim>298</prim>
+            <prim>299</prim>
+            <prim>300</prim>
+            <prim>302</prim>
+            <prim>303</prim>
+            <prim>305</prim>
+            <prim>306</prim>
+            <prim>308</prim>
+            <prim>309</prim>
+            <prim>310</prim>
+            <prim>311</prim>
+            <prim>312</prim>
+            <prim>313</prim>
+            <prim>314</prim>
+            <prim>315</prim>
+            <prim>316</prim>
+            <prim>317</prim>
+            <prim>318</prim>
+            <prim>321</prim>
+            <prim>322</prim>
+            <prim>323</prim>
+            <prim>325</prim>
+            <prim>329</prim>
+            <prim>324</prim>
+            <prim>326</prim>
+            <prim>327</prim>
+            <prim>331</prim>
+            <prim>330</prim>
+          </primitive>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">2</ToolDiameter>
+          <ToolNumber state="Value">2</ToolNumber>
+          <ToolProfile state="Default">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">300</PlungeFeedrate>
+          <CutFeedrate state="Value">1300</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <StartPoint state="Default" />
+          <CustomMOPHeader state="Value">M8</CustomMOPHeader>
+          <CustomMOPFooter state="Default" />
+          <Name>5rows</Name>
+        </profile>
+        <profile Enabled="true">
+          <TargetDepth state="Value">-12</TargetDepth>
+          <DepthIncrement state="Value">3</DepthIncrement>
+          <FinalDepthIncrement state="Default">0</FinalDepthIncrement>
+          <CutOrdering state="Default">DepthFirst</CutOrdering>
+          <CutWidth state="Default">0</CutWidth>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">Plunge Feedrate</StepoverFeedrate>
+          <InsideOutside state="Value">Inside</InsideOutside>
+          <MillingDirection state="Default">Conventional</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <CornerOvercut state="Default">False</CornerOvercut>
+          <LeadInMove state="Value">
+            <LeadInType>None</LeadInType>
+            <SpiralAngle>5</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <HoldingTabs state="Value">
+            <TabMethod>Automatic</TabMethod>
+            <Width>4</Width>
+            <Height>3</Height>
+            <MinimumTabs>3</MinimumTabs>
+            <MaximumTabs>8</MaximumTabs>
+            <TabDistance>40</TabDistance>
+            <SizeThreshold>4</SizeThreshold>
+            <UseLeadIns>False</UseLeadIns>
+            <TabStyle>Triangle</TabStyle>
+          </HoldingTabs>
+          <Tabs>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>301</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>301</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>301</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>-0.520296023213188</X>
+                <Y>-0.853985976599465</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>304</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.853985976599464</X>
+                <Y>-0.52029602321319</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>304</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>304</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>307</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>307</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>307</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>319</ParentEntityID>
+              <ParametricPoint>0.166666666666668</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>319</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>319</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>320</ParentEntityID>
+              <ParametricPoint>0.166666666666668</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>320</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>320</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>328</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.962804750870981</X>
+                <Y>-0.270198097144056</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>328</ParentEntityID>
+              <ParametricPoint>0.499999999999999</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>328</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144055</Y>
+              </Normal>
+            </HoldingTab>
+          </Tabs>
+          <SideProfile state="Default" />
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Value">5</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Value">10000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>301</prim>
+            <prim>304</prim>
+            <prim>307</prim>
+            <prim>319</prim>
+            <prim>320</prim>
+            <prim>328</prim>
+          </primitive>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">2</ToolDiameter>
+          <ToolNumber state="Value">2</ToolNumber>
+          <ToolProfile state="Default">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">300</PlungeFeedrate>
+          <CutFeedrate state="Value">1300</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <StartPoint state="Default" />
+          <CustomMOPHeader state="Value">M8</CustomMOPHeader>
+          <CustomMOPFooter state="Default" />
+          <Name>6thRow</Name>
+        </profile>
+        <profile Enabled="true">
+          <TargetDepth state="Value">-12</TargetDepth>
+          <DepthIncrement state="Value">12</DepthIncrement>
+          <FinalDepthIncrement state="Default">0</FinalDepthIncrement>
+          <CutOrdering state="Default">DepthFirst</CutOrdering>
+          <CutWidth state="Default">0</CutWidth>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">Plunge Feedrate</StepoverFeedrate>
+          <InsideOutside state="Value">Inside</InsideOutside>
+          <MillingDirection state="Default">Conventional</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <CornerOvercut state="Default">False</CornerOvercut>
+          <LeadInMove state="Value">
+            <LeadInType>None</LeadInType>
+            <SpiralAngle>5</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <HoldingTabs state="Value">
+            <TabMethod>None</TabMethod>
+            <Width>3</Width>
+            <Height>3</Height>
+            <MinimumTabs>3</MinimumTabs>
+            <MaximumTabs>60</MaximumTabs>
+            <TabDistance>40</TabDistance>
+            <SizeThreshold>4</SizeThreshold>
+            <UseLeadIns>False</UseLeadIns>
+            <TabStyle>Triangle</TabStyle>
+          </HoldingTabs>
+          <Tabs>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>294</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.853985976599461</X>
+                <Y>-0.520296023213194</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>294</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>294</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>295</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>295</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>295</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599467</X>
+                <Y>-0.520296023213184</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>296</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>296</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>296</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599467</X>
+                <Y>-0.520296023213184</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>297</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.853985976599461</X>
+                <Y>-0.520296023213194</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>297</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>297</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>298</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.853985976599461</X>
+                <Y>-0.520296023213194</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>298</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>298</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>299</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>299</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>299</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599467</X>
+                <Y>-0.520296023213184</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>300</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>300</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>300</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599461</X>
+                <Y>-0.520296023213195</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>302</ParentEntityID>
+              <ParametricPoint>0.166666666666669</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>302</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>302</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599467</X>
+                <Y>-0.520296023213184</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>303</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>303</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>303</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599457</X>
+                <Y>-0.5202960232132</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>305</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>305</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>305</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599463</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>306</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>306</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>306</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599463</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>308</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0.520296023213195</X>
+                <Y>-0.853985976599461</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>308</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>308</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>309</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0.520296023213195</X>
+                <Y>-0.853985976599461</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>309</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>309</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>310</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>310</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>310</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>311</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>311</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>311</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599461</X>
+                <Y>-0.520296023213195</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>312</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>312</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>312</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599463</X>
+                <Y>-0.520296023213191</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>313</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>313</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>313</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>314</ParentEntityID>
+              <ParametricPoint>0.166666666666668</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>314</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>314</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599457</X>
+                <Y>-0.5202960232132</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>315</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>315</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>315</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599463</X>
+                <Y>-0.520296023213191</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>316</ParentEntityID>
+              <ParametricPoint>0.166666666666669</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>316</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>316</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>317</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>317</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>317</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599461</X>
+                <Y>-0.520296023213195</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>318</ParentEntityID>
+              <ParametricPoint>0.166666666666666</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>318</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>318</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>321</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>321</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>321</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599461</X>
+                <Y>-0.520296023213194</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>322</ParentEntityID>
+              <ParametricPoint>0.166666666666668</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>322</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>322</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.853985976599467</X>
+                <Y>-0.520296023213184</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>323</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.520296023213193</X>
+                <Y>0.853985976599462</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>323</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>323</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>325</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.96280475087098</X>
+                <Y>-0.270198097144059</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>325</ParentEntityID>
+              <ParametricPoint>0.500000000000001</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>325</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144056</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>329</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.96280475087098</X>
+                <Y>-0.270198097144058</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>329</ParentEntityID>
+              <ParametricPoint>0.499999999999999</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>329</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0.962804750870983</X>
+                <Y>-0.270198097144049</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>324</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.96280475087098</X>
+                <Y>-0.270198097144058</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>324</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>324</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144056</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>326</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.96280475087098</X>
+                <Y>-0.270198097144059</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>326</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>326</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144057</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>327</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.96280475087098</X>
+                <Y>-0.270198097144057</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>327</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>327</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144057</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.0762118425445524</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.228635527633657</ParametricPoint>
+              <Normal>
+                <X>0.707106781186547</X>
+                <Y>-0.707106781186547</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.381059212722762</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>-6.6317322004276E-16</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.533482897811867</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>-6.6317322004276E-16</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.685906582900972</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>-6.6317322004276E-16</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.838330267990076</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>331</ParentEntityID>
+              <ParametricPoint>0.990753953079181</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.0762118425445524</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.228635527633657</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.381059212722762</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.533482897811867</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.685906582900972</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.838330267990077</ParametricPoint>
+              <Normal>
+                <X>-0.707106781186547</X>
+                <Y>0.707106781186547</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>330</ParentEntityID>
+              <ParametricPoint>0.990753953079181</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+          </Tabs>
+          <SideProfile state="Default" />
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Value">5</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Value">10000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>294</prim>
+            <prim>295</prim>
+            <prim>296</prim>
+            <prim>297</prim>
+            <prim>298</prim>
+            <prim>299</prim>
+            <prim>300</prim>
+            <prim>302</prim>
+            <prim>303</prim>
+            <prim>305</prim>
+            <prim>306</prim>
+            <prim>308</prim>
+            <prim>309</prim>
+            <prim>310</prim>
+            <prim>311</prim>
+            <prim>312</prim>
+            <prim>313</prim>
+            <prim>314</prim>
+            <prim>315</prim>
+            <prim>316</prim>
+            <prim>317</prim>
+            <prim>318</prim>
+            <prim>321</prim>
+            <prim>322</prim>
+            <prim>323</prim>
+            <prim>325</prim>
+            <prim>329</prim>
+            <prim>324</prim>
+            <prim>326</prim>
+            <prim>327</prim>
+            <prim>331</prim>
+            <prim>330</prim>
+          </primitive>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">2</ToolDiameter>
+          <ToolNumber state="Value">2</ToolNumber>
+          <ToolProfile state="Default">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">300</PlungeFeedrate>
+          <CutFeedrate state="Value">1300</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <StartPoint state="Default" />
+          <CustomMOPHeader state="Value">M9
+</CustomMOPHeader>
+          <CustomMOPFooter state="Default" />
+          <Name>5rowsFinal</Name>
+        </profile>
+        <profile Enabled="true">
+          <TargetDepth state="Value">-12</TargetDepth>
+          <DepthIncrement state="Value">12</DepthIncrement>
+          <FinalDepthIncrement state="Default">0</FinalDepthIncrement>
+          <CutOrdering state="Default">DepthFirst</CutOrdering>
+          <CutWidth state="Default">0</CutWidth>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">Plunge Feedrate</StepoverFeedrate>
+          <InsideOutside state="Value">Inside</InsideOutside>
+          <MillingDirection state="Default">Conventional</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <CornerOvercut state="Default">False</CornerOvercut>
+          <LeadInMove state="Value">
+            <LeadInType>None</LeadInType>
+            <SpiralAngle>5</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <HoldingTabs state="Value">
+            <TabMethod>None</TabMethod>
+            <Width>3</Width>
+            <Height>3</Height>
+            <MinimumTabs>3</MinimumTabs>
+            <MaximumTabs>6</MaximumTabs>
+            <TabDistance>40</TabDistance>
+            <SizeThreshold>4</SizeThreshold>
+            <UseLeadIns>False</UseLeadIns>
+            <TabStyle>Triangle</TabStyle>
+          </HoldingTabs>
+          <Tabs>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>301</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>301</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>301</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>-0.520296023213191</X>
+                <Y>-0.853985976599463</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>304</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.853985976599461</X>
+                <Y>-0.520296023213194</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>304</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>304</ParentEntityID>
+              <ParametricPoint>0.833333333333334</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>307</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>307</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-1.77635683940025E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>307</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>319</ParentEntityID>
+              <ParametricPoint>0.166666666666668</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>319</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>319</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599461</X>
+                <Y>-0.520296023213195</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>320</ParentEntityID>
+              <ParametricPoint>0.166666666666668</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>320</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>320</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.853985976599462</X>
+                <Y>-0.520296023213192</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>328</ParentEntityID>
+              <ParametricPoint>0.166666666666667</ParametricPoint>
+              <Normal>
+                <X>-0.96280475087098</X>
+                <Y>-0.270198097144058</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>328</ParentEntityID>
+              <ParametricPoint>0.499999999999999</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <NormalInverted>true</NormalInverted>
+              <ParentEntityID>328</ParentEntityID>
+              <ParametricPoint>0.833333333333333</ParametricPoint>
+              <Normal>
+                <X>0.962804750870981</X>
+                <Y>-0.270198097144055</Y>
+              </Normal>
+            </HoldingTab>
+          </Tabs>
+          <SideProfile state="Default" />
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Value">5</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Value">10000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>301</prim>
+            <prim>304</prim>
+            <prim>307</prim>
+            <prim>319</prim>
+            <prim>320</prim>
+            <prim>328</prim>
+          </primitive>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">2</ToolDiameter>
+          <ToolNumber state="Value">2</ToolNumber>
+          <ToolProfile state="Default">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">300</PlungeFeedrate>
+          <CutFeedrate state="Value">1300</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <StartPoint state="Default" />
+          <CustomMOPHeader state="Value">M9
+</CustomMOPHeader>
+          <CustomMOPFooter state="Default" />
+          <Name>6thRowFinal</Name>
+        </profile>
+      </machineops>
+      <Stock>
+        <PMin>0,0</PMin>
+        <PMax>0,0</PMax>
+        <Color>255,165,0</Color>
+      </Stock>
+      <ToolProfile>Unspecified</ToolProfile>
+      <Nesting>
+        <BasePoint>0,0</BasePoint>
+        <NestMethod>None</NestMethod>
+      </Nesting>
+    </part>
+  </parts>
+  <ActiveLayer>0</ActiveLayer>
+  <ActivePart>Part1</ActivePart>
+</CADFile>

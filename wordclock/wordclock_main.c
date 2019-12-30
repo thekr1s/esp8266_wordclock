@@ -230,7 +230,7 @@ void ShowTime(int delayMS) {
 			if (age < 120 ) {
 				ShowDist(dist);
 			}
-			if (ownerOfClock != USER_RUTGER_HUIJGEN) {
+			if (g_settings.perfectImperfections) {
 				if (rand() % 50 == 0) {
 					AlsSetRandom(g_brightness);
 				}

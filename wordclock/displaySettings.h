@@ -17,6 +17,7 @@
 #define WORDCLOCK_COLLS_MAX 13
 #define MAX_BRIGHTNESS_OFFSET  5
 #define BRIGHTNESS_COUNT  12
+#define MAX_STRING_SIZE 32
 #define COLOR_COUNT  15
 #define COLOR_INDEX_RAINBOW 14
 #define LEDSTRIP_GPIO_NR 5 //the hardware GPIO used for controlling the display

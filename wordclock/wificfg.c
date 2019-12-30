@@ -704,8 +704,20 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
 
             wificfg_form_url_decode(buf);
             printf("%s %s %s\n", __FUNCTION__, name, buf);
-            if (strcmp(name, "cl_hadrwaretype") == 0) {
+            if (strcmp(name, "hw_hadrwaretype") == 0) {
                 g_settings.hardwareType = atoi(buf);
+            } else if (strcmp(name, "hw_perfection") == 0) {
+                g_settings.perfectImperfections = atoi(buf);
+            } else if (strcmp(name, "hw_hierbenik_url") == 0) {
+                strcpy(g_settings.hierbenikUrl, buf);
+            } else if (strcmp(name, "hw_hierbenik_port") == 0) {
+                g_settings.hierbenikPort = atoi(buf);
+            } else if (strcmp(name, "hw_hierbenik_req") == 0) {
+                strcpy(g_settings.hierbenikRequest, buf);
+            } else if (strcmp(name, "hw_otafw_url") == 0) {
+                strcpy(g_settings.otaFwUrl, buf);
+            } else if (strcmp(name, "hw_otafw_port") == 0) {
+                g_settings.otaFwPort = atoi(buf);
             }
         }
     }

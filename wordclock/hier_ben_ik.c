@@ -22,12 +22,6 @@
 #include "esp_glue.h"
 #include "settings.h"
 
-#define WEB_SERVER "hierbenik.wssns.nl"
-#define WEB_SERVER_REQ "GET /get_with_age.php HTTP/1.1\r\nHost: hierbenik.wssns.nl\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n"
-#define WEB_SERVER_RUTGER "schoonheidssalonsuzanne.nl"
-#define WEB_SERVER_REQ_RUTGER "GET /here_am_i/get_with_age.php HTTP/1.1\r\nHost: schoonheidssalonsuzanne.nl\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n"
-#define WEB_PORT "80"
-
 uint32_t _dist = 10000;
 uint32_t _age = 10000;
 
@@ -70,12 +64,11 @@ static void GetHierBenIk() {
 		struct addrinfo *res = NULL;
 		const struct addrinfo hints = { .ai_family = AF_INET, .ai_socktype =
 				SOCK_STREAM, };
-
-		if (ownerOfClock == USER_RUTGER_HUIJGEN) {
-		    err = getaddrinfo(WEB_SERVER_RUTGER, WEB_PORT, &hints, &res);
-		} else {
-		    err = getaddrinfo(WEB_SERVER, WEB_PORT, &hints, &res);
-		}
+		
+		
+		char port_str[7];
+   		sprintf(port_str, "%d", g_settings.hierbenikPort);
+		err = getaddrinfo(g_settings.hierbenikUrl, port_str, &hints, &res);
 
 		if (err != 0 || res == NULL ) {
 			printf("DNS lookup failed err=%d res=%p\r\n", err, res);
@@ -107,11 +100,10 @@ static void GetHierBenIk() {
 		return;
 	}
 
-	if (ownerOfClock == USER_RUTGER_HUIJGEN) {
-	    err = write(s, WEB_SERVER_REQ_RUTGER, strlen(WEB_SERVER_REQ_RUTGER));
-	} else {
-	    err = write(s, WEB_SERVER_REQ, strlen(WEB_SERVER_REQ));
-	}
+	char tempRequest[76+MAX_STRING_SIZE+MAX_STRING_SIZE];
+	sprintf(tempRequest, "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n", g_settings.hierbenikRequest, g_settings.hierbenikUrl);
+	err = write(s, tempRequest, strlen(tempRequest));
+	
 	if (err < 0) {
 		printf("... socket send failed\r\n");
 		close(s);

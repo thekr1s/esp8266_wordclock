@@ -2,6 +2,7 @@
 - NodeMcu Lolin V3 ESP32 [Link](https://www.ebay.com/itm/NodeMCU-V3-ESP8266-ESP-12-E-Lua-CH340-WiFI-WLan-IoT-Lolin-Mini-N3A2-V9T3/312753940110)
 - Led strip: WS2812B [Link](https://www.ebay.com/itm/1-5m-WS2812B-RGB-Led-Strip-Light-30-60-144Leds-m-Individual-Addressable-IC-DC5V/401755047203?var=671534865138)
 - LDR: 5MM GL5537 [Link](https://www.ebay.com/itm/20pcs-Photoresistor-5MM-GL5537-LDR-Photo-Resistors-Light-Dependent-Resistor/381374819080?epid=1381908731&hash=item58cbb5eb08:g:INIAAOxyYSdTAJq4)
+- 100kOhm Resistor [link](https://www.ebay.com/itm/100PCS-1-4W-0-25W-Metal-Film-Resistor-1-Full-Range-of-Values-0-to-10M/252838503547?hash=item3ade59647b:m:m9AAPzkedx9P_upvXOpgF9Q) 
 
 # Wirring
 - ESP(Rx) -> LedStrip (Data)
@@ -9,6 +10,7 @@
 - ESP(VU) -> LedStrip (5v)
 - LDR(1) -> ESP(3v)
 - LDR(2) -> ESP(A0)
+- ESP(A0) -> RESISTOR(100kOhm) -> ESP(3v) 
 
 # Hardware
 ### RIBBA 23x23
@@ -31,9 +33,18 @@
 - light divider (with hanging hole)
 - led panel on hardboard
 
+#### Hardware Tips and tricks
+- I Have created a FreeCAD pyhton macro for generating a Letterplate, ..\hardware\lettering_plates\FreeCAD_drawings\freecad_macro
+- The letterplate is paramatic so can be used for 11*11 of 13*13
+- After the generation is done, export the part as .STEP (the DXF generator from freecad is not smooth)
+- The Step file can be imported into Fusion 360 to create gcode 
+- the 11*11 clock has a 94mm from the center a hole 
+- the 13*13 has 217.5 mm from the center a hole
+
+
 #### Assemble
-- Create the led-panel by cutting out a square from a hardboard pannel
-- Place the led-panel en light divider on eatch other
+- Create the led-panel by cutting out a square from hardboard
+- Place the led-panel and the light divider on eatch other
 - Trace the holes from the light divider on the led panel hardboard
 - Place the led-strips centerd on the taces on the hardboard by following the this pattern:
     - Start upper left with Din end place it to the upper Right side end with Dout

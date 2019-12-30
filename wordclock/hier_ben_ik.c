@@ -65,10 +65,7 @@ static void GetHierBenIk() {
 		const struct addrinfo hints = { .ai_family = AF_INET, .ai_socktype =
 				SOCK_STREAM, };
 		
-		
-		char port_str[7];
-   		sprintf(port_str, "%d", g_settings.hierbenikPort);
-		err = getaddrinfo(g_settings.hierbenikUrl, port_str, &hints, &res);
+		err = getaddrinfo(g_settings.hierbenikUrl, g_settings.hierbenikPort, &hints, &res);
 
 		if (err != 0 || res == NULL ) {
 			printf("DNS lookup failed err=%d res=%p\r\n", err, res);

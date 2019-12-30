@@ -26,10 +26,10 @@ TSettings g_settings_default __attribute__((aligned(4))) = {
      HARDWARE_11_11,
      1,   // perfectImperfections
      "",  // hierbenikUrl
-     0,   // hierbenikPort
+     "",   // hierbenikPort
      "",  // hierbenikRequest
      "",  // otaFwUrl
-     0,   // otaFwPort
+     "",   // otaFwPort
      {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
      1, // reserved
      0, // brightnessOffset

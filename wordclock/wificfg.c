@@ -547,7 +547,6 @@ static void handle_clock_cfg(int s, wificfg_method method,
         	if (g_settings.bgColorIdx == i) wificfg_write_string(s, "selected");
         }
 
-
         // DST
         wificfg_write_string(s, http_clock_cfg_content[++idx]);
         if (g_settings.isSummerTime) wificfg_write_string(s, "checked");
@@ -665,6 +664,27 @@ static void handle_hw_cfg(int s, wificfg_method method,
 			if (g_settings.hardwareType == i) wificfg_write_string(s, "selected");
 		}
 
+        // Perfect Imperfections
+        wificfg_write_string(s, http_hw_cfg_content[++idx]);
+        if (g_settings.perfectImperfections == 1) wificfg_write_string(s, "checked");
+        
+        // HierBenIk url
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        wificfg_write_string(s, g_settings.hierbenikUrl);
+        // HierBenIk port
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        wificfg_write_string(s, g_settings.hierbenikPort);
+        // HierBenIk request
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        wificfg_write_string(s, g_settings.hierbenikRequest);
+
+        // FW update url
+        wificfg_write_string(s, http_hw_cfg_content[++idx]);
+        if (wificfg_write_string(s, g_settings.otaFwUrl) < 0) return;
+        // FW update port
+        wificfg_write_string(s, http_hw_cfg_content[++idx]);
+        if (wificfg_write_string(s, g_settings.otaFwPort) < 0) return;
+
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
     }
 }
@@ -706,32 +726,22 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             printf("%s %s %s\n", __FUNCTION__, name, buf);
             if (strcmp(name, "hw_hadrwaretype") == 0) {
                 g_settings.hardwareType = atoi(buf);
-            } else if (strcmp(name, "hw_perfection") == 0) {
-                if (strcmp(buf, "Checked")) {
+            } else if (strcmp(name, "hw_imperfections") == 0) {
+                if (strcmp(buf, "Checked") == 0) {
                     g_settings.perfectImperfections = 1;
                 } else {
                     g_settings.perfectImperfections = 0;
                 }
             } else if (strcmp(name, "hw_hierbenik_url") == 0) {
-                if (strlen(buf) > 0) {
-                    strcpy(g_settings.hierbenikUrl, buf);
-                }
+                strcpy(g_settings.hierbenikUrl, buf);
             } else if (strcmp(name, "hw_hierbenik_port") == 0) {
-                if (strlen(buf) > 0) {
-                    g_settings.hierbenikPort = atoi(buf);
-                }
+                strcpy(g_settings.hierbenikPort, buf);
             } else if (strcmp(name, "hw_hierbenik_req") == 0) {
-                if (strlen(buf) > 0) {
-                    strcpy(g_settings.hierbenikRequest, buf);
-                }
+                strcpy(g_settings.hierbenikRequest, buf);
             } else if (strcmp(name, "hw_otafw_url") == 0) {
-                if (strlen(buf) > 0) {
-                    strcpy(g_settings.otaFwUrl, buf);
-                }
+                strcpy(g_settings.otaFwUrl, buf);
             } else if (strcmp(name, "hw_otafw_port") == 0) {
-                if (strlen(buf) > 0) {
-                    g_settings.otaFwPort = atoi(buf);
-                }
+                strcpy(g_settings.otaFwPort, buf);
             }
         }
     }

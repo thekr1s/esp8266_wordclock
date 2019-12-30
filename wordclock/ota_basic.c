@@ -36,7 +36,7 @@ static void tftpclient_download_and_verify_file1(int slot, rboot_config *conf)
     int res;
     
 
-    res = ota_tftp_download(g_settings.otaFwUrl, g_settings.otaFwPort, TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
+    res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
     printf("ota_tftp_download %s result %d\n", TFTP_IMAGE_FILENAME1, res);
 
     if (res != 0) {

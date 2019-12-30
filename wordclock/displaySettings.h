@@ -15,7 +15,7 @@
 
 #define WORDCLOCK_ROWS_MAX 13 //The max values are used to allocate memory.
 #define WORDCLOCK_COLLS_MAX 13
-#define MAX_BRIGHTNESS_OFFSET  5
+#define MAX_BRIGHTNESS_OFFSET 5
 #define BRIGHTNESS_COUNT  12
 #define MAX_STRING_SIZE 32
 #define COLOR_COUNT  15

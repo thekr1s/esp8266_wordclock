@@ -717,7 +717,9 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                     strcpy(g_settings.hierbenikUrl, buf);
                 }
             } else if (strcmp(name, "hw_hierbenik_port") == 0) {
-                g_settings.hierbenikPort = atoi(buf);
+                if (strlen(buf) > 0) {
+                    g_settings.hierbenikPort = atoi(buf);
+                }
             } else if (strcmp(name, "hw_hierbenik_req") == 0) {
                 if (strlen(buf) > 0) {
                     strcpy(g_settings.hierbenikRequest, buf);
@@ -727,7 +729,9 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                     strcpy(g_settings.otaFwUrl, buf);
                 }
             } else if (strcmp(name, "hw_otafw_port") == 0) {
-                g_settings.otaFwPort = atoi(buf);
+                if (strlen(buf) > 0) {
+                    g_settings.otaFwPort = atoi(buf);
+                }
             }
         }
     }

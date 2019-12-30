@@ -230,8 +230,9 @@ void ShowTime(int delayMS) {
 			if (age < 120 ) {
 				ShowDist(dist);
 			}
-			if (g_settings.perfectImperfections) {
-				if (rand() % 50 == 0) {
+			
+			if (rand() % 50 == 0) {
+				if (g_settings.perfectImperfections == 1) {
 					AlsSetRandom(g_brightness);
 				}
 			}

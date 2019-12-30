@@ -707,15 +707,25 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             if (strcmp(name, "hw_hadrwaretype") == 0) {
                 g_settings.hardwareType = atoi(buf);
             } else if (strcmp(name, "hw_perfection") == 0) {
-                g_settings.perfectImperfections = atoi(buf);
+                if (strcmp(buf, "Checked")) {
+                    g_settings.perfectImperfections = 1;
+                } else {
+                    g_settings.perfectImperfections = 0;
+                }
             } else if (strcmp(name, "hw_hierbenik_url") == 0) {
-                strcpy(g_settings.hierbenikUrl, buf);
+                if (strlen(buf) > 0) {
+                    strcpy(g_settings.hierbenikUrl, buf);
+                }
             } else if (strcmp(name, "hw_hierbenik_port") == 0) {
                 g_settings.hierbenikPort = atoi(buf);
             } else if (strcmp(name, "hw_hierbenik_req") == 0) {
-                strcpy(g_settings.hierbenikRequest, buf);
+                if (strlen(buf) > 0) {
+                    strcpy(g_settings.hierbenikRequest, buf);
+                }
             } else if (strcmp(name, "hw_otafw_url") == 0) {
-                strcpy(g_settings.otaFwUrl, buf);
+                if (strlen(buf) > 0) {
+                    strcpy(g_settings.otaFwUrl, buf);
+                }
             } else if (strcmp(name, "hw_otafw_port") == 0) {
                 g_settings.otaFwPort = atoi(buf);
             }

@@ -137,7 +137,7 @@ void TestAllWords(void)
 	g = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].g);
 	b = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].b);
 
-	if (g_settings.perfectImperfections) { //for now use this setting but we need to find a better solution.
+	if (g_settings.perfectImperfections == 1) { //for now use this setting but we need to find a better solution.
 
 		AlsFill(0, 0, 0);
 		CWSet("he", r, g, b);

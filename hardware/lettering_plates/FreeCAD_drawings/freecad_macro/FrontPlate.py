@@ -57,7 +57,8 @@ class front_plate:
     def make_hole_for_ldr(self):
         TopOfFirstLine = self.posFirstLetterBottemLeft.y + self.ledOffset
         SpaceBeteenTopEnFirstLine = self.length - TopOfFirstLine
-        positionLdr = FreeCAD.Vector(self.frontPlateCenter.x, self.height - (SpaceBeteenTopEnFirstLine/2.0), 0)
+        positionLdr = FreeCAD.Vector(self.frontPlateCenter.x, self.height - ((SpaceBeteenTopEnFirstLine/3.0)*2.0), 0)
+        print("LDR offcet: " + str(((SpaceBeteenTopEnFirstLine/3.0)*2.0)))
         PlaceLdr = FreeCAD.Placement(positionLdr, FreeCAD.Rotation(0,0,0))
         ldrCircle = Draft.makeCircle(self.ldrDiameter/2.0, PlaceLdr)
         self.part.addObject(ldrCircle)
@@ -104,23 +105,12 @@ class front_plate:
 
     
 if __name__ == "__main__":
-    WORDCLOCK_TEXT = ["HETGISENUZELF",
-    "BIJNAWDERTIEN",
-    "DRIENEGENTIEN",
-    "ZEVENTIENVIJF",
-    "TWEENVIERTIEN",
-    "ACHTTIENKWART",
-    "ZESTIENTWAALF",
-    "OVERVOOROHALF",
-    "VIJFWACHTDRIE",
-    "TWEENZESZEVEN",
-    "TIENTWAALFELF",
-    "BVIERNEGENRWA",
-    "VUURAGEWEESTU"]
+    WORDCLOCK_TEXT = ["HETGISENUZELF"]
+
 
     part = App.activeDocument().addObject('App::Part','Part')
     text = WORDCLOCK_TEXT
-    font = "C:/Users/rutger.huijgen/Dropbox/Hobby/wordclock_git/lettering_plates/fonts/Muar-Stencil.ttf"
+    font = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil-23cm.ttf"
     fontScale = 0.55
     ledOffset = 1000.0/30.0
     length = 500

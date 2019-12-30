@@ -30,7 +30,7 @@ if GENERATE_RIBBA_11_11:
 	FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil-23cm.ttf"
 	FONT_SCALE = 0.98
 	LED_OFFSET = 1000.0/60.0	#1 meter / 60 leds
-	FRONT_PLATE_SIZE = 250.0
+	FRONT_PLATE_SIZE = 230.0
 	LDR_DIAMETER = 5.0	
 	SCOTS_DEPTH = 12.0
 	SCOTS_MATERIAL_THICKNESS = 5.0

@@ -703,6 +703,7 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
     size_t rem = content_length;
     bool valp = false;
 
+    g_settings.perfectImperfections = 0; //Checkbox don't send anything when unchecked, so first set the value to unset.
     while (rem > 0) {
         int r = wificfg_form_name_value(s, &valp, &rem, buf, len);
 
@@ -727,10 +728,8 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             if (strcmp(name, "hw_hadrwaretype") == 0) {
                 g_settings.hardwareType = atoi(buf);
             } else if (strcmp(name, "hw_imperfections") == 0) {
-                if (strcmp(buf, "Checked") == 0) {
+                if (strstr(buf, "CheckOn") != NULL) {
                     g_settings.perfectImperfections = 1;
-                } else {
-                    g_settings.perfectImperfections = 0;
                 }
             } else if (strcmp(name, "hw_hierbenik_url") == 0) {
                 strcpy(g_settings.hierbenikUrl, buf);

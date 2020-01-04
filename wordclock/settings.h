@@ -15,7 +15,7 @@
 #include "animations.h"
 #include "displaySettings.h"
 
-#define FLASH_MAGIC 0xBABEBAB5
+#define FLASH_MAGIC 0xBABEBAB6
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
 
@@ -30,10 +30,10 @@ typedef struct {
     EAnimationType animation;
     EHardwareType hardwareType;
     uint32_t perfectImperfections;
-    char hierbenikUrl[MAX_STRING_SIZE];
+    char hierbenikUrl[MAX_URL_SIZE];
     char hierbenikPort[6];
-    char hierbenikRequest[MAX_STRING_SIZE];
-    char otaFwUrl[MAX_STRING_SIZE];
+    char hierbenikRequest[MAX_URL_SIZE];
+    char otaFwUrl[MAX_URL_SIZE];
     char otaFwPort[6];
     const uint8_t aBrightness[BRIGHTNESS_COUNT];
     int8_t reserved0;

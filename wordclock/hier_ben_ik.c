@@ -97,7 +97,7 @@ static void GetHierBenIk() {
 		return;
 	}
 
-	char tempRequest[76+MAX_STRING_SIZE+MAX_STRING_SIZE];
+	char tempRequest[76+MAX_URL_SIZE+MAX_URL_SIZE];
 	sprintf(tempRequest, "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n", g_settings.hierbenikRequest, g_settings.hierbenikUrl);
 	err = write(s, tempRequest, strlen(tempRequest));
 	

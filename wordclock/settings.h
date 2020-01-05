@@ -31,10 +31,10 @@ typedef struct {
     EHardwareType hardwareType;
     uint32_t perfectImperfections;
     char hierbenikUrl[MAX_URL_SIZE];
-    char hierbenikPort[6];
+    char hierbenikPort[MAX_PORT_SIZE];
     char hierbenikRequest[MAX_URL_SIZE];
     char otaFwUrl[MAX_URL_SIZE];
-    char otaFwPort[6];
+    char otaFwPort[MAX_PORT_SIZE];
     const uint8_t aBrightness[BRIGHTNESS_COUNT];
     int8_t reserved0;
     int8_t brightnessOffset;

@@ -736,16 +736,16 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                 strncpy(g_settings.hierbenikUrl, buf, sizeof(g_settings.hierbenikUrl) - 1);
             } else if (strcmp(name, "hw_hierbenik_port") == 0) {
                 bzero(g_settings.hierbenikPort, sizeof(g_settings.hierbenikPort));
-                strncpy(g_settings.hierbenikPort, buf, sizeof(g_settings.hierbenikPort));
+                strncpy(g_settings.hierbenikPort, buf, sizeof(g_settings.hierbenikPort) - 1);
             } else if (strcmp(name, "hw_hierbenik_req") == 0) {
                 bzero(g_settings.hierbenikRequest, sizeof(g_settings.hierbenikRequest));
-                strncpy(g_settings.hierbenikRequest, buf, sizeof(g_settings.hierbenikRequest));
+                strncpy(g_settings.hierbenikRequest, buf, sizeof(g_settings.hierbenikRequest) - 1);
             } else if (strcmp(name, "hw_otafw_url") == 0) {
                 bzero(g_settings.otaFwUrl, sizeof(g_settings.otaFwUrl));
-                strncpy(g_settings.otaFwUrl, buf, sizeof(g_settings.otaFwUrl));
+                strncpy(g_settings.otaFwUrl, buf, sizeof(g_settings.otaFwUrl) - 1);
             } else if (strcmp(name, "hw_otafw_port") == 0) {
                 bzero(g_settings.otaFwPort, sizeof(g_settings.otaFwPort));
-                strncpy(g_settings.otaFwPort, buf, sizeof(g_settings.otaFwPort));
+                strncpy(g_settings.otaFwPort, buf, sizeof(g_settings.otaFwPort) - 1);
             }
         }
     }

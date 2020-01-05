@@ -1,8 +1,5 @@
 {
     "files.associations": {
-        "settings.h": "c",
-        "addressableledstrip.h": "c",
-        "random": "cpp",
-        "sha256.h": "c"
+        "*.h": "c",
     }
 }

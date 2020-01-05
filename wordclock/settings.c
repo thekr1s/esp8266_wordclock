@@ -28,8 +28,8 @@ TSettings g_settings_default __attribute__((aligned(4))) = {
      "",  // hierbenikUrl
      "",   // hierbenikPort
      "",  // hierbenikRequest
-     "",  // otaFwUrl
-     "",   // otaFwPort
+     "rwassens.ddns.net",  // otaFwUrl
+     "10070",   // otaFwPort
      {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
      1, // reserved
      0, // brightnessOffset

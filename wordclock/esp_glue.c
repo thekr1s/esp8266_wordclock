@@ -28,7 +28,7 @@ static bool _isInterrupted = false;
 
 uint32_t GetTicksDiffMs(uint32_t start, uint32_t end) {
     uint32_t diff = end-start;
-    return diff * portTICK_RATE_MS;
+    return diff * portTICK_PERIOD_MS;
 }
 
 void SetInterrupted(bool isInterrupted) {
@@ -47,7 +47,7 @@ void SleepNI(uint32_t ms) {
 	if (ms == 0) {
 		vTaskDelay(0);
 	} else {
-		vTaskDelay(1 + (ms) / portTICK_RATE_MS);
+		vTaskDelay(1 + (ms) / portTICK_PERIOD_MS);
 	}
 }
 
@@ -142,7 +142,7 @@ void user_init(void)
 //			printf("ERROR sdk_wifi_station_set_config\n");
 //		}
 //		printf("No wifi config. Written default wifi config\n");
-//        vTaskDelay(1000 / portTICK_RATE_MS);
+//        vTaskDelay(1000 / portTICK_PERIOD_MS);
 //        sdk_system_restart();
 //	}
 
@@ -158,5 +158,5 @@ void user_init(void)
     
     HbiInit();
     
-	xTaskCreate(WordclockMain, (signed char *)"Main task", 1024, NULL, 1, NULL);
+	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 1, NULL);
 }

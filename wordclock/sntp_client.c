@@ -30,14 +30,14 @@
 #define SNTP_SERVERS 	"0.pool.ntp.org", "1.pool.ntp.org", \
 						"2.pool.ntp.org", "3.pool.ntp.org"
 
-#define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_RATE_MS)
+#define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_PERIOD_MS)
 #define UNUSED_ARG(x)	(void)x
 #define UPDATE_INERVAL (5 * 60000)
 static struct timezone _tz = {0, 0};
 
 void sntp_tsk(void *pvParameters)
 {
-	char *servers[] = {SNTP_SERVERS};
+	const char *servers[] = {SNTP_SERVERS};
 	UNUSED_ARG(pvParameters);
 
 	printf("SNTP: Wait for WiFi connection... \n");
@@ -78,6 +78,6 @@ bool sntp_client_time_valid() {
 void sntpClientIinit(const struct timezone* tz)
 {
 	_tz = *tz;
-     xTaskCreate(sntp_tsk, (signed char *)"SNTP", 1024, NULL, 1, NULL);
+     xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, 1, NULL);
 }
 

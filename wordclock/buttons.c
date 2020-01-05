@@ -19,28 +19,20 @@ static const uint8_t _buttondownGpio = 4;   // NodeMCU pin D2
 static const uint8_t _buttonModeGpio = 14;  //             D5
 static const uint8_t _buttonUpGpio = 12;    //             D6
 
-void gpio04_interrupt_handler(void){
-	EvtHdlButtonStateChange();
-}
-
-void gpio14_interrupt_handler(void){
-	EvtHdlButtonStateChange();
-}
-
-void gpio12_interrupt_handler(void){
+void interrupt_handler(uint8_t gpio_num){
 	EvtHdlButtonStateChange();
 }
 
 void ButtonsInit(void){
     gpio_enable(_buttondownGpio, GPIO_INPUT);
     gpio_set_pullup(_buttondownGpio, true, true);
-    gpio_set_interrupt(_buttondownGpio, GPIO_INTTYPE_EDGE_ANY);
+    gpio_set_interrupt(_buttondownGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
     gpio_enable(_buttonModeGpio, GPIO_INPUT);
     gpio_set_pullup(_buttonModeGpio, true, true);
-    gpio_set_interrupt(_buttonModeGpio, GPIO_INTTYPE_EDGE_ANY);
+    gpio_set_interrupt(_buttonModeGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
     gpio_enable(_buttonUpGpio, GPIO_INPUT);
     gpio_set_pullup(_buttonUpGpio, true, true);
-    gpio_set_interrupt(_buttonUpGpio, GPIO_INTTYPE_EDGE_ANY);
+    gpio_set_interrupt(_buttonUpGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
 
 }
 

@@ -85,7 +85,7 @@ static void tftp_client_task(void *pvParameters)
     */
     while(retries > 0) {
         tftpclient_download_and_verify_file1(slot, &conf);
-        vTaskDelay(5000 / portTICK_RATE_MS);
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
         retries--;
 
     }
@@ -110,5 +110,5 @@ void OtaUpdateInit(void)
         printf("%c%d: offset 0x%08x\r\n", i == conf.current_rom ? '*':' ', i, conf.roms[i]);
     }
 
-    xTaskCreate(&tftp_client_task, (signed char *)"tftp_client", 2048, NULL, 2, NULL);
+    xTaskCreate(&tftp_client_task, "tftp_client", 2048, NULL, 2, NULL);
 }

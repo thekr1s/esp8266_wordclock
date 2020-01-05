@@ -6,11 +6,10 @@
  */
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
-#define TRUE true
-#define FALSE false
 
 #include "stdint.h"
 #include "stdbool.h"
+#include "c_types.h"
 
 #include "animations.h"
 #include "displaySettings.h"

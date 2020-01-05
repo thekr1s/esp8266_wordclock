@@ -35,11 +35,6 @@
 #include "settings.h"
 
 
-
-extern uint8_t user_ip_addr[4];
-
-
-
 static void ShowSome(uint32_t delayMS)
 {
 	uint8_t r,g,b;
@@ -191,7 +186,7 @@ void ShowTime(int delayMS) {
 			g_brightness , RGB_FROM_SETTING);
 
 	PrintCurrentTime();
-	endTicks = xTaskGetTickCount() + (delayMS / portTICK_RATE_MS);
+	endTicks = xTaskGetTickCount() + (delayMS / portTICK_PERIOD_MS);
 	while (xTaskGetTickCount() < endTicks){
 		TimeGet(&h, &m, &s);
 		if (ButtonHandleButtons()) {
@@ -199,7 +194,7 @@ void ShowTime(int delayMS) {
 			DoReDisplay = true;
 			prevMin = m; // Prevent transition effect
 			SettingsScheduleStore();
-			endTicks = xTaskGetTickCount() + 5000/portTICK_RATE_MS;
+			endTicks = xTaskGetTickCount() + 5000/portTICK_PERIOD_MS;
 		}
 		if (Interrupted()) {
 			// Interrupted via WEB interface
@@ -243,7 +238,7 @@ void ShowTime(int delayMS) {
 	}
 }
 
-static xQueueHandle _networkMutex = NULL;
+static QueueHandle_t _networkMutex = NULL;
 
 void NetworkFunctionsEnter(){
 	if (xSemaphoreTake(_networkMutex, 20000) != pdTRUE) {
@@ -259,10 +254,13 @@ void NetworkFunctionsLeave(){
 
 }
 
-static void ShowIpAddress(uint8_t* ip){
+static void ShowIpAddress(void){
 	char str[20];
-	snprintf(str, sizeof(str),"%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
-	DisplayWord(str);
+	struct ip_info info;
+    if (sdk_wifi_get_ip_info(STATION_IF, &info)) {
+		snprintf(str, sizeof(str), IPSTR, IP2STR(&info.ip));
+		DisplayWord(str);
+	}
 }
 
 void WordclockMain(void* p)
@@ -298,7 +296,7 @@ void WordclockMain(void* p)
 	}
 
 	wificfg_init(80, NULL);
-	ShowIpAddress(user_ip_addr);
+	ShowIpAddress();
 
 	while (1) {
 

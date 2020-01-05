@@ -71,7 +71,7 @@ static void GetHierBenIk() {
 			printf("DNS lookup failed err=%d res=%p\r\n", err, res);
 			if (res)
 				freeaddrinfo(res);
-			vTaskDelay(1000 / portTICK_RATE_MS);
+			vTaskDelay(1000 / portTICK_PERIOD_MS);
 			failures++;
 			return;
 		}
@@ -82,31 +82,31 @@ static void GetHierBenIk() {
 	int s = socket(AF_INET, SOCK_STREAM, 0);
 	if (s < 0) {
 		printf("... Failed to allocate socket.\r\n");
-		vTaskDelay(1000 / portTICK_RATE_MS);
+		vTaskDelay(1000 / portTICK_PERIOD_MS);
 		failures++;
 		return;
 	}
 
 	if (connect(s, &addr, addrLen) != 0) {
-		close(s);
+		closesocket(s);
 		printf("... socket connect failed.\r\n");
-		vTaskDelay(4000 / portTICK_RATE_MS);
+		vTaskDelay(4000 / portTICK_PERIOD_MS);
 		failures++;
-		close(s);
+		closesocket(s);
 		addrLen = 0; // Resolve IP adress next time.
 		return;
 	}
 
 	char tempRequest[76+MAX_URL_SIZE+MAX_URL_SIZE];
 	sprintf(tempRequest, "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n", g_settings.hierbenikRequest, g_settings.hierbenikUrl);
-	err = write(s, tempRequest, strlen(tempRequest));
+	err = lwip_write(s, tempRequest, strlen(tempRequest));
 	
 	if (err < 0) {
 		printf("... socket send failed\r\n");
-		close(s);
-		vTaskDelay(4000 / portTICK_RATE_MS);
+		closesocket(s);
+		vTaskDelay(4000 / portTICK_PERIOD_MS);
 		failures++;
-		close(s);
+		closesocket(s);
 		addrLen = 0; // Resolve IP adress next time.
 		return;
 	}
@@ -116,7 +116,7 @@ static void GetHierBenIk() {
 	int i = 0;
 	bzero(recv_buf, sizeof(recv_buf));
 	do {
-		r = read(s, &recv_buf[i], sizeof(recv_buf) - i - 1);
+		r = lwip_read(s, &recv_buf[i], sizeof(recv_buf) - i - 1);
 		i += r;
 	} while (r > 0);
 //		printf("%s\n---\n", recv_buf);
@@ -126,7 +126,7 @@ static void GetHierBenIk() {
 		failures++;
 	else
 		successes++;
-	close(s);
+	closesocket(s);
 	printf("%s %d leave, \n%s\n", __FUNCTION__, __LINE__, recv_buf);
 
 }
@@ -150,5 +150,5 @@ void HbiTask(void *pvParameters){
 
 
 void HbiInit() {
-    xTaskCreate(HbiTask, (signed char *)"HierBenIk task", 1024, NULL, 1, NULL);
+    xTaskCreate(HbiTask, "HierBenIk task", 1024, NULL, 1, NULL);
 }

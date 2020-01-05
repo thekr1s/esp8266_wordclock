@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <sys/types.h>
+#include "c_types.h"
 #include "font.h"
 #include "clock_words.h"
 

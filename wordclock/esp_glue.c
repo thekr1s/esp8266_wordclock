@@ -155,17 +155,8 @@ void user_init(void)
 	EvtHdlInit();
 
 	ButtonsInit();
-    char* ssidRobert="Robert";
-    char* ssidRutger="Sjormie";
-    if (strncasecmp(ssidRobert, (char*)config.ssid, strlen(ssidRobert)) == 0) {
-        ownerOfClock = USER_ROBERT_WASSENS;
-		HbiInit();
-    } else if (strncmp(ssidRutger, (char*)config.ssid, strlen(ssidRutger)) == 0) {
-        ownerOfClock = USER_RUTGER_HUIJGEN;
-        HbiInit();
-    } else {
-	    ownerOfClock = USER_GUEST;
-	}
-
+    
+    HbiInit();
+    
 	xTaskCreate(WordclockMain, (signed char *)"Main task", 1024, NULL, 1, NULL);
 }

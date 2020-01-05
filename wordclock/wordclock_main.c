@@ -230,7 +230,8 @@ void ShowTime(int delayMS) {
 			if (age < 120 ) {
 				ShowDist(dist);
 			}
-			if (ownerOfClock != USER_RUTGER_HUIJGEN) {
+			
+			if (g_settings.perfectImperfections == 1) {
 				if (rand() % 50 == 0) {
 					AlsSetRandom(g_brightness);
 				}
@@ -319,8 +320,10 @@ void WordclockMain(void* p)
 		} else {
 			ShowTime(timeShowDuration);
 			// Once in a while shome something different
-			if (rand() % 100 == 0) {
-				ShowSome(5000);
+			if (g_settings.perfectImperfections == 1) {
+				if (rand() % 100 == 0) {
+					ShowSome(5000);
+				}
 			}
 			timeShowDuration = 2000;
 			if (g_settings.animation == ANIMATION_ALL && !DisplayInNightMode()) {

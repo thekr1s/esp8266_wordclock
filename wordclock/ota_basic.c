@@ -23,12 +23,7 @@
 #include "settings.h"
 
 /* TFTP client will request this image filenames from this server */
-#define TFTP_IMAGE_SERVER_RUTGER "rutger798.mynetgear.com"
-#define TFTP_SERVER_PORT_RUTGER 6912
-#define TFTP_IMAGE_SERVER "rwassens.ddns.net"
-#define TFTP_SERVER_PORT 10070
 #define TFTP_IMAGE_FILENAME1 "ws2812_buffer.bin"
-
 
 static bool _isBusy = false;
 
@@ -39,11 +34,9 @@ static void tftpclient_download_and_verify_file1(int slot, rboot_config *conf)
 {
     printf("Downloading %s to slot %d...\n", TFTP_IMAGE_FILENAME1, slot);
     int res;
-    if (ownerOfClock == USER_RUTGER_HUIJGEN) {
-        res = ota_tftp_download(TFTP_IMAGE_SERVER_RUTGER, TFTP_SERVER_PORT_RUTGER, TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
-    } else {
-        res = ota_tftp_download(TFTP_IMAGE_SERVER, TFTP_SERVER_PORT, TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
-    }
+    
+
+    res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
     printf("ota_tftp_download %s result %d\n", TFTP_IMAGE_FILENAME1, res);
 
     if (res != 0) {

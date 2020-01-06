@@ -13,7 +13,7 @@
 #include "settings.h"
 
 
-#define ALS_BYTES_PER_LED  3
+#define ALS_BYTES_PER_LED  4
 #define ALS_MAX_LED_COUNT  (WORDCLOCK_ROWS_MAX * WORDCLOCK_COLLS_MAX)
 
 static uint8_t _redIdx   = 0;

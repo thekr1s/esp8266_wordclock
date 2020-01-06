@@ -105,15 +105,15 @@ uint8_t ApplyBgBrightness(uint8_t color)
 
 }
 
-static void WS2812_I2S_WriteData(uint8_t* p, uint32_t length){
+static void WS2812_I2S_WriteData(uint8_t* p, uint32_t length){  
     ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGB);
 }
 
 void wordClockDisplay_init(void)
 {
-    uint8_t _redIdx   = 0;
+    uint8_t _redIdx   = 2;
     uint8_t _greenIdx = 1;
-    uint8_t _blueIdx  = 2;
+    uint8_t _blueIdx  = 0;
     bool _flipCols = false;
 
     //Set the brightness on boot

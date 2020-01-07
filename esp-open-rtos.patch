@@ -46,3 +46,17 @@ index 4fde486..731df79 100644
 +
  #endif /* _SNTP_H_ */
  
+diff --git a/include/ssid_config.h b/include/ssid_config.h
+index 9136731..b0488a9 100644
+--- a/include/ssid_config.h
++++ b/include/ssid_config.h
+@@ -13,6 +13,8 @@
+ #ifndef __SSID_CONFIG_H__
+ #define __SSID_CONFIG_H__
+ 
+-#include "private_ssid_config.h"
++//#include "private_ssid_config.h"
++#define WIFI_SSID "NOT_USED"
++#define WIFI_PASS "NOT_USED"
+ 
+ #endif // __SSID_CONFIG_H__

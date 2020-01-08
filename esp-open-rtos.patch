@@ -1,230 +1,26 @@
-diff --git a/core/include/esp/gpio.h b/core/include/esp/gpio.h
-old mode 100644
-new mode 100755
-index f3f6308..97e1b86
---- a/core/include/esp/gpio.h
-+++ b/core/include/esp/gpio.h
-@@ -89,6 +89,10 @@ static inline void gpio_write(const uint8_t gpio_num, const bool set)
-         GPIO.OUT_CLEAR = BIT(gpio_num) & GPIO_OUT_PIN_MASK;
- }
- 
-+#define OUTPUT_SET(gpio_num, set)\
-+    if (set) GPIO.OUT_SET = BIT(gpio_num) & GPIO_OUT_PIN_MASK; else \
-+        GPIO.OUT_CLEAR = BIT(gpio_num) & GPIO_OUT_PIN_MASK;
-+
- /* Toggle output of a pin
-  *
-  * Only works if pin has been set to GPIO_OUTPUT or GPIO_OUT_OPEN_DRAIN via
-diff --git a/core/newlib_syscalls.c b/core/newlib_syscalls.c
-old mode 100644
-new mode 100755
-index 577ecda..d95df83
---- a/core/newlib_syscalls.c
-+++ b/core/newlib_syscalls.c
-@@ -14,6 +14,7 @@
- #include <stdlib.h>
- 
- extern void *xPortSupervisorStackPointer;
-+int newlib_uart_port = 0;
- 
- IRAM caddr_t _sbrk_r (struct _reent *r, int incr)
- {
-@@ -52,8 +53,8 @@ __attribute__((weak)) long _write_r(struct _reent *r, int fd, const char *ptr, i
-         if(ptr[i] == '\r')
-             continue;
-         if(ptr[i] == '\n')
--            uart_putc(0, '\r');
--        uart_putc(0, ptr[i]);
-+            uart_putc(newlib_uart_port, '\r');
-+        uart_putc(newlib_uart_port, ptr[i]);
-     }
-     return len;
- }
-@@ -67,9 +68,9 @@ __attribute__((weak)) long _read_r( struct _reent *r, int fd, char *ptr, int len
-         r->_errno = EBADF;
-         return -1;
-     }
--    uart_rxfifo_wait(0, 1);
-+    uart_rxfifo_wait(newlib_uart_port, 1);
-     for(i = 0; i < len; i++) {
--        ch = uart_getc_nowait(0);
-+        ch = uart_getc_nowait(newlib_uart_port);
-         if (ch < 0) break;
-         ptr[i] = ch;
-     }
-diff --git a/extras/dhcpserver/dhcpserver.c b/extras/dhcpserver/dhcpserver.c
-old mode 100644
-new mode 100755
-index 269b297..4d8a200
---- a/extras/dhcpserver/dhcpserver.c
-+++ b/extras/dhcpserver/dhcpserver.c
-@@ -44,6 +44,7 @@ typedef struct {
-     ip_addr_t first_client_addr;
-     struct netif *server_if;
-     dhcp_lease_t *leases; /* length max_leases */
-+    bool dns; /* Enable sending a DNS server option */
- } server_state_t;
- 
- /* Only one DHCP server task can run at once, so we have global state
-@@ -77,7 +78,7 @@ inline static void sprintf_ipaddr(const ip_addr_t *addr, char *dest)
-                 ip4_addr2(addr), ip4_addr3(addr), ip4_addr4(addr));
- }
- 
--void dhcpserver_start(const ip_addr_t *first_client_addr, uint8_t max_leases)
-+void dhcpserver_start(const ip_addr_t *first_client_addr, uint8_t max_leases, bool dns)
- {
-     /* Stop any existing running dhcpserver */
-     if(dhcpserver_task_handle)
-@@ -88,8 +89,9 @@ void dhcpserver_start(const ip_addr_t *first_client_addr, uint8_t max_leases)
-     state->leases = calloc(max_leases, sizeof(dhcp_lease_t));
-     // state->server_if is assigned once the task is running - see comment in dhcpserver_task()
-     ip_addr_copy(state->first_client_addr, *first_client_addr);
-+    state->dns = dns;
- 
--    xTaskCreate(dhcpserver_task, (signed char *)"DHCPServer", 768, NULL, 8, &dhcpserver_task_handle);
-+    xTaskCreate(dhcpserver_task, (signed char *)"DHCP Server", 336, NULL, 2, &dhcpserver_task_handle);
- }
- 
- void dhcpserver_stop(void)
-@@ -206,6 +208,8 @@ static void handle_dhcp_discover(struct dhcp_msg *dhcpmsg)
-     opt = add_dhcp_option_byte(opt, DHCP_OPTION_MESSAGE_TYPE, DHCP_OFFER);
-     opt = add_dhcp_option_bytes(opt, DHCP_OPTION_SERVER_ID, &state->server_if->ip_addr, 4);
-     opt = add_dhcp_option_bytes(opt, DHCP_OPTION_SUBNET_MASK, &state->server_if->netmask, 4);
-+    if (state->dns)
-+        opt = add_dhcp_option_bytes(opt, DHCP_OPTION_DNS_SERVER, &state->server_if->ip_addr, 4);
-     opt = add_dhcp_option_bytes(opt, DHCP_OPTION_END, NULL, 0);
- 
-     struct netbuf *netbuf = netbuf_new();
-@@ -279,6 +283,8 @@ static void handle_dhcp_request(struct dhcp_msg *dhcpmsg)
-     opt = add_dhcp_option_bytes(opt, DHCP_OPTION_LEASE_TIME, &expiry, 4);
-     opt = add_dhcp_option_bytes(opt, DHCP_OPTION_SERVER_ID, &state->server_if->ip_addr, 4);
-     opt = add_dhcp_option_bytes(opt, DHCP_OPTION_SUBNET_MASK, &state->server_if->netmask, 4);
-+    if (state->dns)
-+        opt = add_dhcp_option_bytes(opt, DHCP_OPTION_DNS_SERVER, &state->server_if->ip_addr, 4);
-     opt = add_dhcp_option_bytes(opt, DHCP_OPTION_END, NULL, 0);
- 
-     struct netbuf *netbuf = netbuf_new();
-diff --git a/extras/dhcpserver/include/dhcpserver.h b/extras/dhcpserver/include/dhcpserver.h
-old mode 100644
-new mode 100755
-index 5548c19..af07754
---- a/extras/dhcpserver/include/dhcpserver.h
-+++ b/extras/dhcpserver/include/dhcpserver.h
-@@ -22,7 +22,7 @@
-    to a client.  Subsequent lease addresses are calculated by
-    incrementing the final octet of the IPv4 address, up to max_leases.
- */
--void dhcpserver_start(const ip_addr_t *first_client_addr, uint8_t max_leases);
-+void dhcpserver_start(const ip_addr_t *first_client_addr, uint8_t max_leases, bool dns);
- 
- void dhcpserver_get_lease(const ip_addr_t *first_client_addr, uint8_t max_leases);
- 
 diff --git a/extras/sntp/sntp.c b/extras/sntp/sntp.c
-old mode 100644
-new mode 100755
-index 48b2f14..2062f24
+index 26ac110..885c610 100644
 --- a/extras/sntp/sntp.c
 +++ b/extras/sntp/sntp.c
-@@ -263,6 +263,9 @@ PACK_STRUCT_END
- #  include "arch/epstruct.h"
- #endif
- 
-+static bool _sntpAddrValid = false;
-+static ip_addr_t _sntpServerAddress;
-+
- /* function prototypes */
- static void sntp_request(void *arg);
- 
-@@ -300,6 +303,7 @@ static ip_addr_t sntp_last_server_address;
+@@ -300,6 +300,8 @@ static ip_addr_t sntp_last_server_address;
  static u32_t sntp_last_timestamp_sent[2];
  #endif /* SNTP_CHECK_RESPONSE >= 2 */
  
 +static time_t lastUpdated = 0;
++
  /**
   * SNTP processing of received timestamp
   */
-@@ -324,6 +328,9 @@ sntp_process(u32_t *receive_timestamp)
+@@ -324,6 +326,8 @@ sntp_process(u32_t *receive_timestamp)
    /* display local time from GMT time */
    LWIP_DEBUGF(SNTP_DEBUG_TRACE, ("sntp_process: %s", ctime(&t)));
  #endif /* SNTP_CALC_TIME_US */
-+
++  
 +  time(&lastUpdated);
-+
  }
  
  /**
-@@ -488,7 +495,7 @@ static void
- sntp_try_next_server(void* arg)
- {
-   LWIP_UNUSED_ARG(arg);
--
-+  _sntpAddrValid = false;
-   if (sntp_num_servers > 1) {
-     /* new server: reset retry timeout */
-     SNTP_RESET_RETRY_TIMEOUT();
-@@ -496,13 +503,8 @@ sntp_try_next_server(void* arg)
-     if (sntp_current_server >= sntp_num_servers) {
-       sntp_current_server = 0;
-     }
--    LWIP_DEBUGF(SNTP_DEBUG_STATE, ("sntp_try_next_server: Sending request to server %"U16_F"\n",
--      (u16_t)sntp_current_server));
--    /* instantly send a request to the next server */
--    sntp_request(NULL);
--  } else {
--    sntp_retry(NULL);
-   }
-+    sntp_retry(NULL);
- }
- #else /* SNTP_NUM_SERVERS_SUPPORTED > 1 */
- /* Always retry on error if only one server is supported */
-@@ -654,28 +656,29 @@ sntp_dns_found(const char* hostname, ip_addr_t *ipaddr, void *arg)
- static void
- sntp_request(void *arg)
- {
--  ip_addr_t sntp_server_address;
--  err_t err;
-+  err_t err = ERR_OK;
- 
-   LWIP_UNUSED_ARG(arg);
- 
--  /* initialize SNTP server address */
--#if SNTP_SERVER_DNS
--  err = dns_gethostbyname(sntp_server_addresses[sntp_current_server], &sntp_server_address,
--    sntp_dns_found, NULL);
--  if (err == ERR_INPROGRESS) {
--    /* DNS request sent, wait for sntp_dns_found being called */
--    LWIP_DEBUGF(SNTP_DEBUG_STATE, ("sntp_request: Waiting for server address to be resolved.\n"));
--    return;
-+  if (!_sntpAddrValid) {
-+	  /* initialize SNTP server address */
-+	#if SNTP_SERVER_DNS
-+	  err = dns_gethostbyname(sntp_server_addresses[sntp_current_server], &_sntpServerAddress,
-+		sntp_dns_found, NULL);
-+	  if (err == ERR_INPROGRESS) {
-+		/* DNS request sent, wait for sntp_dns_found being called */
-+		LWIP_DEBUGF(SNTP_DEBUG_STATE, ("sntp_request: Waiting for server address to be resolved.\n"));
-+		return;
-+	  }
-+	#else /* SNTP_SERVER_DNS */
-+	  err = ipaddr_aton(sntp_server_addresses[sntp_current_server], &_sntpServerAddress)
-+		? ERR_OK : ERR_ARG;
-+
-+	#endif /* SNTP_SERVER_DNS */
-+	  _sntpAddrValid = true;
-   }
--#else /* SNTP_SERVER_DNS */
--  err = ipaddr_aton(sntp_server_addresses[sntp_current_server], &sntp_server_address)
--    ? ERR_OK : ERR_ARG;
--
--#endif /* SNTP_SERVER_DNS */
--
-   if (err == ERR_OK) {
--    sntp_send_request(&sntp_server_address);
-+    sntp_send_request(&_sntpServerAddress);
-   } else {
-     /* address conversion failed, try another server */
-     LWIP_DEBUGF(SNTP_DEBUG_WARN_STATE, ("sntp_request: Invalid server address, trying next server.\n"));
-@@ -747,4 +750,10 @@ void sntp_set_update_delay(uint32_t ms)
+@@ -745,4 +749,10 @@ void sntp_set_update_delay(uint32_t ms)
  	sntp_update_delay = ms > 15000?ms:15000;
  }
  
@@ -236,193 +32,31 @@ index 48b2f14..2062f24
 +
  #endif /* LWIP_UDP */
 diff --git a/extras/sntp/sntp.h b/extras/sntp/sntp.h
-old mode 100644
-new mode 100755
-index dd25cf0..8fbee3b
+index 4fde486..731df79 100644
 --- a/extras/sntp/sntp.h
 +++ b/extras/sntp/sntp.h
-@@ -61,6 +61,11 @@ int sntp_set_servers(char *server_url[], int num_servers);
- void sntp_set_update_delay(uint32_t ms);
+@@ -72,5 +72,10 @@ time_t sntp_get_rtc_time(int32_t *us);
+  */
+ void sntp_update_rtc(time_t t, uint32_t us);
  
- /*
-+ * Get te number of seconds that have passed since the last update
++/* 
++ *Get te number of seconds that have passed since the last update
 + */
 +uint32_t sntp_get_last_update_age_sec();
 +
-+/*
-  * Returns the time read from RTC counter, in seconds from Epoch. If
-  * us is not null, it will be filled with the microseconds.
-  */
-diff --git a/extras/sntp/sntp_fun.c b/extras/sntp/sntp_fun.c
-old mode 100644
-new mode 100755
-index 7aaca20..af6413d
---- a/extras/sntp/sntp_fun.c
-+++ b/extras/sntp/sntp_fun.c
-@@ -12,17 +12,23 @@
- #include <esp/timer.h>
- #include <esp/rtc_regs.h>
- #include "sntp.h"
-+#include "inttypes.h"
-+
-+#include "FreeRTOS.h"
-+#include "semphr.h"
- 
- #define TIMER_COUNT			RTC.COUNTER
- 
- // daylight settings
- // Base calculated with value obtained from NTP server (64 bits)
- #define sntp_base	(*((uint64_t*)RTC.SCRATCH))
--// Timer value when base was obtained
--#define tim_ref 	(RTC.SCRATCH[2])
-+// Previous read timer value, used to detect timer wrap.
-+#define prev_timer_count 	(RTC.SCRATCH[2])
- // Calibration value
- #define cal 		(RTC.SCRATCH[3])
- 
-+static xQueueHandle _mutex = NULL;
-+
- // Timezone related data.
- static struct timezone stz;
- 
-@@ -42,6 +48,7 @@ void sntp_set_timezone(const struct timezone *tz) {
- 
- // Initialization
- void sntp_initialize(const struct timezone *tz) {
-+	_mutex = xSemaphoreCreateMutex();
- 	if (tz) {
- 		stz = *tz;
- 	} else {
-@@ -51,36 +58,36 @@ void sntp_initialize(const struct timezone *tz) {
- 	sntp_base = 0;
- 	// To avoid div by 0 exceptions if requesting time before SNTP config
- 	cal = 1;
--	tim_ref = TIMER_COUNT;
-+	prev_timer_count = TIMER_COUNT;
- 	sntp_init();
- }
- 
--// Check if a timer wrap has occurred. Compensate sntp_base reference
--// if affirmative.
--// TODO: think about multitasking and race conditions
--static inline void sntp_check_timer_wrap(uint32_t current_value) {
--	if (current_value < tim_ref) {
--		// Timer wrap has occurred, compensate by subtracting 2^32 to ref.
--		sntp_base -= 1LLU<<32;
--		// DEBUG
--		printf("\nTIMER WRAPPED!\n");
--	}
--}
--
- // Return secs. If us is not a null pointer, fill it with usecs
- inline time_t sntp_get_rtc_time(int32_t *us) {
- 	time_t secs;
- 	uint32_t tim;
- 	uint64_t base;
-+	bool useMutex = _mutex != NULL;
- 
-+	if (useMutex && xSemaphoreTake(_mutex, 1000) != pdTRUE) {
-+		printf("%s SemTake failed\n", __FUNCTION__);
-+	}
- 	tim = TIMER_COUNT;
- 	// Check for timer wrap
--	sntp_check_timer_wrap(tim);
--	base = sntp_base + tim - tim_ref;
-+	if (tim < prev_timer_count) {
-+		// Timer wrap has occurred
-+		sntp_base += 1LLU<<32;
-+		printf("\nTIMER WRAPPED!\n");
-+	}
-+	prev_timer_count = tim;
-+	base = sntp_base + tim;
- 	secs = base * cal / (1000000U<<12);
- 	if (us) {
- 		*us = base * cal % (1000000U<<12);
- 	}
-+	if (useMutex && xSemaphoreGive(_mutex) != pdTRUE) {
-+		printf("%s SemTake failed\n", __FUNCTION__);
-+	}
- 	return secs;
- }
- 
-@@ -97,16 +104,26 @@ int _gettimeofday_r(struct _reent *r, struct timeval *tp, void *tzp) {
- 
- // Update RTC timer. Called by SNTP module each time it receives an update.
- void sntp_update_rtc(time_t t, uint32_t us) {
-+	if (xSemaphoreTake(_mutex, 1000) != pdTRUE) {
-+		printf("%s SemTake failed\n", __FUNCTION__);
-+	}
- 	// Apply daylight and timezone correction
- 	t += (stz.tz_minuteswest + stz.tz_dsttime * 60) * 60;
- 	// DEBUG: Compute and print drift
--	int64_t sntp_current = sntp_base + TIMER_COUNT - tim_ref;
-+	int64_t sntp_current = sntp_base + TIMER_COUNT;
- 	int64_t sntp_correct = (((uint64_t)us + (uint64_t)t * 1000000U)<<12) / cal;
--	printf("\nRTC Adjust: drift = %ld ticks, cal = %d\n", (time_t)(sntp_correct - sntp_current), cal);
- 
--	tim_ref = TIMER_COUNT;
-+	prev_timer_count = TIMER_COUNT;
- 	cal = sdk_system_rtc_clock_cali_proc();
- 
- 	sntp_base = (((uint64_t)us + (uint64_t)t * 1000000U)<<12) / cal;
-+	sntp_base -= prev_timer_count;
-+
-+	if (xSemaphoreGive(_mutex) != pdTRUE) {
-+		printf("%s SemTake failed\n", __FUNCTION__);
-+	}
-+	printf("base = 0x%x%x, , ref: %u\n",
-+			(uint32_t)(sntp_base >>32 & 0xffffffff), (uint32_t)(sntp_base & 0xffffffff), prev_timer_count );
-+	printf("RTC Adjust: drift = %ld ticks, cal = %d\n", (time_t)(sntp_correct - sntp_current), cal);
- }
+ #endif /* _SNTP_H_ */
  
 diff --git a/include/ssid_config.h b/include/ssid_config.h
-index a13e09a..bc46bab 100644
+index 9136731..b0488a9 100644
 --- a/include/ssid_config.h
 +++ b/include/ssid_config.h
-@@ -20,7 +20,7 @@
- //   https://www.kernel.org/pub/software/scm/git/docs/git-update-index.html
- //
- 
--#error "You need to enter your wifi credentials in this file and follow the instructions here to keep the password safe from Github commits."
-+//#error "You need to enter your wifi credentials in this file and follow the instructions here to keep the password safe from Github commits."
- 
+@@ -13,6 +13,8 @@
  #ifndef __SSID_CONFIG_H__
  #define __SSID_CONFIG_H__
-diff --git a/lwip/esp_interface.c b/lwip/esp_interface.c
-old mode 100644
-new mode 100755
-index 6f37b5a..44486f6
---- a/lwip/esp_interface.c
-+++ b/lwip/esp_interface.c
-@@ -70,7 +70,7 @@ err_t ethernetif_init(struct netif *netif)
  
- #if LWIP_NETIF_HOSTNAME
-   /* Initialize interface hostname */
--  netif->hostname = "lwip";
-+  netif->hostname = "wrdklk";
- #endif /* LWIP_NETIF_HOSTNAME */
+-#include "private_ssid_config.h"
++//#include "private_ssid_config.h"
++#define WIFI_SSID "NOT_USED"
++#define WIFI_PASS "NOT_USED"
  
-   /*
-diff --git a/open_esplibs/libmain/user_interface.c b/open_esplibs/libmain/user_interface.c
-old mode 100644
-new mode 100755
-index 823e88f..eca2b00
---- a/open_esplibs/libmain/user_interface.c
-+++ b/open_esplibs/libmain/user_interface.c
-@@ -462,6 +462,8 @@ uint32_t sdk_system_relative_time(uint32_t reltime) {
-     return WDEV.SYS_TIME - reltime;
- }
- 
-+uint8_t user_ip_addr[4];
-+
- void sdk_system_station_got_ip_set(struct ip_addr *ip, struct ip_addr *mask, struct ip_addr *gw) {
-     uint8_t *ip_bytes = (uint8_t *)&ip->addr;
-     uint8_t *mask_bytes = (uint8_t *)&mask->addr;
-@@ -471,6 +473,7 @@ void sdk_system_station_got_ip_set(struct ip_addr *ip, struct ip_addr *mask, str
-     sdk_g_ic.v.station_netif_info->connect_status = STATION_GOT_IP;
-     printf("ip:%d.%d.%d.%d,mask:%d.%d.%d.%d,gw:%d.%d.%d.%d", ip_bytes[0], ip_bytes[1], ip_bytes[2], ip_bytes[3], mask_bytes[0], mask_bytes[1], mask_bytes[2], mask_bytes[3], gw_bytes[0], gw_bytes[1], gw_bytes[2], gw_bytes[3]);
-     printf("\n");
-+    memcpy(user_ip_addr, ip_bytes, sizeof(user_ip_addr));
-     if ((sdk_g_ic.s.wifi_led_enable == 1) && (sdk_g_ic.s.wifi_mode == 1)) {
-         sdk_os_timer_disarm(&sdk_sta_con_timer);
-         gpio_mask = 1 << sdk_g_ic.s.wifi_led_gpio;
+ #endif // __SSID_CONFIG_H__

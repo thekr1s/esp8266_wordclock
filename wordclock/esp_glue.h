@@ -10,9 +10,6 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-#define TRUE true
-#define FALSE false
-
 uint32_t GetTicksDiffMs(uint32_t start, uint32_t end);
 void SetInterrupted(bool isInterrupted);
 bool Interrupted();

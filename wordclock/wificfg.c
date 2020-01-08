@@ -64,7 +64,7 @@ static int read_crlf_line(int s, char *buf, size_t len)
 
     do {
         char c;
-        int r = read(s, &c, 1);
+        int r = lwip_read(s, &c, 1);
 
         /* Expecting a known terminator so fail on EOF. */
         if (r <= 0)
@@ -98,7 +98,7 @@ int wificfg_form_name_value(int s, bool *valp, size_t *rem, char *buf, size_t le
             break;
 
         char c;
-        int r = read(s, &c, 1);
+        int r = lwip_read(s, &c, 1);
 
         /* Expecting a known number of characters so fail on EOF. */
         if (r <= 0) return -1;
@@ -306,7 +306,7 @@ static char *skip_to_whitespace(char *string)
 
 int wificfg_write_string(int s, const char *str)
 {
-    int res = write(s, str, strlen(str));
+    int res = lwip_write(s, str, strlen(str));
     return res;
 }
 
@@ -407,12 +407,13 @@ static void handle_ipaddr_redirect(int s, char *buf, size_t len)
 
     struct sockaddr addr;
     socklen_t addr_len = sizeof(addr);
-    getsockname(s, (struct sockaddr*)&addr, &addr_len);
-    struct sockaddr_in *sa = (struct sockaddr_in *)&addr;
-    snprintf(buf, len, "" IPSTR "/\r\n\r\n", IP2STR(&sa->sin_addr));
-    wificfg_write_string(s, buf);
-}
+    if (getsockname(s, (struct sockaddr*)&addr, &addr_len) == 0) {
+        struct sockaddr_in *sa = (struct sockaddr_in *)&addr;
+        snprintf(buf, len, IPSTR, IP2STR((ip4_addr_t *)&sa->sin_addr.s_addr));
+        wificfg_write_string(s, buf);
+    }
 
+}
 
 
 static const char *http_wifi_station_content[] = {
@@ -435,7 +436,7 @@ static void handle_wifi_station(int s, wificfg_method method,
     	printf("%s %d %s\n", __FUNCTION__, __LINE__, http_wifi_station_content[1]);
     	printf("%s %d %s\n", __FUNCTION__, __LINE__, http_wifi_station_content[2]);
     }
-    close(s);
+    closesocket(s);
 }
 
 static void handle_wifi_station_post(int s, wificfg_method method,
@@ -486,7 +487,7 @@ static void handle_wifi_station_post(int s, wificfg_method method,
                 strncpy(password, buf, sizeof(password) - 1);
 
                 if (ssid[0] == '\0' || password == '\0') {
-					close(s);
+					closesocket(s);
 					return;
                 } else {
 					struct sdk_station_config config = {"", "", 0, {0}};
@@ -497,8 +498,8 @@ static void handle_wifi_station_post(int s, wificfg_method method,
 						printf("ERROR sdk_wifi_station_set_config\n");
 					}
 					wificfg_write_string(s, "Rebooting with new configuration\r\n");
-					close(s);
-					vTaskDelay(1000 / portTICK_RATE_MS);
+					closesocket(s);
+					vTaskDelay(1000 / portTICK_PERIOD_MS);
 					sdk_system_restart();
                 }
                 break;
@@ -751,10 +752,10 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
     }
 
     wificfg_write_string(s, "Rebooting with new configuration\r\n");
-    close(s);
+    closesocket(s);
     SettingsWrite();
     printf("REBOOTING IN 1 second\n");
-    vTaskDelay(1000 / portTICK_RATE_MS);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
     sdk_system_restart();
 }
 
@@ -886,7 +887,7 @@ static void server_task(void *pvParameters)
             /* Read the request line */
             int request_line_size = read_crlf_line(s, buf, sizeof(buf));
             if (request_line_size < 5) {
-                close(s);
+                closesocket(s);
                 continue;
             }
 
@@ -977,7 +978,7 @@ static void server_task(void *pvParameters)
                 wificfg_write_string(s, http_redirect_header_sta);
             }
 
-            close(s);
+            closesocket(s);
         }
     }
 }
@@ -1037,10 +1038,10 @@ static void dns_task(void *pvParameters)
             *head++ = 0x78;
             *head++ = 0x00; // RD len
             *head++ = 0x04;
-            *head++ = ip4_addr1(&server_addr.addr);
-            *head++ = ip4_addr2(&server_addr.addr);
-            *head++ = ip4_addr3(&server_addr.addr);
-            *head++ = ip4_addr4(&server_addr.addr);
+            *head++ = ip4_addr1(&server_addr);
+            *head++ = ip4_addr2(&server_addr);
+            *head++ = ip4_addr3(&server_addr);
+            *head++ = ip4_addr4(&server_addr);
 
             sendto(fd, buffer, reply_len, 0, &src_addr, src_addr_len);
         }
@@ -1089,15 +1090,17 @@ void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
 
 		sdk_wifi_set_opmode(SOFTAP_MODE);
 
-		dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases, true);
+		dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases);
+        dhcpserver_set_router(&ap_ip.ip);
+        dhcpserver_set_dns(&ap_ip.ip);
 
-		xTaskCreate(dns_task, (signed char * )"WiFi Cfg DNS", 224, NULL, 2, NULL);
+		xTaskCreate(dns_task, "WiFi Cfg DNS", 224, NULL, 2, NULL);
 	}
     server_params *params = malloc(sizeof(server_params));
     params->port = port;
     params->wificfg_dispatch = wificfg_dispatch_list;
     params->dispatch = dispatch;
-    xTaskCreate(server_task, (signed char *)"WiFi Cfg HTTP", 1024, params, 2, NULL);
+    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, params, 2, NULL);
 
 	if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
 		while (1) {

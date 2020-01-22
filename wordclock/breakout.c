@@ -98,15 +98,11 @@ static void MoveBall() {
 
 void DoBreakout(){
     uint32_t cycleTime = 300;
-    int lastActionTime = xTaskGetTickCount();
     Init();
     while (ControllerGameGet() == GAME_BREAKOUT) {
         SetInterrupted(FALSE);
         cycleTime = Sleep(cycleTime);
         TControllerAction action = ControllerGet();
-        if (action != CONTROLLER_NONE) {
-            lastActionTime = xTaskGetTickCount();
-        }
         switch(action){
         case CONTROLLER_LEFT :_batPos = _batPos > 0 ? _batPos - 1: 0; break;
         case CONTROLLER_RIGHT:_batPos = _batPos < (AlsGetCols() - _batWidth) ? _batPos + 1 : AlsGetCols() - _batWidth; break;
@@ -118,8 +114,5 @@ void DoBreakout(){
             cycleTime = 500;
         }
         AlsRefresh(ALSEFFECT_NONE);
-        if (GetTicksDiffMs(lastActionTime, xTaskGetTickCount()) > 60000) {
-            ControllerGameSet(GAME_NONE);
-        }
     }
 }

@@ -35,6 +35,7 @@
 #include "settings.h"
 #include "controller.h"
 #include "breakout.h"
+#include "tetris.h"
 
 
 

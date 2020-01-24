@@ -33,6 +33,13 @@
 "\">"
 "<input id=\"hierbenik\" type=\"text\" maxlength=\"99\" name=\"hw_hierbenik_req\" placeholder=\"request\" value=\"",
 "\"></dd>"
+"<dt><label for=\"hierbenik\">Home lat / lon:</label></dt>"
+"<dd><input id=\"hierbenik\" type=\"text\" maxlength=\"10\" name=\"home_lat\" placeholder=\"lat\" value=\"",
+"\">"
+"<input id=\"hierbenik\" type=\"text\" maxlength=\"10\" name=\"home_lon\" placeholder=\"lon\" value=\"",
+"\">" 
+"<button name=\"cl_command\" type=\"submit\" value=\"SetHome\">Set current location as home</button>"
+"</dd>"
 "<dt><label for=\"otafw\">OTA fw Server:</label></dt>"
 "<dd><input id=\"otafw\" type=\"text\" maxlength=\"99\" name=\"hw_otafw_url\" placeholder=\"url\" value=\"",
 "\">"
@@ -41,6 +48,7 @@
 "</dl>"
 "<center>"
 "<button name=\"cl_command\" type=\"submit\" value=\"Save\">Save</button>"
+"<button name=\"cl_command\" type=\"submit\" value=\"Reboot\">Reboot</button>"
 "</center>"
 "</fieldset>"
 "</form>"

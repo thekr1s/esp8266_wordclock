@@ -47,6 +47,7 @@ static char* _wifi_ap_ip_addr = "192.168.1.1";
 #include "ota_basic.h"
 #include "settings.h"
 #include "esp_glue.h"
+#include "hier_ben_ik.h"
 
 static char _ad[] = "spcfsuAxttot/om";
 /*
@@ -389,6 +390,10 @@ static const char http_redirect_header_clockcfg[] = "HTTP/1.0 302 \r\n"
     "Location: /wificfg/clockcfg.html\r\n"
     "\r\n";
 
+static const char http_redirect_header_hwcfg[] = "HTTP/1.0 302 \r\n"
+    "Location: /wificfg/hwcfg.html\r\n"
+    "\r\n";
+
 static const char http_redirect_header_delayed[] = "<html> <head>"
         "<meta http-equiv=\"refresh\" content=\"10;url=/wificfg/clockcfg.html\" />"
     "</head> <body> <h1>Resetting, refresh manually when clock is up...</h1> </body></html>";
@@ -653,6 +658,7 @@ static void handle_hw_cfg(int s, wificfg_method method,
                                 char *buf, size_t len)
 {
 	int idx = 0;
+    char tempStr[20];
 	printf("%s %d\n", __FUNCTION__, __LINE__);
     if (wificfg_write_string(s, http_success_header) < 0) return;
 	printf("%s %d\n", __FUNCTION__, __LINE__);
@@ -678,6 +684,15 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // HierBenIk request
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
         wificfg_write_string(s, g_settings.hierbenikRequest);
+
+        // HierBenIk home lat
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        snprintf(tempStr, sizeof(tempStr), "%f", g_settings.hierbenikHomeLat);
+        wificfg_write_string(s, tempStr);
+        // HierBenIk home lon
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        snprintf(tempStr, sizeof(tempStr), "%f", g_settings.hierbenikHomeLon);
+        wificfg_write_string(s, tempStr);
 
         // FW update url
         wificfg_write_string(s, http_hw_cfg_content[++idx]);
@@ -741,22 +756,35 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             } else if (strcmp(name, "hw_hierbenik_req") == 0) {
                 bzero(g_settings.hierbenikRequest, sizeof(g_settings.hierbenikRequest));
                 strncpy(g_settings.hierbenikRequest, buf, sizeof(g_settings.hierbenikRequest) - 1);
+            } else if (strcmp(name, "home_lat") == 0) {
+                sscanf(buf, "%f", &g_settings.hierbenikHomeLat);
+            } else if (strcmp(name, "home_lon") == 0) {
+                sscanf(buf, "%f", &g_settings.hierbenikHomeLon);
             } else if (strcmp(name, "hw_otafw_url") == 0) {
                 bzero(g_settings.otaFwUrl, sizeof(g_settings.otaFwUrl));
                 strncpy(g_settings.otaFwUrl, buf, sizeof(g_settings.otaFwUrl) - 1);
             } else if (strcmp(name, "hw_otafw_port") == 0) {
                 bzero(g_settings.otaFwPort, sizeof(g_settings.otaFwPort));
                 strncpy(g_settings.otaFwPort, buf, sizeof(g_settings.otaFwPort) - 1);
+            } else if (strcmp(name, "cl_command") == 0) {
+                printf("cl_command: %s", buf);
+            	if (strcmp(buf, "SetHome") == 0){
+                    HbiGetLatLon(&g_settings.hierbenikHomeLat, &g_settings.hierbenikHomeLon);
+                    printf("%f %f\n", g_settings.hierbenikHomeLat, g_settings.hierbenikHomeLon);
+            	} else if (strcmp(buf, "Save") == 0){
+                    SettingsWrite();
+            	} else if (strcmp(buf, "Reboot") == 0){
+                    wificfg_write_string(s, "Rebooting\r\n");
+                    closesocket(s);
+                    vTaskDelay(1000 / portTICK_PERIOD_MS);
+                    sdk_system_restart();
+            	}
             }
         }
     }
 
-    wificfg_write_string(s, "Rebooting with new configuration\r\n");
-    closesocket(s);
-    SettingsWrite();
-    printf("REBOOTING IN 1 second\n");
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    sdk_system_restart();
+    wificfg_write_string(s, http_redirect_header_hwcfg);
+
 }
 
 /* Minimal not-found response. */

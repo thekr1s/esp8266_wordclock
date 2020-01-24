@@ -181,10 +181,6 @@ void ShowTime(int delayMS) {
 	uint32_t endTicks;
 	bool DoReDisplay = true;
 
-	printf("idx %d rgb %d %d %d br:%d : %d %d %d", g_settings.colorIdx,
-			g_settings.aColors[g_settings.colorIdx].r ,g_settings.aColors[g_settings.colorIdx].g ,g_settings.aColors[g_settings.colorIdx].b,
-			g_brightness , RGB_FROM_SETTING);
-
 	PrintCurrentTime();
 	endTicks = xTaskGetTickCount() + (delayMS / portTICK_PERIOD_MS);
 	while (xTaskGetTickCount() < endTicks){
@@ -220,6 +216,11 @@ void ShowTime(int delayMS) {
 				CWDisplayTime(h, m, RGB_FROM_SETTING);
 			}
 			DisplayTimeSyncStatus();
+
+			if (g_settings.colorIdx == COLOR_INDEX_RAINBOW) {
+				AlsApplyFilter(ALSFILTER_RAINBOW);
+			} 
+
 //			ShowLdr();
 			HbiGetDistAndAge(&dist, &age);
 			if (age < 120 ) {

@@ -446,9 +446,6 @@ void AlsApplyFilter(TAlsFilters filter)
 
 void AlsRefresh(TAlsEffects effect)
 { 
-	if (g_settings.colorIdx == COLOR_INDEX_RAINBOW) {
-		AlsApplyFilter(ALSFILTER_RAINBOW);
-	} 
 
 	if (effect == ALSEFFECT_RANDOM_EFFECT) {
 		effect = rand() % 6 + ALSEFFECT_RANDOM_EFFECT + 1;

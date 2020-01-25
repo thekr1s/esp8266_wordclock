@@ -54,9 +54,9 @@ static bool BallHitsBat() {
     TPos newPos = _balPos;
     UpdateBallPos(&newPos);
     if (newPos.row == 0 &&  newPos.col >= _batPos && newPos.col < _batPos + _batWidth) {
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return true;
     }
 }
 
@@ -68,10 +68,10 @@ static bool BallHitsWall() {
         AlsGetLed(newPos.row, newPos.col, &r, &g, &b);
         AlsSetLed(newPos.row, newPos.col, 0, 0, 0);
         if ((r + g + b) != 0) {
-            return TRUE;
+            return true;
         } 
     }
-    return FALSE;
+    return false;
 }
 
 static void MoveBall() {
@@ -100,7 +100,7 @@ void DoBreakout(){
     uint32_t cycleTime = 300;
     Init();
     while (ControllerGameGet() == GAME_BREAKOUT) {
-        SetInterrupted(FALSE);
+        SetInterrupted(false);
         cycleTime = Sleep(cycleTime);
         TControllerAction action = ControllerGet();
         switch(action){

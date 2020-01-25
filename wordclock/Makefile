@@ -20,5 +20,5 @@ CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
 
 PROGRAM=ws2812_buffer
 EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls
-#LIBS += esp-gdbstub
+LIBS += m
 include ../esp-open-rtos/common.mk

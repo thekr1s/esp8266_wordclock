@@ -28,6 +28,8 @@ TSettings g_settings_default __attribute__((aligned(4))) = {
      "",  // hierbenikUrl
      "",   // hierbenikPort
      "",  // hierbenikRequest
+     0.0, // home lat
+     0.0, // home lon
      "rwassens.ddns.net",  // otaFwUrl
      "10070",   // otaFwPort
      {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},

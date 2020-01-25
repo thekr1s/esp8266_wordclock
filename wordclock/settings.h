@@ -14,7 +14,7 @@
 #include "animations.h"
 #include "displaySettings.h"
 
-#define FLASH_MAGIC 0xBABEBAB6
+#define FLASH_MAGIC 0xBABEBAB7
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
 
@@ -32,6 +32,8 @@ typedef struct {
     char hierbenikUrl[MAX_URL_SIZE];
     char hierbenikPort[MAX_PORT_SIZE];
     char hierbenikRequest[MAX_URL_SIZE];
+    float hierbenikHomeLat;
+    float hierbenikHomeLon;
     char otaFwUrl[MAX_URL_SIZE];
     char otaFwPort[MAX_PORT_SIZE];
     const uint8_t aBrightness[BRIGHTNESS_COUNT];

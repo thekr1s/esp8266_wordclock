@@ -17,6 +17,7 @@
 #include "lwip/netdb.h"
 #include "lwip/dns.h"
 
+#include <math.h>
 #include "espressif/esp_common.h"
 
 #include "esp_glue.h"
@@ -24,33 +25,67 @@
 
 uint32_t _dist = 10000;
 uint32_t _age = 10000;
-
+float _lat = 0.0;
+float _lon = 0.0;
 
 void HbiGetDistAndAge(uint32_t* pDist, uint32_t* pAge) {
-	// TODO
 	*pDist = _dist;
 	*pAge = _age;
 }
 
+void HbiGetLatLon(float* pLat, float* pLon) {
+	*pLat = _lat;
+	*pLon = _lon;
+}
+
+float deg2rad(float deg) {
+  return deg * (M_PI/180);
+}
+
+float CalcDist(float lat1, float lon1, float lat2, float lon2) {
+  float R = 6371; // Radius of the earth in km
+  float dLat = deg2rad(lat2-lat1);  // deg2rad below
+  float dLon = deg2rad(lon2-lon1); 
+  float a = 
+    sin(dLat/2) * sin(dLat/2) +
+    cos(deg2rad(lat1)) * cos(deg2rad(lat2)) * 
+    sin(dLon/2) * sin(dLon/2)
+    ; 
+  float c = 2 * atan2(sqrt(a), sqrt(1-a)); 
+  float d = R * c; // Distance in km
+  return d;
+}
+
+
 static void ParseResponse(char* pResp){
-//	int i;
 	const char* ageTag = "age:";
 	const char* distTag = "dist:";
+	const char* latTag = "lat:";
+	const char* lonTag = "lon:";
 	char* p;
 	int t, t2;
+	float f;
 
 	p = strstr(pResp, ageTag);
-	if (p == NULL){
-	    return; //return else this result in hard fault
-	}
-	if (sscanf(p, "age:%d", &t) == 1) {
+	if ( p && sscanf(p, "age:%d", &t) == 1) {
 		_age = t;
 		printf("age: %d\n", t);
 	}
 	p = strstr(pResp, distTag);
-	if (sscanf(p, "dist:%d.%3d", &t, &t2) == 2) {
+	if (p && sscanf(p, "dist:%d.%3d", &t, &t2) == 2) {
 		_dist = t * 1000 + t2;
 		printf("dist: %d\n", _dist);
+	}
+	p = strstr(pResp, latTag);
+	if (p && sscanf(p, "lat:%f", &f) == 1) {
+		_lat = f;
+		printf("lat: %f\n", _lat);
+	}
+	p = strstr(pResp, lonTag);
+	if (p && sscanf(p, "lon:%f", &f) == 1) {
+		_lon = f;
+		_dist = (1000.0 * CalcDist(_lat, _lon, g_settings.hierbenikHomeLat, g_settings.hierbenikHomeLon));
+		printf("lat: %f, lon: %f, dist: %d\n", _lat, _lon, _dist);
 	}
 }
 
@@ -68,7 +103,7 @@ static void GetHierBenIk() {
 		err = getaddrinfo(g_settings.hierbenikUrl, g_settings.hierbenikPort, &hints, &res);
 
 		if (err != 0 || res == NULL ) {
-			printf("DNS lookup failed err=%d res=%p\r\n", err, res);
+			printf("DNS lookup failed (%s) err=%d res=%p\r\n", g_settings.hierbenikUrl, err, res);
 			if (res)
 				freeaddrinfo(res);
 			vTaskDelay(1000 / portTICK_PERIOD_MS);
@@ -115,11 +150,12 @@ static void GetHierBenIk() {
 	int r;
 	int i = 0;
 	bzero(recv_buf, sizeof(recv_buf));
-	do {
+	// do {
+		SleepNI(1000);
 		r = lwip_read(s, &recv_buf[i], sizeof(recv_buf) - i - 1);
 		i += r;
-	} while (r > 0);
-//		printf("%s\n---\n", recv_buf);
+	// } while (r > 0);
+	// printf("%s\n---\n", recv_buf);
 	ParseResponse(recv_buf);
 
 	if (r != 0)
@@ -127,7 +163,7 @@ static void GetHierBenIk() {
 	else
 		successes++;
 	closesocket(s);
-	printf("%s %d leave, \n%s\n", __FUNCTION__, __LINE__, recv_buf);
+	// printf("%s %d leave, \n", __FUNCTION__, __LINE__);
 
 }
 

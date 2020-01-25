@@ -33,6 +33,9 @@
 #include <buttons.h>
 #include "displaySettings.h"
 #include "settings.h"
+#include "controller.h"
+#include "breakout.h"
+#include "tetris.h"
 
 
 static void ShowSome(uint32_t delayMS)
@@ -300,6 +303,12 @@ void WordclockMain(void* p)
 	ShowIpAddress();
 
 	while (1) {
+		switch (ControllerGameGet())
+		{
+			case GAME_BREAKOUT: DoBreakout(); break;
+			case GAME_TETRIS: DoTetris(); break;
+			default: break;
+		}
 
 		if (OtaIsBusy()) {
 			DisplayWord("Updating firmware");
@@ -327,8 +336,6 @@ void WordclockMain(void* p)
 			timeShowDuration = 2000;
 			if (g_settings.animation == ANIMATION_ALL && !DisplayInNightMode()) {
 				DoAnimation();
-			} else if (g_settings.animation == ANIMATION_TETRIS && !DisplayInNightMode()) {
-				DoTetris();
 			} else {
 				timeShowDuration = 5000;
 			}

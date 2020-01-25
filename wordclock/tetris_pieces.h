@@ -15,8 +15,6 @@ typedef struct {
     TColorIdx color;
     int x;
     int y;
-    int x_before;
-    int y_before;
 } TPiece;
 
 typedef enum {
@@ -31,6 +29,7 @@ void TetrisRotateCCW(TPiece *piece);
 void TetrisNew(TPiece *piece);
 void TetrisDraw(TPiece *piece);
 void TetrisMove(TPiece *piece, TDirection dir);
+bool TetrisPieceHit(TPiece *piece);
 
 #endif
 

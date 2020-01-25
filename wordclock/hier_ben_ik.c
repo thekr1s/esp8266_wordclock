@@ -150,12 +150,9 @@ static void GetHierBenIk() {
 	int r;
 	int i = 0;
 	bzero(recv_buf, sizeof(recv_buf));
-	// do {
-		SleepNI(1000);
-		r = lwip_read(s, &recv_buf[i], sizeof(recv_buf) - i - 1);
-		i += r;
-	// } while (r > 0);
-	// printf("%s\n---\n", recv_buf);
+	SleepNI(1000);
+	r = lwip_read(s, &recv_buf[i], sizeof(recv_buf) - i - 1);
+	i += r;
 	ParseResponse(recv_buf);
 
 	if (r != 0)

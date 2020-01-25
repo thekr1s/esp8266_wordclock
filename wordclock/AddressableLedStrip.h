@@ -38,6 +38,7 @@ uint32_t AlsGetRows();
 uint32_t AlsGetCols();
 void AlsFill(uint8_t red, uint8_t green, uint8_t blue);
 void AlsSetLed(uint32_t row, uint32_t col, uint8_t red, uint8_t green, uint8_t blue);
+void AlsGetLed(uint32_t row, uint32_t col, uint8_t* pRed, uint8_t* pGreen, uint8_t* pBlue);
 void AlsApplyFilter(TAlsFilters filter);
 void AlsRefresh(TAlsEffects effect);
 

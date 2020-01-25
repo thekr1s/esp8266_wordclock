@@ -26,6 +26,9 @@
 #include "tetris_pieces.h"
 #include "esp_glue.h"
 #include "settings.h"
+#include "controller.h"
+#include "tetris.h"
+
 
 #define MAX_MESSAGE_SIZE 60
 static char g_message[MAX_MESSAGE_SIZE]="";
@@ -512,26 +515,6 @@ void fireworks() {
 		Sleep(200);
 	}
 	fireworksExplode(row + 2, col);
-}
-
-void DoTetris() {
-
-	TPiece piece;
-	TetrisNew(&piece);
-	for (int i = 0; i < 15; i++){
-		AlsFill(0,0,0);
-		TetrisDraw(&piece);
-		AlsRefresh(ALSEFFECT_NONE);
-		Sleep(300);
-		TetrisMove(&piece, DIR_DOWN);
-		switch (rand() % 5) {
-		case 0: TetrisRotateCW(&piece); break;
-		case 1: TetrisRotateCCW(&piece); break;
-		case 2: TetrisMove(&piece, DIR_LEFT); break;
-		case 3: TetrisMove(&piece, DIR_RIGHT); break;
-		}
-	}
-
 }
 
 void AnimationSetMessageText(char* txt){

@@ -1227,7 +1227,7 @@ void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
         dhcpserver_set_router(&ap_ip.ip);
         dhcpserver_set_dns(&ap_ip.ip);
 
-		xTaskCreate(dns_task, "WiFi Cfg DNS", 224, NULL, 2, NULL);
+		xTaskCreate(dns_task, "WiFi Cfg DNS", 512, NULL, 2, NULL);
 	}
     server_params *params = malloc(sizeof(server_params));
     params->port = port;

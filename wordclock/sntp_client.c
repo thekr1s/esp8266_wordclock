@@ -18,8 +18,6 @@
 #include <lwip/netdb.h>
 #include <lwip/dns.h>
 
-#include <ssid_config.h>
-
 /* Add extras/sntp component to makefile for this include to work */
 #include <sntp.h>
 #include <time.h>
@@ -34,6 +32,7 @@
 #define UNUSED_ARG(x)	(void)x
 #define UPDATE_INERVAL (5 * 60000)
 static struct timezone _tz = {0, 0};
+static uint32_t _rtcTicsPerSec = 0;
 
 void sntp_tsk(void *pvParameters)
 {
@@ -64,7 +63,10 @@ void sntp_tsk(void *pvParameters)
 
 	/* Print date and time each 5 seconds */
 	while(1) {
-		vTaskDelayMs(5000);
+		const delaySec = 5;
+		uint32_t t = RTC.COUNTER;
+		vTaskDelayMs(delaySec * 1000);
+		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;		
 //		time_t ts = time(NULL);
 //		printf("TIME: %s", ctime(&ts));
 	}
@@ -72,7 +74,14 @@ void sntp_tsk(void *pvParameters)
 
 bool sntp_client_time_valid() {
 	// TODO: implement
-	return (sntp_get_last_update_age_sec() <= (2 * UPDATE_INERVAL) / 1000)? true : false;
+	if (_rtcTicsPerSec == 0) return false;
+
+	// sntp_fun.c stores the last update in RTC scratch2 register. See line:
+	//     tim_ref = now_rtc;
+	// At the bottom of the c file.
+	// Use that to calculate the age of the time update.
+	uint32_t age = (RTC.COUNTER - RTC.SCRATCH[2]) / _rtcTicsPerSec;
+	return ((RTC.COUNTER - RTC.SCRATCH[2]) / _rtcTicsPerSec <= (2 * UPDATE_INERVAL) / 1000)? true : false;
 }
 
 void sntpClientIinit(const struct timezone* tz)

@@ -63,7 +63,7 @@ void sntp_tsk(void *pvParameters)
 
 	/* Print date and time each 5 seconds */
 	while(1) {
-		const delaySec = 5;
+		const uint32_t delaySec = 5;
 		uint32_t t = RTC.COUNTER;
 		vTaskDelayMs(delaySec * 1000);
 		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;		
@@ -81,7 +81,7 @@ bool sntp_client_time_valid() {
 	// At the bottom of the c file.
 	// Use that to calculate the age of the time update.
 	uint32_t age = (RTC.COUNTER - RTC.SCRATCH[2]) / _rtcTicsPerSec;
-	return ((RTC.COUNTER - RTC.SCRATCH[2]) / _rtcTicsPerSec <= (2 * UPDATE_INERVAL) / 1000)? true : false;
+	return (age <= (2 * UPDATE_INERVAL) / 1000)? true : false;
 }
 
 void sntpClientIinit(const struct timezone* tz)

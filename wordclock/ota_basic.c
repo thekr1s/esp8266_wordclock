@@ -14,7 +14,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "esp8266.h"
-#include "ssid_config.h"
 #include "mbedtls/sha256.h"
 
 #include "ota-tftp.h"

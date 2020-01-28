@@ -6,8 +6,6 @@ cd esp8266_wordclock/esp-open-rtos
 
 git submodule update --init --recursive
 
-git apply ../esp-open-rtos.patch
-
 cd ..
 
 tar -xvf esp-open-sdk.tgz 

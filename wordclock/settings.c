@@ -26,8 +26,8 @@ TSettings g_settings_default __attribute__((aligned(4))) = {
      HARDWARE_11_11,
      1,   // perfectImperfections
      "",  // hierbenikUrl
-     "",   // hierbenikPort
-     "",  // hierbenikRequest
+     "80",   // hierbenikPort
+     "/get_with_age.php",  // hierbenikRequest
      0.0, // home lat
      0.0, // home lon
      "rwassens.ddns.net",  // otaFwUrl

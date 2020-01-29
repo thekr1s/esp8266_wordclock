@@ -638,11 +638,6 @@ static void handle_clock_cfg_post(int s, wificfg_method method,
             	if (strcmp(buf, "Reset") == 0){
             	    wificfg_write_string(s, http_redirect_header_delayed);
             		SettingsClockReset();
-            	} else if (strcmp(buf, "OtaUpdate") == 0){
-            		OtaUpdateInit();
-            		wificfg_write_string(s, "OTA UPDATING");
-            		SetInterrupted(true);
-            		return;
             	}
             }
 
@@ -778,6 +773,11 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                     printf("%f %f\n", g_settings.hierbenikHomeLat, g_settings.hierbenikHomeLon);
             	} else if (strcmp(buf, "Save") == 0){
                     SettingsWrite();
+            	} else if (strcmp(buf, "OtaUpdate") == 0){
+            		OtaUpdateInit();
+            		wificfg_write_string(s, "OTA UPDATING");
+            		SetInterrupted(true);
+            		return;
             	} else if (strcmp(buf, "Reboot") == 0){
                     wificfg_write_string(s, "Rebooting\r\n");
                     closesocket(s);

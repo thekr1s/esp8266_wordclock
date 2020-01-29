@@ -10,6 +10,7 @@
 "<li><a href=\"/wificfg/sta.html\">WiFi Config</a></li>"
 "<li><a href=\"/wificfg/clockcfg.html\">Clock Config</a></li>"
 "<li><a href=\"/wificfg/controller.html\">Controller</a></li>"
+"<li><a href=\"/wificfg/hwcfg.html\">System Config</a></li>"
 "<li class=\"icon\">"
 "<a href=\"javascript:void(0);\" onclick=\"myFunction()\">&#8801;</a>"
 "</li>"
@@ -28,28 +29,29 @@
 "<dd><input id=\"imperfections\" type=\"checkbox\" name=\"hw_imperfections\" value=\"CheckOn\" ",
 "/> </dd>"
 "<dt><label for=\"hierbenik\">HierBenIk:</label></dt>"
-"<dd><input id=\"hierbenik\" type=\"text\" maxlength=\"99\" name=\"hw_hierbenik_url\" placeholder=\"url\" value=\"",
+"<dd><input id=\"hierbenik\" type=\"text\" maxlength=\"99\" size=\"10\" name=\"hw_hierbenik_url\" placeholder=\"host\" value=\"",
 "\">"
-"<input id=\"hierbenik\" type=\"text\" maxlength=\"5\" name=\"hw_hierbenik_port\" placeholder=\"port\" value=\"",
+"<input id=\"hierbenik\" type=\"text\" maxlength=\"5\" size=\"3\" name=\"hw_hierbenik_port\" placeholder=\"port\" value=\"",
 "\">"
-"<input id=\"hierbenik\" type=\"text\" maxlength=\"99\" name=\"hw_hierbenik_req\" placeholder=\"request\" value=\"",
+"<input id=\"hierbenik\" type=\"text\" maxlength=\"99\" size=\"10\" name=\"hw_hierbenik_req\" placeholder=\"request\" value=\"",
 "\"></dd>"
 "<dt><label for=\"hierbenik\">Home lat / lon:</label></dt>"
-"<dd><input id=\"hierbenik\" type=\"text\" maxlength=\"10\" name=\"home_lat\" placeholder=\"lat\" value=\"",
+"<dd><input id=\"hierbenik\" type=\"text\" maxlength=\"10\" size=\"3\" name=\"home_lat\" placeholder=\"lat\" value=\"",
 "\">"
-"<input id=\"hierbenik\" type=\"text\" maxlength=\"10\" name=\"home_lon\" placeholder=\"lon\" value=\"",
+"<input id=\"hierbenik\" type=\"text\" maxlength=\"10\" size=\"3\" name=\"home_lon\" placeholder=\"lon\" value=\"",
 "\">" 
 "<button name=\"cl_command\" type=\"submit\" value=\"SetHome\">Set current location as home</button>"
 "</dd>"
 "<dt><label for=\"otafw\">OTA fw Server:</label></dt>"
-"<dd><input id=\"otafw\" type=\"text\" maxlength=\"99\" name=\"hw_otafw_url\" placeholder=\"url\" value=\"",
+"<dd><input id=\"otafw\" type=\"text\" maxlength=\"99\" size=\"10\" name=\"hw_otafw_url\" placeholder=\"url\" value=\"",
 "\">"
-"<input id=\"otafw\" type=\"text\" maxlength=\"5\" name=\"hw_otafw_port\" placeholder=\"port\" value=\"",
+"<input id=\"otafw\" type=\"text\" maxlength=\"5\"  size=\"3\"name=\"hw_otafw_port\" placeholder=\"port\" value=\"",
 "\"></dd>"
 "</dl>"
 "<center>"
 "<button name=\"cl_command\" type=\"submit\" value=\"Save\">Save</button>"
 "<button name=\"cl_command\" type=\"submit\" value=\"Reboot\">Reboot</button>"
+"<button name=\"cl_command\" type=\"submit\" value=\"OtaUpdate\">sw update</button>"
 "</center>"
 "</fieldset>"
 "</form>"

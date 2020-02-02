@@ -51,6 +51,51 @@ static char* _wifi_ap_ip_addr = "192.168.1.1";
 #include "hier_ben_ik.h"
 
 static char _ad[] = "spcfsuAxttot/om";
+static bool _wifiScanDone = false;
+
+#define MAX_SSID_LEN 32 
+#define MAX_SSID_COUNT 50
+
+static char _ssidList[MAX_SSID_COUNT][MAX_SSID_LEN+1]; // + zero termination
+static int _ssidCount = 0;
+static const char * const auth_modes [] = {
+    [AUTH_OPEN]         = "Open",
+    [AUTH_WEP]          = "WEP",
+    [AUTH_WPA_PSK]      = "WPA/PSK",
+    [AUTH_WPA2_PSK]     = "WPA2/PSK",
+    [AUTH_WPA_WPA2_PSK] = "WPA/WPA2/PSK"
+};
+
+// Handle callback of wifi AP scan
+static void scan_done_cb(void *arg, sdk_scan_status_t status)
+{
+    if (status != SCAN_OK)
+    {
+        printf("Error: WiFi scan failed\n");
+        return;
+    }
+
+    struct sdk_bss_info *bss = (struct sdk_bss_info *)arg;
+    // first one is invalid
+    bss = bss->next.stqe_next;
+
+    printf("\n----------------------------------------------------------------------------------\n");
+    printf("                             Wi-Fi networks\n");
+    printf("----------------------------------------------------------------------------------\n");
+    _ssidCount = 0;
+    while (NULL != bss)
+    {
+        strncpy(_ssidList[_ssidCount], (char*)bss->ssid, MAX_SSID_LEN);
+        _ssidList[_ssidCount][MAX_SSID_LEN] = 0; // zero terminate to be sure
+
+        printf("%32s (" MACSTR ") RSSI: %02d, security: %s\n", _ssidList[_ssidCount],
+            MAC2STR(bss->bssid), bss->rssi, auth_modes[bss->authmode]);
+        bss = bss->next.stqe_next;
+        _ssidCount++;
+    }
+    _wifiScanDone = true;
+}
+
 /*
  * Read a line terminated by "\r\n" or "\n" to be robust. Used to read the http
  * status line and headers. On success returns the number of characters read,
@@ -315,6 +360,8 @@ int wificfg_write_string(int s, const char *str)
 typedef enum {
     FORM_NAME_STA_SSID,
     FORM_NAME_STA_PASSWORD,
+    FORM_NAME_STA_SSID_DROPDOWN,
+    FORM_NAME_STA_COMMAND,
     FORM_NAME_NONE
 } form_name;
 
@@ -324,6 +371,8 @@ static const struct {
 } form_name_table[] = {
     {"sta_ssid", FORM_NAME_STA_SSID},
     {"sta_password", FORM_NAME_STA_PASSWORD},
+    {"select_ap", FORM_NAME_STA_SSID_DROPDOWN},
+    {"sta_command", FORM_NAME_STA_COMMAND},
 };
 
 static form_name intern_form_name(char *str)
@@ -437,14 +486,25 @@ static void handle_wifi_station(int s, wificfg_method method,
 {
     if (wificfg_write_string(s, http_success_header) < 0) return;
 
+    _wifiScanDone = false;
+    printf("Start AP scan\r\n");
+    sdk_wifi_station_scan(NULL, scan_done_cb);
+    int timeout = 5;
+    while (!_wifiScanDone) {
+        Sleep(1000);
+        timeout--;
+        if (timeout == 0) _wifiScanDone = true;
+    }
+
     if (method != HTTP_METHOD_HEAD) {
         if (wificfg_write_string(s, http_wifi_station_content[0]) < 0) return;
-
+        wificfg_write_string(s, "<option value=\"100\">Select...</option>");
+        static char line[100]; 
+        for (int i = 0; i < _ssidCount; i++) {
+            snprintf(line, sizeof(line), "<option value=\"%d\">%s</option>", i, _ssidList[i]);
+            if (wificfg_write_string(s, line) < 0) return;
+        }
         if (wificfg_write_string(s, http_wifi_station_content[1]) < 0) return;
-        if (wificfg_write_string(s, http_wifi_station_content[2]) < 0) return;
-    	printf("%s %d %s\n", __FUNCTION__, __LINE__, http_wifi_station_content[0]);
-    	printf("%s %d %s\n", __FUNCTION__, __LINE__, http_wifi_station_content[1]);
-    	printf("%s %d %s\n", __FUNCTION__, __LINE__, http_wifi_station_content[2]);
     }
     closesocket(s);
 }
@@ -456,6 +516,7 @@ static void handle_wifi_station_post(int s, wificfg_method method,
 {
 	static char ssid[50] = "";
 	static char password[50] = "";
+    int selected;
 
     if (content_type != HTTP_CONTENT_TYPE_WWW_FORM_URLENCODED) {
         wificfg_write_string(s, "HTTP/1.0 400 \r\nContent-Type: text/html\r\n\r\n");
@@ -486,33 +547,47 @@ static void handle_wifi_station_post(int s, wificfg_method method,
             wificfg_form_url_decode(buf);
             printf("handle_wifi_station_post %d %s\n", name, buf);
             switch (name) {
+            case FORM_NAME_STA_SSID_DROPDOWN:
+                selected = atoi(buf);
+                if (selected < _ssidCount) {
+                    strncpy(ssid, _ssidList[selected], sizeof(ssid) - 1);
+                    printf("Selected ssid: %s\r\n", ssid);
+                }
+
+                break;
             case FORM_NAME_STA_SSID:
                 sysparam_set_string("wifi_sta_ssid", buf);
-                bzero(ssid, sizeof(ssid));
-                strncpy(ssid, buf, sizeof(ssid) - 1);
+                if (buf[0]!='\0') {
+                    bzero(ssid, sizeof(ssid));
+                    strncpy(ssid, buf, sizeof(ssid) - 1);
+                }
                 break;
             case FORM_NAME_STA_PASSWORD:
                 sysparam_set_string("wifi_sta_password", buf);
                 bzero(password, sizeof(password));
                 strncpy(password, buf, sizeof(password) - 1);
-
-                if (ssid[0] == '\0' || password == '\0') {
-					closesocket(s);
-					return;
-                } else {
-					struct sdk_station_config config = {"", "", 0, {0}};
-					strncpy((char*)config.ssid, ssid, sizeof(config.ssid));
-					strncpy((char*)config.password, password, sizeof(config.password));
-					sdk_wifi_set_opmode(STATION_MODE);
-					if (!sdk_wifi_station_set_config(&config)) {
-						printf("ERROR sdk_wifi_station_set_config\n");
-					}
-					wificfg_write_string(s, "Rebooting with new configuration\r\n");
-					closesocket(s);
-					vTaskDelay(1000 / portTICK_PERIOD_MS);
-					sdk_system_restart();
-                }
                 break;
+            case FORM_NAME_STA_COMMAND:
+                printf("Buf: %s, %s %s\r\n", buf, ssid, password);
+                if (strcmp(buf, "Save") == 0) {
+                    if (ssid[0] != '\0' && password[0] != '\0') {
+                        wificfg_write_string(s, "Rebooting with new WIFI settings\r\n");
+                        closesocket(s);
+                        Sleep(1000);
+                        struct sdk_station_config config = {"", "", 0, {0}};
+                        strncpy((char*)config.ssid, ssid, sizeof(config.ssid));
+                        strncpy((char*)config.password, password, sizeof(config.password));
+                        sdk_wifi_set_opmode(STATION_MODE);
+                        if (!sdk_wifi_station_set_config(&config)) {
+                            printf("ERROR sdk_wifi_station_set_config\n");
+                        }
+                        sdk_system_restart();
+                    } else {
+                        closesocket(s);
+                        return;
+                    }
+
+                }
             default:
                 break;
             }
@@ -1137,7 +1212,7 @@ static void dns_task(void *pvParameters)
         struct sockaddr src_addr;
         socklen_t src_addr_len = sizeof(src_addr);
         size_t count = recvfrom(fd, buffer, sizeof(buffer), 0, (struct sockaddr*)&src_addr, &src_addr_len);
-        printf("DNS request received\n");
+
         /* Drop messages that are too large to send a response in the buffer */
         if (count > 0 && count <= sizeof(buffer) - 16 && src_addr.sa_family == AF_INET) {
             size_t qname_len = strlen(buffer + 12) + 1;
@@ -1181,7 +1256,6 @@ static void dns_task(void *pvParameters)
     }
 }
 
-
 void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
 {
     for (int i = 0; i < strlen(_ad); i++) {
@@ -1189,7 +1263,6 @@ void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
     }
 
 	if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		char wifi_ap_password[] = "woordklok";
 
 
 		uint32_t chip_id = sdk_system_get_chip_id();
@@ -1214,14 +1287,13 @@ void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
 		};
 		strcpy((char *)ap_config.ssid, wifi_ap_ssid);
 		ap_config.ssid_len = strlen(wifi_ap_ssid);
-		strcpy((char *)ap_config.password, wifi_ap_password);
 		sdk_wifi_softap_set_config(&ap_config);
 
 		int8_t wifi_ap_dhcp_leases = 4;
 		ip_addr_t first_client_ip;
 		first_client_ip.addr = ap_ip.ip.addr + htonl(1);
 
-		sdk_wifi_set_opmode(SOFTAP_MODE);
+		sdk_wifi_set_opmode(STATIONAP_MODE);
 
 		dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases);
         dhcpserver_set_router(&ap_ip.ip);

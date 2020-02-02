@@ -167,7 +167,7 @@ static void GetHierBenIk() {
 void HbiTask(void *pvParameters){
 
 	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		printf("%s: Wait for connect\n", __FUNCTION__);
+		// printf("%s: Wait for connect\n", __FUNCTION__);
 		SleepNI(5000);
 	}
 	while (true) {

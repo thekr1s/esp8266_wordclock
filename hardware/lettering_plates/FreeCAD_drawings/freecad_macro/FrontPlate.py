@@ -2,14 +2,14 @@ import Draft
 import FreeCAD as App
 import FreeCAD
 
-sys.path.append("C:/proj/esp8266_wordclock/hardware/lettering_plates/FreeCAD_drawings/freecad_macro/")
+# Get the path the macro is in.
+p=FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Macro")
+macro_path = p.GetString("MacroPath")
+sys.path.append("macro_path")
 from SnijlabSetting import *
 import LetterPlateText
 
-# Get the path relative to the path the macro is in.
-p=FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Macro")
-p.GetString("MacroPath")
-FONT_PATH=p.GetString("MacroPath") +"/../../fonts/"
+FONT_PATH = macro_path +"/../../fonts/"
 
 CONFIGS = {
     'l_taurus': {   # Large plate, Taurus font

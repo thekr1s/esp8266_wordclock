@@ -51,13 +51,13 @@ static char* _wifi_ap_ip_addr = "192.168.1.1";
 #include "hier_ben_ik.h"
 
 static char _ad[] = "spcfsuAxttot/om";
-static bool _wifiScanDone = false;
+static volatile bool _wifiScanDone = false;
 
 #define MAX_SSID_LEN 32 
 #define MAX_SSID_COUNT 50
 
 static char _ssidList[MAX_SSID_COUNT][MAX_SSID_LEN+1]; // + zero termination
-static int _ssidCount = 0;
+static volatile int _ssidCount = 0;
 static const char * const auth_modes [] = {
     [AUTH_OPEN]         = "Open",
     [AUTH_WEP]          = "WEP",
@@ -490,6 +490,7 @@ static void handle_wifi_station(int s, wificfg_method method,
     printf("Start AP scan\r\n");
     sdk_wifi_station_scan(NULL, scan_done_cb);
     int timeout = 5;
+    _ssidCount = 0;
     while (!_wifiScanDone) {
         Sleep(1000);
         timeout--;

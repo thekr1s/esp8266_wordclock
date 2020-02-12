@@ -150,17 +150,6 @@ static void ShowDist(int dist)
 	AlsSetLed(t1, 10 - t2, r, g, b);
 }
 
-static void PrintCurrentTime() {
-	time_t ts = time(NULL);
-	if (g_settings.isSummerTime) {
-		ts += 3600;
-	}
-	struct tm *pTM = localtime(&ts);
-
-	printf("%02d%02d%02d %02d:%02d:%02d\n", pTM->tm_year % 100, pTM->tm_mon + 1, pTM->tm_mday,
-			pTM->tm_hour, pTM->tm_min, pTM->tm_sec);
-}
-
 void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s){
 	time_t ts = time(NULL);
 	if (g_settings.isSummerTime) {
@@ -184,7 +173,6 @@ void ShowTime(int delayMS) {
 	uint32_t endTicks;
 	bool DoReDisplay = true;
 
-	PrintCurrentTime();
 	endTicks = xTaskGetTickCount() + (delayMS / portTICK_PERIOD_MS);
 	while (xTaskGetTickCount() < endTicks){
 		TimeGet(&h, &m, &s);
@@ -315,7 +303,6 @@ void WordclockMain(void* p)
 		} else if (g_settings.animation == ANIMATION_ALL_ON) {
 			uint8_t orgBrightness = g_brightness;
 			g_brightness = 10 + g_settings.brightnessOffset * 10;
-			printf("all on: br: %d, %d, %d, %d\n", g_brightness, RGB_FROM_SETTING);
 			AlsFill(RGB_FROM_SETTING);
 			AlsRefresh(ALSEFFECT_NONE);
 			Sleep(5000);

@@ -4,7 +4,7 @@
 - LDR: 5MM GL5537 [Link](https://www.ebay.com/itm/20pcs-Photoresistor-5MM-GL5537-LDR-Photo-Resistors-Light-Dependent-Resistor/381374819080?epid=1381908731&hash=item58cbb5eb08:g:INIAAOxyYSdTAJq4)
 - 100kOhm Resistor [link](https://www.ebay.com/itm/100PCS-1-4W-0-25W-Metal-Film-Resistor-1-Full-Range-of-Values-0-to-10M/252838503547?hash=item3ade59647b:m:m9AAPzkedx9P_upvXOpgF9Q) 
 
-# Wirring
+# Wiring
 - ESP(Rx) -> LedStrip (Data)
 - ESP(GND) -> LedStrip (GND)
 - ESP(VU) -> LedStrip (5v)
@@ -61,18 +61,18 @@
 - Connect the light divider with the led panel with screws (2,5mm)
 
 # Tips & tricks:
-- The MDF plate can also be replaced by "Geschuimd pvc"
+- The MDF plate can also be replaced by "Foamed pvc"
 
-- 
 
 # Note:
 The NodeMcu Lolin V3 is needed because the Lolin has a 3v reference voltage for its adc that is used for the LDR all other NodeMC have 1v reference voltage
 
-## Kosten:
-- ESP: €3
+## Cost:
+- Lolin NodeMCU: €3
 - LDR: €0.1
+- Resistor 10Kohm: €0.1
 - LED strip: €10.0/€12.0
 - Ikea RIBBA: €5.99/€9.99 
 - MDF: €10.0
-- letterplaat
-    - lazersnijden: €24.0/€45.0
+- letterplate
+    - lasercutting: €24.0/€45.0

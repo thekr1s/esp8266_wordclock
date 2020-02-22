@@ -2,75 +2,19 @@ import Draft
 import FreeCAD as App
 import FreeCAD
 
-# Get the path the macro is in.
-p=FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Macro")
-macro_path = p.GetString("MacroPath")
-sys.path.append("macro_path")
-from SnijlabSetting import *
-import LetterPlateText
-
-FONT_PATH = macro_path +"/../../fonts/"
-
-CONFIGS = {
-    'l_taurus': {   # Large plate, Taurus font
-        'font':       FONT_PATH + "Taurus-Mono-Stencil-Bold-ij.ttf",
-        'font_scale': 0.30   ,
-		'size':       [500, 500],
-        'led_offset': 1000/30
-    },
-    's_taurus': {   # Small plate, Taurus font
-        'font':       FONT_PATH + "Taurus-Mono-Stencil-Bold-ij.ttf",
-        'font_scale': 0.34,
-		'size':       [230, 230],
-        'led_offset': 1000/60
-    },
-    'l_lib': {   # Large plate, Liberation font
-        'font':       FONT_PATH + "LiberationMono-Regular-stencil-50cm.ttf",
-        'font_scale': 0.80   ,
-		'size':       [500, 500],
-        'led_offset': 1000/30
-    },
-    's_lib': {   # Small plate, Liberation font
-        'font':       FONT_PATH + "LiberationMono-Regular-stencil-50cm.ttf",
-        'font_scale': 0.84   ,
-		'size':       [230, 230],
-        'led_offset': 1000/60
-    },
-    's_muar': {   # Small plate, Muar font
-        'font':       FONT_PATH + "Muar-Stencil.ttf",
-        'font_scale': 0.50   ,
-		'size':       [230, 230],
-        'led_offset': 1000/60
-    },
-}
-
-# WORDCLOCK_TEXT = ["HETGISENUZELF"]
-WORDCLOCK_TEXT = LetterPlateText.WORDCLOCK_TEXT_11_11
-USE_LAYERS=False    # Using layers makes it slow somehow!?
-PLATE_TYPE='l_lib'
-
+try:
+    from freecad_macro_libs.SnijlabSetting  import *
+except:
+    from SnijlabSetting import *
 
 class front_plate:
     def __init__(self, part, text, font, fontScale, ledOffset, length, height, ldrDiameter, scots_thickness):
         self.drawText = True
         self.drawSquares = False
         self.drawSquaresHoles = False
-        self.drawCircles = True
         self.drawLdr = True
         self.drawOutline = True
         self.part = part
-        if USE_LAYERS:
-            self.pocket_layer = Draft.makeVisGroup(name="pockets")
-            self.part.addObject(self.pocket_layer)
-            self.text_layer = Draft.makeVisGroup(name="text")
-            self.part.addObject(self.text_layer)
-            self.outline_layer = Draft.makeVisGroup(name="outline")
-            self.part.addObject(self.outline_layer)
-        else:
-            self.pocket_layer = self.part
-            self.text_layer = self.part
-            self.outline_layer = self.part
-
         self.text = text
         self.font = font
         self.fontScale = fontScale
@@ -108,7 +52,7 @@ class front_plate:
     def make_outline(self):
         position = FreeCAD.Placement(FreeCAD.Vector(0, 0, 0), FreeCAD.Rotation(0,0,0))
         FrontPlateRectangle = Draft.makeRectangle(self.length, self.height, position)
-        self.outline_layer.addObject(FrontPlateRectangle)
+        self.part.addObject(FrontPlateRectangle)
     
     def make_hole_for_ldr(self):
         TopOfFirstLine = self.posFirstLetterBottemLeft.y + self.ledOffset
@@ -117,7 +61,7 @@ class front_plate:
         print("LDR offcet: " + str(((SpaceBeteenTopEnFirstLine/3.0)*2.0)))
         PlaceLdr = FreeCAD.Placement(positionLdr, FreeCAD.Rotation(0,0,0))
         ldrCircle = Draft.makeCircle(self.ldrDiameter/2.0, PlaceLdr)
-        self.text_layer.addObject(ldrCircle)
+        self.part.addObject(ldrCircle)
     
     def caculat_center_off_mass(self, letter):
         TestLetter = Draft.makeShapeString('H', self.font, self.ledHoleWith * self.fontScale)
@@ -142,7 +86,7 @@ class front_plate:
                     text = Draft.makeShapeString(letter, self.font, self.ledHoleWith * self.fontScale)
                     AdjCenter = FreeCAD.Vector(CenterSquare.x - self.letterCorrection['x'], CenterSquare.y - self.letterCorrection['y'])
                     text.Placement.Base = AdjCenter
-                    self.text_layer.addObject(text)
+                    self.part.addObject(text)
                 if self.drawSquares:
                     RecBottemLeft = FreeCAD.Vector(CenterSquare.x - (self.ledOffset/2), CenterSquare.y - (self.ledOffset/2))
                     Place = FreeCAD.Placement(RecBottemLeft,FreeCAD.Rotation(0,0,0))
@@ -158,22 +102,19 @@ class front_plate:
                     myCut.Base = Rectangle
                     myCut.Tool = HoleRectangle
                     self.part.addObject(myCut)
-                if self.drawCircles:
-                    Place = FreeCAD.Placement(CenterSquare,FreeCAD.Rotation(0,0,0))
-                    self.pocket_layer.addObject(Draft.makeCircle(self.ledOffset*0.9/2, placement=Place))
 
     
 if __name__ == "__main__":
+    WORDCLOCK_TEXT = ["HETGISENUZELF"]
+
+
     part = App.activeDocument().addObject('App::Part','Part')
     text = WORDCLOCK_TEXT
-    config = CONFIGS[PLATE_TYPE]
-    # font = "C:/proj/esp8266_wordclock/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil-23cm.ttf"
-    # fontScale = 0.80
-    font = config['font']
-    fontScale = config['font_scale']
-    ledOffset = config['led_offset']
-    length = config['size'][0]
-    height = config['size'][1]
+    font = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil-23cm.ttf"
+    fontScale = 0.55
+    ledOffset = 1000.0/30.0
+    length = 500
+    height = 500
     ldrDiameter = 5
     scots_thickness = 3
     front_plate = front_plate( part, text, font, fontScale, ledOffset, length, height, ldrDiameter, scots_thickness)

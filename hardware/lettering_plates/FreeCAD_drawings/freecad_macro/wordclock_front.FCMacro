@@ -14,8 +14,8 @@ INSERT_SCOTS_BIG = False
 ########################################################
 ########################################################
 if GENERATE_RIBBA_13_13:
-	FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil-50cm.ttf"
-	FONT_SCALE = 0.97
+	FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil.ttf"
+	FONT_SCALE = 0.90
 	LED_OFFSET = 1000.0/30.0	#1 meter / 30 leds
 	FRONT_PLATE_SIZE = 500.0
 	LDR_DIAMETER = 5.0	
@@ -27,7 +27,7 @@ if GENERATE_RIBBA_13_13:
 ########################################################
 ########################################################
 if GENERATE_RIBBA_11_11:
-	FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil-23cm.ttf"
+	FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil.ttf"
 	FONT_SCALE = 0.98
 	LED_OFFSET = 1000.0/60.0	#1 meter / 60 leds
 	FRONT_PLATE_SIZE = 230.0

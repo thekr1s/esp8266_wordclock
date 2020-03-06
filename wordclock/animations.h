@@ -14,7 +14,8 @@ typedef enum {
     ANIMATION_FIRE,
     ANIMATION_ALL_ON,
     ANIMATION_TETRIS,
-    ANIMATION_MESSAGE
+    ANIMATION_MESSAGE,
+    ANIMATION_LOGO,
 } EAnimationType;
 
 
@@ -26,6 +27,7 @@ char* AnimationGetMessageText();
 void DisplayWord(char* str);
 void Fire(uint32_t ms);
 void DisplayGreeting();
+void ShowLogo();
 
 
 #endif /* ANIMATIONS_H_ */

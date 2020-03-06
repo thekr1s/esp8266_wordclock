@@ -641,7 +641,7 @@ static void handle_clock_cfg(int s, wificfg_method method,
         if (!g_settings.isSummerTime) wificfg_write_string(s, "checked");
 
         // Animations
-        for (int i = 0; i <= 6; i++) {
+        for (int i = 0; i <= 7; i++) {
         	wificfg_write_string(s, http_clock_cfg_content[++idx]);
         	if (g_settings.animation == i) wificfg_write_string(s, "selected");
         }

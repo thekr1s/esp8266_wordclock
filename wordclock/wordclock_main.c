@@ -312,6 +312,9 @@ void WordclockMain(void* p)
 		} else if (g_settings.animation == ANIMATION_MESSAGE) {
 			ShowTime(timeShowDuration * 3);
 			DisplayGreeting();
+		} else if (g_settings.animation == ANIMATION_LOGO) {
+			ShowTime(timeShowDuration * 3);
+			ShowLogo();
 		} else {
 			ShowTime(timeShowDuration);
 			// Once in a while shome something different

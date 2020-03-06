@@ -100,6 +100,16 @@ const uint8_t _smiley2[] = {
 		0b00111100
 };
 
+const uint8_t _kiremko_logo[] = {
+		0b01110101,
+		0b01000000,
+		0b01010101,
+		0b00000100,
+		0b01110101,
+		0b00000001,
+		0b01010111,
+		0b00000000,
+};
 
 void ShowSplash(){
 	AlsFill(5,5,5);
@@ -112,6 +122,15 @@ void ShowSplash(){
 	AlsRefresh(ALSEFFECT_FADE);
 
 }
+
+void ShowLogo(){
+	AlsFill((64*g_brightness)/512, (64*g_brightness)/512, (64*g_brightness)/512);
+	FontPutCharTD(8, 8, 1, 1, _kiremko_logo, RGB_FROM_COLOR_IDX(COLOR_RED));
+	AlsRefresh(ALSEFFECT_NONE);
+	Sleep(5000);
+
+}
+
 void AnimationRandomFill(void)
 {
 	uint32_t h;

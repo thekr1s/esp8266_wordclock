@@ -19,6 +19,13 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
+    - name: show info
+      run: |
+        hostname
+        head /proc/cpuinfo -n 6
+        head /proc/meminfo -n 2
+        head /etc/*-release -n 4
+
     - name: prepare build env
       run: |
         cd esp-open-rtos

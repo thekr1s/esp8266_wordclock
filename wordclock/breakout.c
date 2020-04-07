@@ -56,7 +56,7 @@ static bool BallHitsBat() {
     if (newPos.row == 0 &&  newPos.col >= _batPos && newPos.col < _batPos + _batWidth) {
         return true;
     } else {
-        return true;
+        return false;
     }
 }
 

@@ -46,7 +46,7 @@ void sntp_tsk(void *pvParameters)
 
 	/* Start SNTP */
 	printf("Starting SNTP... \n");
-	/* SNTP will request an update each 5 minutes */
+	/* SNTP will request an update each 15 minutes */
 	sntp_set_update_delay(UPDATE_INERVAL);
 	/* Set GMT+1 zone, daylight savings off. DST is handled in the wordclock app itself */
 	/* SNTP initialization */
@@ -57,24 +57,18 @@ void sntp_tsk(void *pvParameters)
 	printf("Wait for NTP time...\n");
 	while (time(NULL) < 10000) {
 		vTaskDelayMs(1000);
+
 	}
 	printf("Time set...\n");
+
 	/* Print date and time each 5 seconds */
 	while(1) {
 		const uint32_t delaySec = 5;
-		uint32_t counter = RTC.COUNTER;
-		time_t tsBeforeDelay = time(NULL);
-
+		uint32_t t = RTC.COUNTER;
 		vTaskDelayMs(delaySec * 1000);
-		_rtcTicsPerSec = (RTC.COUNTER - counter) / delaySec;
-		time_t ts = time(NULL);
-		time_t tsDiff = ts - tsBeforeDelay;
-
-		if (tsDiff > (delaySec + 1) || tsDiff < (delaySec - 1)) {
-			char *timeString = ctime(&ts);
-			if (timeString[strlen(timeString)-1] == '\n') timeString[strlen(timeString)-1] = '\0';
-			printf("Time: %s TSdiff: %d, _rtcTimePerSec: %d\n", timeString, (int)tsDiff, _rtcTicsPerSec);
-		}
+		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;		
+//		time_t ts = time(NULL);
+//		printf("TIME: %s", ctime(&ts));
 	}
 }
 
@@ -94,4 +88,3 @@ void sntpClientIinit(const struct timezone* tz)
 	_tz = *tz;
      xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, 1, NULL);
 }
-

@@ -73,7 +73,6 @@ void sntp_tsk(void *pvParameters)
 }
 
 bool sntp_client_time_valid() {
-	// TODO: implement
 	if (_rtcTicsPerSec == 0) return false;
 
 	// sntp_fun.c stores the last update in RTC scratch2 register. See line:
@@ -89,4 +88,3 @@ void sntpClientIinit(const struct timezone* tz)
 	_tz = *tz;
      xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, 1, NULL);
 }
-

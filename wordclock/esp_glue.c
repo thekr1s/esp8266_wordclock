@@ -161,5 +161,5 @@ void user_init(void)
     
     HbiInit();
     
-	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 5, NULL);
+	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 1, NULL);
 }

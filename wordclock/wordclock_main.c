@@ -70,8 +70,6 @@ static void ShowSome(uint32_t delayMS)
 
 static void DisplayTimeSyncStatus()
 {
-
-	// TODO: determine time valid
 	if (!sntp_client_time_valid()) {
 		printf("timesync too old: red\n");
 		AlsSetLed(_displaySize[0] - 1, 0, g_brightness, 0, 0);
@@ -90,22 +88,6 @@ void DisplayTimeZone() {
 	}
 	AlsRefresh(ALSEFFECT_NONE);
 }
-
-/*
-//TODO relocate to debug_function.c/h
-static void ShowLdr() {
-	uint16_t val = 0;
-	LdrGetValue16(&val);
-
-	AlsSetLed(val % 10, 10, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 9, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 8, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 7, 0, 0, ApplyBrightness(255));
-}
-*/
 
 static void ShowDist(int dist)
 {
@@ -159,8 +141,8 @@ void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s){
 	*h = pTM->tm_hour;
     *m = pTM->tm_min;
     *s = pTM->tm_sec;
-
 }
+
 /**
  *
  * @param delayMS
@@ -174,7 +156,7 @@ void ShowTime(int delayMS) {
 	bool DoReDisplay = true;
 
 	endTicks = xTaskGetTickCount() + (delayMS / portTICK_PERIOD_MS);
-	while (xTaskGetTickCount() < endTicks){
+	while (xTaskGetTickCount() < endTicks) {
 		TimeGet(&h, &m, &s);
 		if (ButtonHandleButtons()) {
 			SetInterrupted(false);
@@ -230,22 +212,6 @@ void ShowTime(int delayMS) {
 	}
 }
 
-static QueueHandle_t _networkMutex = NULL;
-
-void NetworkFunctionsEnter(){
-	if (xSemaphoreTake(_networkMutex, 20000) != pdTRUE) {
-		printf("%s SemTake failed\n", __FUNCTION__);
-	}
-
-}
-
-void NetworkFunctionsLeave(){
-	if (xSemaphoreGive(_networkMutex) != pdTRUE) {
-		printf("%s SemTake failed\n", __FUNCTION__);
-	}
-
-}
-
 static void ShowIpAddress(void){
 	char str[20];
 	struct ip_info info;
@@ -263,10 +229,6 @@ void WordclockMain(void* p)
 	SettingsInit();
 	wordClockDisplay_init();
 
-	_networkMutex = xSemaphoreCreateMutex();
-
-//	wordClockDisplay_init();
-
 	if (g_settings.hardwareType == HARDWARE_13_13) {
 		DisplayWord("By RMW");
 	} else {
@@ -283,10 +245,10 @@ void WordclockMain(void* p)
 		printf("time: %u\n",(uint32_t)time(NULL));
 	}
 
-	wificfg_init(80, NULL);
 	ShowIpAddress();
 
 	while (1) {
+		printf("woordklok task\n\n");
 		switch (ControllerGameGet())
 		{
 			case GAME_BREAKOUT: DoBreakout(); break;
@@ -330,8 +292,5 @@ void WordclockMain(void* p)
 
 		SetInterrupted(false);
 		SettingsCheckStore();
-
-
 	}
-
 }

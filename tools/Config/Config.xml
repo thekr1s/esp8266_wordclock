@@ -46,7 +46,7 @@
   </Data>
   <Data name="FrameConfigLine3.FilePath">
     <Type>String</Type>
-    <Value>C:\Users\Rutger\Dropbox\Hobby\test\esp-open-rtos\examples\esp-wifi-config\firmware\esp-wifi-config.bin</Value>
+    <Value>..\wordclock\firmware\ws2812_buffer.bin</Value>
   </Data>
   <Data name="FrameConfigLine3.Offset">
     <Type>String</Type>

@@ -109,5 +109,5 @@ void OtaUpdateInit(void)
         printf("%c%d: offset 0x%08x\r\n", i == conf.current_rom ? '*':' ', i, conf.roms[i]);
     }
 
-    xTaskCreate(&tftp_client_task, "tftp_client", 2048, NULL, 2, NULL);
+    xTaskCreate(&tftp_client_task, "tftp_client", 2048, NULL, TFTP_CLIENT_TASK_PRIO, NULL);
 }

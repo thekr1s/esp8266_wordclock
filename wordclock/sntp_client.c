@@ -21,6 +21,7 @@
 /* Add extras/sntp component to makefile for this include to work */
 #include <sntp.h>
 #include <time.h>
+#include <esp_glue.h>
 
 
 #include "event_handler.h"
@@ -69,7 +70,7 @@ void sntp_tsk(void *pvParameters)
 		vTaskDelayMs(delaySec * 1000);
 		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;		
 		time_t ts = time(NULL);
-//		printf("TIME: %s", ctime(&ts));
+		printf("TIME: %s\n", ctime(&ts));
 	}
 }
 
@@ -87,5 +88,5 @@ bool sntp_client_time_valid() {
 void sntpClientIinit(const struct timezone* tz)
 {
 	_tz = *tz;
-    xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, 6, NULL);
+    xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, SNTP_SERVER_TASK_PRIO, NULL);
 }

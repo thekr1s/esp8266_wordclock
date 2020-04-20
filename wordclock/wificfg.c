@@ -43,7 +43,6 @@
 #include "wifi_config.h"
 #include "wificfg.h"
 #include "sysparam.h"
-static char* _wifi_ap_ip_addr = "192.168.1.1";
 
 #include "ota_basic.h"
 #include "settings.h"
@@ -1083,6 +1082,7 @@ static void server_task(void *pvParameters)
     printf("wificfg server task\n");
 
     for (;;) {
+        printf("server task\n");
         int s = accept(listenfd, (struct sockaddr *)NULL, (socklen_t *)NULL);
         printf("wificfg accept connection\n");
         if (s >= 0) {
@@ -1216,5 +1216,5 @@ void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
     params->port = port;
     params->wificfg_dispatch = wificfg_dispatch_list;
     params->dispatch = dispatch;
-    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, params, 2, NULL);
+    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, params, WIFI_CONFIG_TASK_PRIO, NULL);
 }

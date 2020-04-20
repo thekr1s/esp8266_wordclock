@@ -18,9 +18,12 @@
 #include <time.h>
 #include <sys/types.h>
 
+#include <esp_glue.h>
 #include <event_handler.h>
 #include <buttons.h>
 #include <hier_ben_ik.h>
+#include <wificfg.h>
+#include <sntp_client.h>
 #include <wordclock_main.h>
 #include <settings.h>
 
@@ -131,16 +134,15 @@ void user_init(void)
     uart_set_baud(0, 115200);
     printf("--- RMW Wordclock ---\r\n");
 
-	// EvtHdlInit();
-
-	// ButtonsInit();
-    
+	EvtHdlInit();
+	ButtonsInit();
     HbiInit();
+    wificfg_init(80, NULL);
 
     // Only set timezone. Daylight saving time is handled in the wordclock application
 	const struct timezone tz = {1*60, 0};
 	sntpClientIinit(&tz);
     
     // This priority should be lower than wifi config and sntp.
-	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 10, NULL);
+	xTaskCreate(WordclockMain, "Main task", 1024, NULL, WORDCLOCKMAIN_TASK_PRIO, NULL);
 }

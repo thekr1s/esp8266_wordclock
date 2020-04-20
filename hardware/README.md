@@ -8,7 +8,7 @@
 - ESP(Rx) -> LedStrip (Data)
 - ESP(GND) -> LedStrip (GND)
 - ESP(VU) -> LedStrip (5v)
-- LDR(1) -> ESP(3v)
+- LDR(1) -> ESP(GND)
 - LDR(2) -> ESP(A0)
 - ESP(A0) -> RESISTOR(100kOhm) -> ESP(3v) 
 

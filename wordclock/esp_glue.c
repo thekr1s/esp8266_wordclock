@@ -131,35 +131,16 @@ void user_init(void)
     uart_set_baud(0, 115200);
     printf("--- RMW Wordclock ---\r\n");
 
-    struct sdk_station_config config = {"", "", 0, {0}};
+	// EvtHdlInit();
 
-	if (!sdk_wifi_station_get_config(&config)) {
-		printf("ERROR sdk_wifi_station_get_config\n");
-	}
-	printf("wifi config: ssid:%s, pw:%s.\n", config.ssid, config.password);
-//	if (strlen(config.ssid) == 0) {
-//		strncpy((char*) config.ssid, "default", sizeof(config.ssid));
-//		strncpy((char*) config.password, "default", sizeof(config.password));
-//		sdk_wifi_set_opmode(STATION_MODE);
-//		if (!sdk_wifi_station_set_config(&config)) {
-//			printf("ERROR sdk_wifi_station_set_config\n");
-//		}
-//		printf("No wifi config. Written default wifi config\n");
-//        vTaskDelay(1000 / portTICK_PERIOD_MS);
-//        sdk_system_restart();
-//	}
-
-	if (!sdk_wifi_set_opmode(STATION_MODE)){
-		printf("Error sdk_wifi_set_opmode\n");
-	}
-	sdk_wifi_station_set_auto_connect(TRUE);
-//	sdk_wifi_station_connect();
-
-	EvtHdlInit();
-
-	ButtonsInit();
+	// ButtonsInit();
     
     HbiInit();
+
+    // Only set timezone. Daylight saving time is handled in the wordclock application
+	const struct timezone tz = {1*60, 0};
+	sntpClientIinit(&tz);
     
-	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 1, NULL);
+    // This priority should be lower than wifi config and sntp.
+	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 10, NULL);
 }

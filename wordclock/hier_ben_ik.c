@@ -166,7 +166,8 @@ static void GetHierBenIk() {
 
 void HbiTask(void *pvParameters){
 
-	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP ||
+			g_settings.hierbenikUrl == "") {
 		// printf("%s: Wait for connect\n", __FUNCTION__);
 		SleepNI(5000);
 	}
@@ -183,5 +184,5 @@ void HbiTask(void *pvParameters){
 
 
 void HbiInit() {
-    xTaskCreate(HbiTask, "HierBenIk task", 1024, NULL, 1, NULL);
+    xTaskCreate(HbiTask, "HierBenIk task", 1024, NULL, 5, NULL);
 }

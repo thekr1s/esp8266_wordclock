@@ -40,7 +40,8 @@ void sntp_tsk(void *pvParameters)
 	UNUSED_ARG(pvParameters);
 
 	printf("SNTP: Wait for WiFi connection... \n");
-	while(sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+	while(sdk_wifi_get_opmode() != STATION_MODE || sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+		printf("sntp wait..");
 		vTaskDelayMs(1000);
 	}
 
@@ -67,7 +68,7 @@ void sntp_tsk(void *pvParameters)
 		uint32_t t = RTC.COUNTER;
 		vTaskDelayMs(delaySec * 1000);
 		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;		
-//		time_t ts = time(NULL);
+		time_t ts = time(NULL);
 //		printf("TIME: %s", ctime(&ts));
 	}
 }
@@ -86,5 +87,5 @@ bool sntp_client_time_valid() {
 void sntpClientIinit(const struct timezone* tz)
 {
 	_tz = *tz;
-     xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, 1, NULL);
+    xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, 6, NULL);
 }

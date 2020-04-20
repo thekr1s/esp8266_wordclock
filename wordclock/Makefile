@@ -19,8 +19,17 @@ $(shell touch version.c)
 CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
 EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2
 
+# enable debugging for the wifi config tasks
+EXTRA_CFLAGS += -DWIFI_CONFIG_DEBUG
+
+# For the mDNS responder included with lwip:
+#EXTRA_CFLAGS += -DLWIP_MDNS_RESPONDER=1 -DLWIP_NUM_NETIF_CLIENT_DATA=1 -DLWIP_NETIF_EXT_STATUS_CALLBACK=1
+
+# Avoid writing the wifi state to flash when using wificfg.
+#EXTRA_CFLAGS += -DWIFI_PARAM_SAVE=0
+
 PROGRAM=ws2812_buffer
-EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls
+EXTRA_COMPONENTS = extras/wifi-config-v2 extras/http-parser extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls
 LIBS += m
 include ../esp-open-rtos/common.mk
 

@@ -265,10 +265,6 @@ void WordclockMain(void* p)
 
 	_networkMutex = xSemaphoreCreateMutex();
 
-	// Only set timezone. Daylight saving time is handled in the wordclock application
-	const struct timezone tz = {1*60, 0};
-	sntpClientIinit(&tz);
-
 //	wordClockDisplay_init();
 
 	if (g_settings.hardwareType == HARDWARE_13_13) {

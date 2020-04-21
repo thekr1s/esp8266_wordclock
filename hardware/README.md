@@ -8,7 +8,7 @@
 - ESP(Rx) -> LedStrip (Data)
 - ESP(GND) -> LedStrip (GND)
 - ESP(VU) -> LedStrip (5v)
-- LDR(1) -> ESP(3v)
+- LDR(1) -> ESP(GND)
 - LDR(2) -> ESP(A0)
 - ESP(A0) -> RESISTOR(100kOhm) -> ESP(3v) 
 
@@ -33,14 +33,25 @@
 - light divider (with hanging hole)
 - led panel on hardboard
 
-#### Hardware Tips and tricks
+#### Hardware Drawings
+##### letterplate
 - I Have created a FreeCAD pyhton macro for generating a Letterplate, ..\hardware\lettering_plates\FreeCAD_drawings\freecad_macro
 - The letterplate is paramatic so can be used for 11*11 of 13*13
 - After the generation is done, export the part as .STEP (the DXF generator from freecad is not smooth)
-- The Step file can be imported into Fusion 360 to create gcode 
-- the 11*11 clock has a 94mm from the center a hole 
-- the 13*13 has 217.5 mm from the center a hole
-
+- Import the .STEP file into Fusion for creating the DXF file of gcode
+- Gcode
+    - Create A body by setting the hight
+    - Switch to manufacture
+    - start creating the Gcode
+- DXF:
+    - Create a sketch on the Top view
+    - Menu -> Create -> Project / include -> include 3D Geometry
+    - Select the Body from the letterplate
+    - Save Sketch -> right klik the Sketch and save as DXF
+##### ledschotten
+- The LDR for the 11*11 clock is 214.444 mm from the bottem (This information is printed by FreeCAD)
+- The LDR for the 13*13 clock is 477.778 mm from the bottem
+- The LEdschotten is completly drawn in Fusion360, and is partly paramatic.
 
 #### Assemble
 - Create the led-panel by cutting out a square from hardboard

@@ -10,7 +10,7 @@ cd ..
 
 tar -xvf esp-open-sdk.tgz 
 
-sudo apt-get install make python-serial eclipse gcc g++
+sudo apt-get install make python-serial gcc g++
 
 . env.sh
 
@@ -19,6 +19,8 @@ cd wordclock
 make
 
 # Use eclipse
+sudo apt-get install eclipse
+
 eclipse&
 
 install C/C++ dev tools in eclipse

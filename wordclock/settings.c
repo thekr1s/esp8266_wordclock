@@ -17,7 +17,7 @@
 #include <settings.h>
 #include <AddressableLedStrip.h>
 
-#define SETTINGS_ADDRESS 0x7e000
+#define SETTINGS_ADDRESS 0x7f000
 
 static volatile uint32_t g_storeTS = 0;
 TSettings g_settings_default __attribute__((aligned(4))) = {

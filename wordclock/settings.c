@@ -20,7 +20,7 @@
 #define SETTINGS_KEY "wc-cfg"
 
 static volatile uint32_t g_storeTS = 0;
-TSettings g_settings_default __attribute__((aligned(4))) = {
+static const TSettings g_settings_default __attribute__((aligned(4))) = {
      FLASH_MAGIC,
      ANIMATION_TRANSITION,
      HARDWARE_11_11,
@@ -61,14 +61,13 @@ TSettings g_settings_default __attribute__((aligned(4))) = {
 
 void SettingsInit() {
     size_t actual_size;
+    g_settings.magic = 0;
     sysparam_get_data_static(SETTINGS_KEY, (uint8_t*)&g_settings, sizeof(g_settings), &actual_size, NULL);
-    if (actual_size != sizeof(g_settings) ) {
-        printf("Settings size mismatch is: %d expect: %d", actual_size, sizeof(g_settings));
-    }
-    if (g_settings.magic == FLASH_MAGIC) {
-        // Valid settings found
+    if (actual_size == sizeof(g_settings) && (g_settings.magic == FLASH_MAGIC)) {
+        printf("Valid settings read from sysparams flash\r\n");
     } else {
-        //if there is no config stored in flash use the default
+        printf("No valid settings found, size %d, magic: %08x\r\n", actual_size, g_settings.magic);
+        printf("Use default settings\r\n");
         memcpy((uint8_t*)&g_settings, (uint8_t*)&g_settings_default, sizeof(TSettings));
     }
 }

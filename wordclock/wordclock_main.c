@@ -249,6 +249,9 @@ void WordclockMain(void* p)
 
 	while (1) {
 		printf("woordklok task\n\n");
+		while (time(NULL) < 10000) {
+			SleepNI(1000);
+		}
 		switch (ControllerGameGet())
 		{
 			case GAME_BREAKOUT: DoBreakout(); break;

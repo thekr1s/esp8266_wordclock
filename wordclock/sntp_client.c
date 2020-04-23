@@ -42,7 +42,7 @@ void sntp_tsk(void *pvParameters)
 
 	printf("SNTP: Wait for WiFi connection... \n");
 	while(sdk_wifi_get_opmode() != STATION_MODE || sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		printf("sntp wait..");
+		printf("sntp wait..\n");
 		vTaskDelayMs(1000);
 	}
 
@@ -59,7 +59,6 @@ void sntp_tsk(void *pvParameters)
 	printf("Wait for NTP time...\n");
 	while (time(NULL) < 10000) {
 		vTaskDelayMs(1000);
-
 	}
 	printf("Time set...\n");
 

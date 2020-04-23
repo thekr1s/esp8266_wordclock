@@ -10,14 +10,14 @@
 #include <string.h>
 #include <time.h>
 #include <sys/types.h>
-
+#include <sysparam.h>
 #include "espressif/esp_common.h"
 
 #include <esp_glue.h>
 #include <settings.h>
 #include <AddressableLedStrip.h>
 
-#define SETTINGS_ADDRESS 0x7f000
+#define SETTINGS_KEY "wc-cfg"
 
 static volatile uint32_t g_storeTS = 0;
 TSettings g_settings_default __attribute__((aligned(4))) = {
@@ -56,15 +56,17 @@ TSettings g_settings_default __attribute__((aligned(4))) = {
         {000,000,255},
         {255,255,255},//dummy used for rainbow
      },
+     FLASH_MAGIC
 };
 
 void SettingsInit() {
-    uint32_t magic;
-
-    sdk_spi_flash_read(SETTINGS_ADDRESS, (uint32_t*) &magic, sizeof(magic));
-    if (magic == FLASH_MAGIC) {
+    size_t actual_size;
+    sysparam_get_data_static(SETTINGS_KEY, (uint8_t*)&g_settings, sizeof(g_settings), &actual_size, NULL);
+    if (actual_size != sizeof(g_settings) ) {
+        printf("Settings size mismatch is: %d expect: %d", actual_size, sizeof(g_settings));
+    }
+    if (g_settings.magic == FLASH_MAGIC) {
         // Valid settings found
-        sdk_spi_flash_read(SETTINGS_ADDRESS, (uint32_t*) &g_settings, sizeof(g_settings));
     } else {
         //if there is no config stored in flash use the default
         memcpy((uint8_t*)&g_settings, (uint8_t*)&g_settings_default, sizeof(TSettings));
@@ -72,14 +74,15 @@ void SettingsInit() {
 }
 
 void SettingsRead() {
-    uint32_t magic;
-
-    sdk_spi_flash_read(SETTINGS_ADDRESS, (uint32_t*) &magic, sizeof(magic));
-    if (magic == FLASH_MAGIC) {
+    size_t actual_size;
+    sysparam_get_data_static(SETTINGS_KEY, (uint8_t*)&g_settings, sizeof(g_settings), &actual_size, NULL);
+    if (actual_size != sizeof(g_settings) ) {
+        printf("Settings size mismatch is: %d expect: %d", actual_size, sizeof(g_settings));
+    }
+    if (g_settings.magic == FLASH_MAGIC && g_settings.magic_end == FLASH_MAGIC) {
         // Valid settings found
         AlsFill(0, ApplyBrightness(100), 0);
         AlsRefresh(ALSEFFECT_NONE);
-        sdk_spi_flash_read(SETTINGS_ADDRESS, (uint32_t*) &g_settings, sizeof(g_settings));
     } else {
         //if there is no config stored in flash use the default
         memcpy((uint8_t*)&g_settings, (uint8_t*)&g_settings_default, sizeof(TSettings));
@@ -92,9 +95,8 @@ void SettingsWrite(){
     AlsFill(0, ApplyBrightness(100), 0);
     AlsRefresh(ALSEFFECT_NONE);
 
-    sdk_spi_flash_erase_sector(SETTINGS_ADDRESS / sdk_flashchip.sector_size);
-    sdk_spi_flash_write(SETTINGS_ADDRESS, (uint32_t*)&g_settings, sizeof(g_settings));
-
+    sysparam_set_string(SETTINGS_KEY, "");
+    sysparam_set_data(SETTINGS_KEY, (uint8_t*)&g_settings, sizeof(g_settings), true);
     SleepNI(300);
 }
 
@@ -114,7 +116,7 @@ void SettingsCheckStore(){
 }
 
 void SettingsClockReset(){
-    sdk_spi_flash_erase_sector(SETTINGS_ADDRESS / sdk_flashchip.sector_size);
+    sysparam_set_string(SETTINGS_KEY, "");
     AlsFill(20,0,0);
     AlsRefresh(ALSEFFECT_NONE);
     SleepNI(2000);

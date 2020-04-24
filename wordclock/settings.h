@@ -44,6 +44,7 @@ typedef struct {
     uint32_t timerPeriodTicks;
     uint32_t isSummerTime;
     TColor aColors[COLOR_COUNT];
+    uint32_t magic_end;
 } TSettings;
 
 TSettings g_settings __attribute__((aligned(4)));

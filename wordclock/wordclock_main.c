@@ -246,12 +246,13 @@ void WordclockMain(void* p)
 	}
 
 	ShowIpAddress();
+	
+	while (time(NULL) < 10000) {
+		SleepNI(5*1000);
+	}
 
 	while (1) {
 		printf("woordklok task\n\n");
-		while (time(NULL) < 10000) {
-			SleepNI(1000);
-		}
 		switch (ControllerGameGet())
 		{
 			case GAME_BREAKOUT: DoBreakout(); break;
@@ -295,5 +296,6 @@ void WordclockMain(void* p)
 
 		SetInterrupted(false);
 		SettingsCheckStore();
+		SleepNI(1000);
 	}
 }

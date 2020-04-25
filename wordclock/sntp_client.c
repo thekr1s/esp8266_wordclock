@@ -17,14 +17,11 @@
 #include <lwip/sys.h>
 #include <lwip/netdb.h>
 #include <lwip/dns.h>
-
 /* Add extras/sntp component to makefile for this include to work */
 #include <sntp.h>
 #include <time.h>
 #include <esp_glue.h>
-
-
-#include "event_handler.h"
+#include <wificfg.h>
 
 #define SNTP_SERVERS 	"0.pool.ntp.org", "1.pool.ntp.org", \
 						"2.pool.ntp.org", "3.pool.ntp.org"
@@ -32,8 +29,9 @@
 #define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_PERIOD_MS)
 #define UNUSED_ARG(x)	(void)x
 #define UPDATE_INERVAL (5 * 60000)
-static struct timezone _tz = {0, 0};
-static uint32_t _rtcTicsPerSec = 0;
+
+static struct timezone _tz = {1*60, 0};
+static volatile uint32_t _rtcTicsPerSec = 0;
 
 void sntp_tsk(void *pvParameters)
 {
@@ -41,18 +39,17 @@ void sntp_tsk(void *pvParameters)
 	UNUSED_ARG(pvParameters);
 
 	printf("SNTP: Wait for WiFi connection... \n");
-	while(sdk_wifi_get_opmode() != STATION_MODE || sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+	while(!wifi_is_connected()) {
 		printf("sntp wait..\n");
-		vTaskDelayMs(1000);
+		vTaskDelayMs(2000);
 	}
 
 	/* Start SNTP */
 	printf("Starting SNTP... \n");
+
 	/* SNTP will request an update each 15 minutes */
 	sntp_set_update_delay(UPDATE_INERVAL);
-	/* Set GMT+1 zone, daylight savings off. DST is handled in the wordclock app itself */
-	/* SNTP initialization */
-	sntp_initialize(&_tz);
+	
 	/* Servers must be configured right after initialization */
 	sntp_set_servers(servers, sizeof(servers) / sizeof(char*));
 
@@ -69,11 +66,11 @@ void sntp_tsk(void *pvParameters)
 		vTaskDelayMs(delaySec * 1000);
 		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;		
 		time_t ts = time(NULL);
-		printf("TIME: %s\n", ctime(&ts));
+		printf("TIME: %s", ctime(&ts));
 	}
 }
 
-bool sntp_client_time_valid() {
+bool sntp_client_time_valid(void) {
 	if (_rtcTicsPerSec == 0) return false;
 
 	// sntp_fun.c stores the last update in RTC scratch2 register. See line:
@@ -84,8 +81,11 @@ bool sntp_client_time_valid() {
 	return (age <= (2 * UPDATE_INERVAL) / 1000)? true : false;
 }
 
-void sntpClientIinit(const struct timezone* tz)
+void sntp_client_init(void)
 {
-	_tz = *tz;
-    xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, SNTP_SERVER_TASK_PRIO, NULL);
+    /* Set GMT+1 zone, daylight savings off. DST is handled in the wordclock app itself */
+	/* SNTP initialization */
+	sntp_initialize(&_tz);
+
+	xTaskCreate(sntp_tsk, "SNTP", 512, NULL, SNTP_SERVER_TASK_PRIO, NULL);
 }

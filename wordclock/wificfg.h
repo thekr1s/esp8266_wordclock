@@ -66,7 +66,7 @@ extern const char buildDate[];
  * and a path dispatch list are needed. The dispatch list can not be
  * stack allocated as it is passed to another task.
  */
-void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch);
+void wificfg_init(void);
 
 /*
  * Support for reading a form name or value from the socket. The name or value
@@ -83,3 +83,6 @@ void wificfg_html_escape(char *string, char *buf, size_t len);
 
 /* Support for writing a string in a response. */
 int wificfg_write_string(int s, const char *str);
+
+
+bool wifi_is_connected(void);

@@ -1,7 +1,7 @@
 #ifndef SNTP_CLIENT_H
 #define SNTP_CLIENT_H
 
-void sntpClientIinit();
-bool sntp_client_time_valid();
+void sntp_client_init(void);
+bool sntp_client_time_valid(void);
 
 #endif //SNTP_CLIENT_H

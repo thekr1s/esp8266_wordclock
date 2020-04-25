@@ -27,7 +27,7 @@
 #include <wordclock_main.h>
 #include <settings.h>
 
-static bool _isInterrupted = false;
+static volatile bool _isInterrupted = false;
 
 uint32_t GetTicksDiffMs(uint32_t start, uint32_t end) {
     uint32_t diff = end-start;
@@ -40,7 +40,7 @@ void SetInterrupted(bool isInterrupted) {
 }
 
 bool Interrupted() {
-	return _isInterrupted;
+    return _isInterrupted;
 }
 
 /**
@@ -60,66 +60,14 @@ void SleepNI(uint32_t ms) {
  * Returns: number of ms left when interrupted. 0 when not interrupted
  */
 uint32_t Sleep(uint32_t ms) {
-	while ( ms > 0) {
+	//SleepNI(ms);
+    while ( ms > 0) {
 		if (_isInterrupted) return ms;
 		SetInterrupted(ButtonsAnyPressed());
 		SleepNI(ms > 100 ? 100 : ms);
 		ms = ms > 100 ? ms - 100 : 0;
 	}
     return ms;
-}
-
-//function is not used any more
-void HexDump (char *desc, void *addr, int len) {
-    int i;
-    unsigned char buff[17];
-    unsigned char *pc = (unsigned char*)addr;
-
-    // Output description if given.
-    if (desc != NULL)
-        printf ("%s:\n", desc);
-
-    if (len == 0) {
-        printf("  ZERO LENGTH\n");
-        return;
-    }
-    if (len < 0) {
-        printf("  NEGATIVE LENGTH: %i\n",len);
-        return;
-    }
-
-    // Process every byte in the data.
-    for (i = 0; i < len; i++) {
-        // Multiple of 16 means new line (with line offset).
-
-        if ((i % 16) == 0) {
-            // Just don't print ASCII for the zeroth line.
-            if (i != 0)
-                printf ("  %s\n", buff);
-
-            // Output the offset.
-            printf ("  %04x ", i);
-        }
-
-        // Now the hex code for the specific character.
-        printf (" %02x", pc[i]);
-
-		// And store a printable ASCII character for later.
-		if ((pc[i] < 0x20) || (pc[i] > 0x7e))
-			buff[i % 16] = '.';
-		else
-			buff[i % 16] = pc[i];
-		buff[(i % 16) + 1] = '\0';
-	}
-
-	// Pad out last line if not exactly 16 characters.
-	while ((i % 16) != 0) {
-        printf ("   ");
-        i++;
-    }
-
-    // And print the final ASCII bit.
-    printf ("  %s\n", buff);
 }
 
 /*
@@ -132,16 +80,16 @@ void user_init(void)
     printf("SDK version:%s\n", sdk_system_get_sdk_version());
 
     uart_set_baud(0, 115200);
-    printf("--- RMW Wordclock ---\r\n");
+    printf("--- RMW Wordclock RHU ---\r\n");
+
+	SettingsInit();
+	wordClockDisplay_init();
+	ButtonsInit();
 
 	EvtHdlInit();
-	ButtonsInit();
+	sntp_client_init();
     HbiInit();
-    wificfg_init(80, NULL);
-
-    // Only set timezone. Daylight saving time is handled in the wordclock application
-	const struct timezone tz = {1*60, 0};
-	sntpClientIinit(&tz);
+    wificfg_init();
     
     // This priority should be lower than wifi config and sntp.
 	xTaskCreate(WordclockMain, "Main task", 1024, NULL, WORDCLOCKMAIN_TASK_PRIO, NULL);

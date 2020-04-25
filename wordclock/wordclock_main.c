@@ -225,19 +225,11 @@ void WordclockMain(void* p)
 {
     (void) p;
 	uint32_t timeShowDuration = 5000;
-
-	SettingsInit();
-	wordClockDisplay_init();
-
-	if (g_settings.hardwareType == HARDWARE_13_13) {
-		DisplayWord("By RMW");
-	} else {
-		ShowSplash();
-	}
-
+	
+	ShowSplash();
 	// Wait for time set
 	int count = 10;
-	while ((time(NULL) < 10000) && (count-- > 0)) {
+	while (!sntp_client_time_valid() && (count-- > 0)) {
 	    CWSet("wacht", 128,128,128);
 	    CWSet("even", 128,128,128);
 	    AlsRefresh(ALSEFFECT_NONE);
@@ -247,12 +239,14 @@ void WordclockMain(void* p)
 
 	ShowIpAddress();
 	
-	while (time(NULL) < 10000) {
-		SleepNI(5*1000);
+	while (!wifi_is_connected()) {
+		printf("No WiFi!\n");
+		DisplayWord("No WiFi!");
+		DisplayWord("Connect to Wordclock WiFi and sign in");
+		Sleep(3000);
 	}
 
 	while (1) {
-		printf("woordklok task\n\n");
 		switch (ControllerGameGet())
 		{
 			case GAME_BREAKOUT: DoBreakout(); break;
@@ -296,6 +290,6 @@ void WordclockMain(void* p)
 
 		SetInterrupted(false);
 		SettingsCheckStore();
-		SleepNI(1000);
+		Sleep(1000);
 	}
 }

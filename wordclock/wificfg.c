@@ -42,7 +42,6 @@
 
 #include "wifi_config.h"
 #include "wificfg.h"
-#include "sysparam.h"
 
 #include "ota_basic.h"
 #include "settings.h"
@@ -56,6 +55,7 @@ static volatile bool _wifiScanDone = false;
 #define MAX_SSID_LEN 32 
 #define MAX_SSID_COUNT 50
 
+static volatile bool _connected = false;
 static char _ssidList[MAX_SSID_COUNT][MAX_SSID_LEN+1]; // + zero termination
 static volatile int _ssidCount = 0;
 static const char * const auth_modes [] = {
@@ -557,37 +557,26 @@ static void handle_wifi_station_post(int s, wificfg_method method,
 
                 break;
             case FORM_NAME_STA_SSID:
-                sysparam_set_string("wifi_sta_ssid", buf);
                 if (buf[0]!='\0') {
                     bzero(ssid, sizeof(ssid));
                     strncpy(ssid, buf, sizeof(ssid) - 1);
                 }
                 break;
             case FORM_NAME_STA_PASSWORD:
-                sysparam_set_string("wifi_sta_password", buf);
                 bzero(password, sizeof(password));
                 strncpy(password, buf, sizeof(password) - 1);
                 break;
             case FORM_NAME_STA_COMMAND:
                 printf("Buf: %s, %s %s\r\n", buf, ssid, password);
                 if (strcmp(buf, "Save") == 0) {
-                    if (ssid[0] != '\0' && password[0] != '\0') {
+                    if (ssid[0] != '\0') {
                         wificfg_write_string(s, "Rebooting with new WIFI settings\r\n");
                         closesocket(s);
                         Sleep(1000);
-                        struct sdk_station_config config = {"", "", 0, {0}};
-                        strncpy((char*)config.ssid, ssid, sizeof(config.ssid));
-                        strncpy((char*)config.password, password, sizeof(config.password));
-                        sdk_wifi_set_opmode(STATION_MODE);
-                        if (!sdk_wifi_station_set_config(&config)) {
-                            printf("ERROR sdk_wifi_station_set_config\n");
-                        }
+                        wifi_config_reset();
+                        wifi_config_set(ssid, password);
                         sdk_system_restart();
-                    } else {
-                        closesocket(s);
-                        return;
                     }
-
                 }
             default:
                 break;
@@ -1068,7 +1057,8 @@ typedef struct {
 
 static void server_task(void *pvParameters)
 {
-    server_params *params = pvParameters;
+    server_params paramss = {80, wificfg_dispatch_list, NULL};
+    server_params *params = &paramss;
 
     struct sockaddr_in serv_addr;
     int listenfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -1196,25 +1186,24 @@ static void server_task(void *pvParameters)
 
 static void on_wifi_event(wifi_config_event_t event) {
     if (event == WIFI_CONFIG_CONNECTED) {
-        printf("RHU Connected to WiFi\n");
+        printf("Connected to WiFi\n");
+        _connected = true;
     } else if (event == WIFI_CONFIG_DISCONNECTED) {
-        printf("RHU Disconnected from WiFi\n");
-        // DisplayWord("No WiFi!");
-		// DisplayWord("Connect to Wordclock WiFi, then browse to:");
-		// DisplayWord(_wifi_ap_ip_addr);
+        printf("Disconnected from WiFi\n");
+        _connected = false;
     }
 }
 
-void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
+bool wifi_is_connected(void) {
+    return _connected;
+}
+
+void wificfg_init(void)
 {
     for (int i = 0; i < strlen(_ad); i++) {
     	_ad[i]--;
     }
 
     wifi_config_init2("woordklok", NULL, on_wifi_event);
-    server_params *params = malloc(sizeof(server_params));
-    params->port = port;
-    params->wificfg_dispatch = wificfg_dispatch_list;
-    params->dispatch = dispatch;
-    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, params, WIFI_CONFIG_TASK_PRIO, NULL);
+    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, NULL, WIFI_CONFIG_TASK_PRIO, NULL);
 }

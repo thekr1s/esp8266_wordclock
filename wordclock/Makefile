@@ -22,6 +22,9 @@ EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2
 # enable debugging for the wifi config tasks
 #EXTRA_CFLAGS += -DWIFI_CONFIG_DEBUG
 
+# enable debugging for the sntp server
+#EXTRA_CFLAGS += -DSNTP_LOGD -DSNTP_LOGD_WITH_PRINTF
+
 # For the mDNS responder included with lwip:
 #EXTRA_CFLAGS += -DLWIP_MDNS_RESPONDER=1 -DLWIP_NUM_NETIF_CLIENT_DATA=1 -DLWIP_NETIF_EXT_STATUS_CALLBACK=1
 

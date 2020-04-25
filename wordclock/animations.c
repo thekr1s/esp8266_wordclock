@@ -101,16 +101,19 @@ const uint8_t _smiley2[] = {
 };
 
 
-void ShowSplash(){
-	AlsFill(5,5,5);
-	AlsRefresh(ALSEFFECT_SHIFTDOWN);
-	SleepNI(500);
-	CWSet("by rmw", 5,5,80);
-	AlsRefresh(ALSEFFECT_SHIFTRIGHT);
-	SleepNI(5000);
-	AlsFill(0,0,0);
-	AlsRefresh(ALSEFFECT_FADE);
-
+void ShowSplash() {
+	if (g_settings.hardwareType == HARDWARE_13_13) {
+		DisplayWord("By RMW");
+	} else {
+		AlsFill(5,5,5);
+		AlsRefresh(ALSEFFECT_SHIFTDOWN);
+		SleepNI(500);
+		CWSet("by rmw", 5,5,80);
+		AlsRefresh(ALSEFFECT_SHIFTRIGHT);
+		SleepNI(5000);
+		AlsFill(0,0,0);
+		AlsRefresh(ALSEFFECT_FADE);
+	}
 }
 void AnimationRandomFill(void)
 {

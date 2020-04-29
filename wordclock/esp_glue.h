@@ -10,10 +10,10 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-#define WORDCLOCKMAIN_TASK_PRIO 2
+#define WORDCLOCKMAIN_TASK_PRIO 1
 #define WIFI_CONFIG_TASK_PRIO 2
 #define TFTP_CLIENT_TASK_PRIO 2     //tftp client is started contitional
-#define SNTP_SERVER_TASK_PRIO 2
+#define SNTP_SERVER_TASK_PRIO 1
 #define EVENT_TASK_PRIO 1
 #define HIERBENIK_TASK_PRIO 1
 

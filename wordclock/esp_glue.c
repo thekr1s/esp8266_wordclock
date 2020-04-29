@@ -80,7 +80,7 @@ void user_init(void)
     printf("SDK version:%s\n", sdk_system_get_sdk_version());
 
     uart_set_baud(0, 115200);
-    printf("--- RMW Wordclock RHU ---\r\n");
+    printf("--- RMW Wordclock ---\r\n");
 
 	SettingsInit();
 	wordClockDisplay_init();

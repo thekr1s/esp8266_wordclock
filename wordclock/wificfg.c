@@ -65,6 +65,7 @@ static const char * const auth_modes [] = {
     [AUTH_WPA2_PSK]     = "WPA2/PSK",
     [AUTH_WPA_WPA2_PSK] = "WPA/WPA2/PSK"
 };
+static TaskHandle_t http_task_handle = NULL;
 
 // Handle callback of wifi AP scan
 static void scan_done_cb(void *arg, sdk_scan_status_t status)
@@ -703,7 +704,9 @@ static void handle_clock_cfg_post(int s, wificfg_method method,
             	if (strcmp(buf, "Reset") == 0){
             	    wificfg_write_string(s, http_redirect_header_delayed);
             		SettingsClockReset();
-            	}
+            	} else if (strcmp(buf, "Save") == 0){
+                    SettingsWrite();
+                }
             }
 
         }
@@ -1183,14 +1186,20 @@ static void server_task(void *pvParameters)
     }
 }
 
-
 static void on_wifi_event(wifi_config_event_t event) {
     if (event == WIFI_CONFIG_CONNECTED) {
         printf("Connected to WiFi\n");
         _connected = true;
+        
+        xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, NULL, WIFI_CONFIG_TASK_PRIO, &http_task_handle);
     } else if (event == WIFI_CONFIG_DISCONNECTED) {
         printf("Disconnected from WiFi\n");
         _connected = false;
+
+        if (http_task_handle) {
+            vTaskDelete(http_task_handle);
+            http_task_handle = NULL;
+        }
     }
 }
 
@@ -1205,5 +1214,4 @@ void wificfg_init(void)
     }
 
     wifi_config_init2("woordklok", NULL, on_wifi_event);
-    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, NULL, WIFI_CONFIG_TASK_PRIO, NULL);
 }

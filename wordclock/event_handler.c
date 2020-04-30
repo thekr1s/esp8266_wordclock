@@ -34,7 +34,6 @@ static void EventTask(void *parameters){
 	portBASE_TYPE result;
 
 	while (!_fStop) {
-		printf("event hdl task\n");
 		result = xQueueReceive(_msgQueue, &event, portMAX_DELAY);
 		if (result == pdTRUE) {
 			switch (event) {
@@ -88,7 +87,7 @@ void EvtHdlInit() {
 	_buttonTimer = xTimerCreate("Button timer", _buttonTimerInterval, pdFALSE, NULL, ButtonHandler);
 	_nextMinuteTimer = xTimerCreate("Next minute timer", _buttonTimerInterval, pdFALSE, NULL, NextMinuteHandler);
 	_msgQueue = xQueueCreate(2, sizeof(uint32_t));
-	xTaskCreate(EventTask, "Event task", 1024, NULL, EVENT_TASK_PRIO, NULL);
+	xTaskCreate(EventTask, "Event task", 256, NULL, EVENT_TASK_PRIO, NULL);
 }
 
 void EvtHdlButtonStateChange() {

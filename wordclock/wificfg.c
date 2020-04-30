@@ -66,6 +66,7 @@ static const char * const auth_modes [] = {
     [AUTH_WPA_WPA2_PSK] = "WPA/WPA2/PSK"
 };
 static TaskHandle_t http_task_handle = NULL;
+static volatile int _listenfd = 0;
 
 // Handle callback of wifi AP scan
 static void scan_done_cb(void *arg, sdk_scan_status_t status)
@@ -1064,21 +1065,35 @@ static void server_task(void *pvParameters)
     server_params *params = &paramss;
 
     struct sockaddr_in serv_addr;
-    int listenfd = socket(AF_INET, SOCK_STREAM, 0);
-    memset(&serv_addr, '0', sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(params->port);
-    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-    listen(listenfd, 2);
-
+    while (true) {
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
+        lwip_close(_listenfd);
+        if ((_listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+            printf("Invalid socket\n");
+            continue;
+        };
+        memset(&serv_addr, '0', sizeof(serv_addr));
+        serv_addr.sin_family = AF_INET;
+        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        serv_addr.sin_port = htons(params->port);
+        if (0 != bind(_listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) {
+            printf("Failed to bind to socket\n");
+            continue;
+        }
+        if (0 != listen(_listenfd, 2)) {
+            printf("Failed to listen to socket\n");
+            continue;
+        };
+        break;
+    }
     printf("wificfg server task\n");
 
     for (;;) {
-        printf("server task\n");
-        int s = accept(listenfd, (struct sockaddr *)NULL, (socklen_t *)NULL);
+        int s = accept(_listenfd, (struct sockaddr *)NULL, (socklen_t *)NULL);
         printf("wificfg accept connection\n");
-        if (s >= 0) {
+        if (s < 0) {
+            printf("Invalid accept\n");
+        } else {
             int timeout = 3000; 
             setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
             setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
@@ -1197,6 +1212,7 @@ static void on_wifi_event(wifi_config_event_t event) {
         _connected = false;
 
         if (http_task_handle) {
+            lwip_close(_listenfd);
             vTaskDelete(http_task_handle);
             http_task_handle = NULL;
         }

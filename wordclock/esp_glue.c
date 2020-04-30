@@ -60,7 +60,6 @@ void SleepNI(uint32_t ms) {
  * Returns: number of ms left when interrupted. 0 when not interrupted
  */
 uint32_t Sleep(uint32_t ms) {
-	//SleepNI(ms);
     while ( ms > 0) {
 		if (_isInterrupted) return ms;
 		SetInterrupted(ButtonsAnyPressed());
@@ -76,6 +75,7 @@ uint32_t Sleep(uint32_t ms) {
  */
 void user_init(void)
 {
+	sdk_wifi_station_set_auto_connect(FALSE);
 	gpio_set_iomux_function(2, IOMUX_GPIO2_FUNC_UART1_TXD);
     printf("SDK version:%s\n", sdk_system_get_sdk_version());
 

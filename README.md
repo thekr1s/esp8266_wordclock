@@ -34,8 +34,5 @@ Start the ESP8266Flasher.exe en vul het onderstaande in:
 
 Setup Wordclock
 ==============
-- otaFw server "rutger798.mynetgear.com:6912"
-- otaFw server "rwassens.ddns.net:10070"
-- hierbenik: "hierbenik.wssns.nl:80"
-- Note the request is build by: sprintf(buf, "GET %s HTTP/1.1\r\nHost: %s\r\nConnection:keep-alive\r\nAccept: */*\r\n\r\n", request, url);
+- hierbenik: the request is build by: sprintf(buf, "GET %s HTTP/1.1\r\nHost: %s\r\nConnection:keep-alive\r\nAccept: */*\r\n\r\n", request, url);
 - hierbenik request: "/get_with_age.php

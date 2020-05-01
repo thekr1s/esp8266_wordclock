@@ -1065,6 +1065,7 @@ static void server_task(void *pvParameters)
     server_params *params = &paramss;
 
     struct sockaddr_in serv_addr;
+    int enable = 1;
     while (true) {
         vTaskDelay(5000 / portTICK_PERIOD_MS);
         lwip_close(_listenfd);
@@ -1076,6 +1077,10 @@ static void server_task(void *pvParameters)
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
         serv_addr.sin_port = htons(params->port);
+        if (setsockopt(_listenfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0) {
+            printf("Error in setsockopt");
+            continue;
+        }
         if (0 != bind(_listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) {
             printf("Failed to bind to socket\n");
             continue;

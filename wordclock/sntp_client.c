@@ -32,26 +32,16 @@
 
 static struct timezone _tz = {1*60, 0};
 static volatile uint32_t _rtcTicsPerSec = 0;
+static const char *servers[] = {SNTP_SERVERS};
 
 void sntp_tsk(void *pvParameters)
 {
-	const char *servers[] = {SNTP_SERVERS};
 	UNUSED_ARG(pvParameters);
 
-	printf("SNTP: Wait for WiFi connection... \n");
 	while(!wifi_is_connected()) {
-		printf("sntp wait..\n");
+		printf("SNTP: Wait for WiFi connection... \n");
 		vTaskDelayMs(2000);
 	}
-
-	/* Start SNTP */
-	printf("Starting SNTP... \n");
-
-	/* SNTP will request an update each 15 minutes */
-	sntp_set_update_delay(UPDATE_INERVAL);
-	
-	/* Servers must be configured right after initialization */
-	sntp_set_servers(servers, sizeof(servers) / sizeof(char*));
 
 	printf("Wait for NTP time...\n");
 	while (time(NULL) < 10000) {
@@ -72,20 +62,17 @@ void sntp_tsk(void *pvParameters)
 
 bool sntp_client_time_valid(void) {
 	if (_rtcTicsPerSec == 0) return false;
-
-	// sntp_fun.c stores the last update in RTC scratch2 register. See line:
-	//     tim_ref = now_rtc;
-	// At the bottom of the c file.
-	// Use that to calculate the age of the time update.
-	uint32_t age = (RTC.COUNTER - RTC.SCRATCH[2]) / _rtcTicsPerSec;
+	uint32_t age = time(NULL) - sntp_last_update_ts();
 	return (age <= (2 * UPDATE_INERVAL) / 1000)? true : false;
 }
 
 void sntp_client_init(void)
 {
-    /* Set GMT+1 zone, daylight savings off. DST is handled in the wordclock app itself */
-	/* SNTP initialization */
+	printf("Starting SNTP... \n");
+	
+	sntp_set_update_delay(UPDATE_INERVAL);
+	sntp_set_servers(servers, sizeof(servers) / sizeof(char*));
 	sntp_initialize(&_tz);
 
-	xTaskCreate(sntp_tsk, "SNTP", 512, NULL, SNTP_SERVER_TASK_PRIO, NULL);
+	xTaskCreate(sntp_tsk, "SNTP", 256, NULL, SNTP_SERVER_TASK_PRIO, NULL);
 }

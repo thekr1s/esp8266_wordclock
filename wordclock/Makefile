@@ -25,9 +25,6 @@ LIBS += m
 include ../esp-open-rtos/common.mk
 
 do_flash:
-	../esp-open-sdk/esptool/esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin
-	../esp-open-sdk/esptool/esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin
-	# Suspect: Using high speed causes all leds turn on. Voltage drop. CPU stalls. FLASH defect. Strange behavior afterwards.
-	# ../esp-open-sdk/esptool/esptool.py --baud 861600 write_flash 0x02000 firmware/ws2812_buffer.bin -ff 80m 
-	# So use lower speed.
-	../esp-open-sdk/esptool/esptool.py --baud 115200 write_flash 0x02000 firmware/ws2812_buffer.bin -ff 80m 
+	../esp-open-sdk/esptool/esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 80m -fs 32m -fm dio
+	../esp-open-sdk/esptool/esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 80m -fs 32m -fm dio
+	../esp-open-sdk/esptool/esptool.py --baud 115200 write_flash 0x02000 firmware/ws2812_buffer.bin -ff 80m -fs 32m -fm dio

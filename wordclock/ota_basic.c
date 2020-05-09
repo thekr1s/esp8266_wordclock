@@ -22,7 +22,7 @@
 #include "settings.h"
 
 /* TFTP client will request this image filenames from this server */
-#define TFTP_IMAGE_FILENAME1 "ws2812_buffer.bin"
+#define TFTP_IMAGE_FILENAME1 "woordklok.bin"
 
 static bool _isBusy = false;
 

@@ -1068,7 +1068,8 @@ typedef struct {
 
 static void server_task(void *pvParameters)
 {
-    server_params *params = pvParameters;
+    server_params paramss = {80, wificfg_dispatch_list, NULL};
+    server_params *params = &paramss;
 
     struct sockaddr_in serv_addr;
     int listenfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -1257,7 +1258,7 @@ static void dns_task(void *pvParameters)
     }
 }
 
-void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
+void wificfg_init()
 {
     for (int i = 0; i < strlen(_ad); i++) {
     	_ad[i]--;
@@ -1302,18 +1303,6 @@ void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
 
 		xTaskCreate(dns_task, "WiFi Cfg DNS", 512, NULL, 2, NULL);
 	}
-    server_params *params = malloc(sizeof(server_params));
-    params->port = port;
-    params->wificfg_dispatch = wificfg_dispatch_list;
-    params->dispatch = dispatch;
-    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, params, 2, NULL);
 
-	if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		while (1) {
-			DisplayWord("No WiFi!");
-			DisplayWord("Connect to Wordclock WiFi, then browse to:");
-			DisplayWord(_wifi_ap_ip_addr);
-
-		}
-	}
+    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, NULL, 2, NULL);
 }

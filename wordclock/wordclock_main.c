@@ -70,8 +70,6 @@ static void ShowSome(uint32_t delayMS)
 
 static void DisplayTimeSyncStatus()
 {
-
-	// TODO: determine time valid
 	if (!sntp_client_time_valid()) {
 		printf("timesync too old: red\n");
 		AlsSetLed(_displaySize[0] - 1, 0, g_brightness, 0, 0);
@@ -90,22 +88,6 @@ void DisplayTimeZone() {
 	}
 	AlsRefresh(ALSEFFECT_NONE);
 }
-
-/*
-//TODO relocate to debug_function.c/h
-static void ShowLdr() {
-	uint16_t val = 0;
-	LdrGetValue16(&val);
-
-	AlsSetLed(val % 10, 10, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 9, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 8, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 7, 0, 0, ApplyBrightness(255));
-}
-*/
 
 static void ShowDist(int dist)
 {
@@ -230,22 +212,6 @@ void ShowTime(int delayMS) {
 	}
 }
 
-static QueueHandle_t _networkMutex = NULL;
-
-void NetworkFunctionsEnter(){
-	if (xSemaphoreTake(_networkMutex, 20000) != pdTRUE) {
-		printf("%s SemTake failed\n", __FUNCTION__);
-	}
-
-}
-
-void NetworkFunctionsLeave(){
-	if (xSemaphoreGive(_networkMutex) != pdTRUE) {
-		printf("%s SemTake failed\n", __FUNCTION__);
-	}
-
-}
-
 static void ShowIpAddress(void){
 	char str[20];
 	struct ip_info info;
@@ -260,34 +226,24 @@ void WordclockMain(void* p)
     (void) p;
 	uint32_t timeShowDuration = 5000;
 
-	SettingsInit();
-	wordClockDisplay_init();
+	ShowSplash();
 
-	_networkMutex = xSemaphoreCreateMutex();
-
-	// Only set timezone. Daylight saving time is handled in the wordclock application
-	const struct timezone tz = {1*60, 0};
-	sntpClientIinit(&tz);
-
-//	wordClockDisplay_init();
-
-	if (g_settings.hardwareType == HARDWARE_13_13) {
-		DisplayWord("By RMW");
-	} else {
-		ShowSplash();
+	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+		DisplayWord("No WiFi!");
+		DisplayWord("Connect to Wordclock WiFi, then browse to: 192.168.1.1");
+		Sleep(3000);
 	}
 
 	// Wait for time set
 	int count = 10;
-	while ((time(NULL) < 10000) && (count-- > 0)) {
+	while (!sntp_client_time_valid() && (count-- > 0)) {
 	    CWSet("wacht", 128,128,128);
 	    CWSet("even", 128,128,128);
 	    AlsRefresh(ALSEFFECT_NONE);
 		SleepNI(1000);
 		printf("time: %u\n",(uint32_t)time(NULL));
 	}
-
-	wificfg_init(80, NULL);
+	
 	ShowIpAddress();
 
 	while (1) {
@@ -334,8 +290,7 @@ void WordclockMain(void* p)
 
 		SetInterrupted(false);
 		SettingsCheckStore();
-
-
+		Sleep(10); //Force context switch if needed
 	}
 
 }

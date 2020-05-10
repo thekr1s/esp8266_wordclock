@@ -18,15 +18,4 @@ void SleepNI(uint32_t ms);
 
 void user_init(void);
 
-
-
-
-
-
-
-
-
-
-
-
 #endif //ESP_GLUE_H_

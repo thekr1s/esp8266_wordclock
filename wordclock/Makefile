@@ -16,6 +16,9 @@ $(info build date $(BUILD_DATE))
 #Force the compiler to rebuild the version.c
 $(shell touch version.c)
 
+# enable debugging for the sntp server
+#EXTRA_CFLAGS += -DSNTP_LOGD -DSNTP_LOGD_WITH_PRINTF
+
 CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
 EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2
 

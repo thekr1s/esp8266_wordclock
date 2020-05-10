@@ -21,7 +21,6 @@
 /* Add extras/sntp component to makefile for this include to work */
 #include <sntp.h>
 #include <time.h>
-#include <wificfg.h>
 
 #define SNTP_SERVERS 	"0.pool.ntp.org", "1.pool.ntp.org", \
 						"2.pool.ntp.org", "3.pool.ntp.org"
@@ -77,5 +76,5 @@ void sntp_client_init(void)
 	sntp_set_servers(servers, sizeof(servers) / sizeof(char*));
 	sntp_initialize(&_tz);
     
-	xTaskCreate(sntp_tsk, "SNTP", 1024, NULL, 1, NULL);
+	xTaskCreate(sntp_tsk, "SNTP", 256, NULL, 1, NULL);
 }

@@ -70,6 +70,40 @@ uint32_t Sleep(uint32_t ms) {
     return ms;
 }
 
+void test_sysparam() {
+    char test[20];
+    char *pTtest = test;
+    bool result = true;
+    printf("Check sysparam\n");
+    if (sysparam_set_string("test", "dummy") != SYSPARAM_OK) {
+        printf("Failed to program test string to sysparam\n");
+        result = false;
+    }
+    if (sysparam_get_string("test", &pTtest) != SYSPARAM_OK) {
+        printf("Failed to get test sysparam\n");
+        result = false;
+    }
+    if (strcmp(pTtest, "dummy") != 0) {
+        printf("Failed to read back sysparam\n");
+        result = false;
+    }
+    
+    if (!result) {
+        uint32_t sysparam_addr;
+        sysparam_status_t status;
+        sysparam_addr = sdk_flashchip.chip_size - (5 + DEFAULT_SYSPARAM_SECTORS) * sdk_flashchip.sector_size;
+        status = sysparam_create_area(sysparam_addr, DEFAULT_SYSPARAM_SECTORS, true);
+        if (status == SYSPARAM_OK) {
+            printf("Sysparam create area succeeded\n");
+        } else {
+            printf("Failed to create Sysparam area: %d\n", status);
+        }
+        printf("Sysparam is cleared, reboot in 2 seconds\n");
+        vTaskDelay(2 * 1000);
+        sdk_system_restart();
+    }
+}
+
 /*
  * This function is called from app_main.c within the esp_rtos,
  * this is where the system starts
@@ -86,6 +120,12 @@ void user_init(void)
 		printf("Error sdk_wifi_set_opmode\n");
 	}
 	sdk_wifi_station_set_auto_connect(TRUE);
+
+    // for (int i =0; i < 2; i++) {
+    //     vTaskDelay(1000);
+    //     printf("Wait\n");
+    // }
+    test_sysparam();
 
 	//Low level init
     SettingsInit();

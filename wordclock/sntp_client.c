@@ -56,8 +56,8 @@ void sntp_tsk(void *pvParameters)
 		uint32_t t = RTC.COUNTER;
 		vTaskDelayMs(delaySec * 1000);
 		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;		
-		time_t ts = time(NULL);
-		printf("TIME: %s", ctime(&ts));
+		// time_t ts = time(NULL);
+		// printf("TIME: %s", ctime(&ts));
 	}
 }
 

@@ -72,22 +72,6 @@ void SettingsInit() {
     }
 }
 
-void SettingsRead() {
-    size_t actual_size;
-    sysparam_get_data_static(SETTINGS_KEY, (uint8_t*)&g_settings, sizeof(g_settings), &actual_size, NULL);
-    if (actual_size != sizeof(g_settings) ) {
-        printf("Settings size mismatch is: %d expect: %d\n", actual_size, sizeof(g_settings));
-    }
-    if (g_settings.magic == FLASH_MAGIC && g_settings.magic_end == FLASH_MAGIC) {
-        // Valid settings found
-        AlsFill(0, ApplyBrightness(100), 0);
-        AlsRefresh(ALSEFFECT_NONE);
-    } else {
-        //if there is no config stored in flash use the default
-        memcpy((uint8_t*)&g_settings, (uint8_t*)&g_settings_default, sizeof(TSettings));
-    }
-}
-
 void SettingsWrite(){
     printf("########## saved config to flash##########\n");
 

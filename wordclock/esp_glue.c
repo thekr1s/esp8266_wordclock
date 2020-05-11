@@ -69,19 +69,7 @@ uint32_t Sleep(uint32_t ms) {
 	}
     return ms;
 }
-void test_sysparam() {
-    // char *test = NULL;
-    // int result 
-    // if ((result = sysparam_set_string("test", "dummy")) != SYSPARAM_OK) {
-    //     printf("Failed to program test string to sysparam: %d", result);
-    // }
-    // if (SYSPARAM_OK != sysparam_get_string("test", &test)) {
-    //     printf("Failed to get test sysparam");
-    // }
-    // if (strcmp(test, "dummy") != 0) {
-    //     printf("Failed to read back sysparam");
-    // }
-}
+
 /*
  * This function is called from app_main.c within the esp_rtos,
  * this is where the system starts
@@ -94,7 +82,10 @@ void user_init(void)
     uart_set_baud(0, 115200);
     printf("--- RMW Wordclock ---\r\n");
 
-    test_sysparam();
+    if (!sdk_wifi_set_opmode(STATION_MODE)){
+		printf("Error sdk_wifi_set_opmode\n");
+	}
+	sdk_wifi_station_set_auto_connect(TRUE);
 
 	//Low level init
     SettingsInit();

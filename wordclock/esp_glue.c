@@ -110,10 +110,8 @@ void user_init(void)
     uart_set_baud(0, 115200);
     printf("--- RMW Wordclock ---\r\n");
 
-    if (!sdk_wifi_set_opmode(STATION_MODE)){
-		printf("Error sdk_wifi_set_opmode\n");
-	}
-	sdk_wifi_station_set_auto_connect(TRUE);
+    sdk_wifi_set_opmode(STATION_MODE);
+    sdk_wifi_station_set_auto_connect(TRUE);
 
     test_sysparam();
 

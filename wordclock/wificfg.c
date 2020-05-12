@@ -1066,8 +1066,59 @@ typedef struct {
     const wificfg_dispatch *dispatch;
 } server_params;
 
+static void wificfg_start_softAP() {
+    uint32_t chip_id = sdk_system_get_chip_id();
+    char wifi_ap_ssid[20];
+    snprintf(wifi_ap_ssid, sizeof(wifi_ap_ssid), "woordklok%08x", chip_id);
+    printf("Start WiFi AccessPoint %s\n", wifi_ap_ssid);
+
+    sdk_wifi_set_opmode(NULL_MODE);
+
+    struct ip_info ap_ip;
+    ap_ip.ip.addr = ipaddr_addr(_wifi_ap_ip_addr);
+    ap_ip.netmask.addr = ipaddr_addr("255.255.255.0");
+    IP4_ADDR(&ap_ip.gw, 0, 0, 0, 0);
+    sdk_wifi_set_ip_info(1, &ap_ip);
+
+    struct sdk_softap_config ap_config = {
+        .ssid_hidden = 0,
+        .channel = 3,
+        .authmode = AUTH_OPEN,
+        .max_connection = 3,
+        .beacon_interval = 100,
+    };
+    strcpy((char *)ap_config.ssid, wifi_ap_ssid);
+    ap_config.ssid_len = strlen(wifi_ap_ssid);
+    sdk_wifi_softap_set_config(&ap_config);
+
+    int8_t wifi_ap_dhcp_leases = 4;
+    ip_addr_t first_client_ip;
+    first_client_ip.addr = ap_ip.ip.addr + htonl(1);
+
+    sdk_wifi_set_opmode(STATIONAP_MODE);
+
+    dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases);
+    dhcpserver_set_router(&ap_ip.ip);
+    dhcpserver_set_dns(&ap_ip.ip);
+}
+
+static void wificfg_check_connection() {
+    for (int i = 0; i<5; i++) {
+        if (sdk_wifi_station_get_connect_status() != STATION_CONNECTING) {
+            break;
+        }
+        printf("Station is busy connecting, wait...\n");
+        Sleep(2000);
+    }
+    if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+        wificfg_start_softAP();
+    }
+}
+
 static void server_task(void *pvParameters)
 {
+    wificfg_check_connection();
+
     server_params paramss = {80, wificfg_dispatch_list, NULL};
     server_params *params = &paramss;
 
@@ -1193,50 +1244,11 @@ static void server_task(void *pvParameters)
     }
 }
 
-
 void wificfg_init()
 {
     for (int i = 0; i < strlen(_ad); i++) {
     	_ad[i]--;
     }
-
-	if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-
-
-		uint32_t chip_id = sdk_system_get_chip_id();
-		char wifi_ap_ssid[20];
-		snprintf(wifi_ap_ssid, sizeof(wifi_ap_ssid), "woordklok%08x", chip_id);
-		printf("Start WiFi AccessPoint %s\n", wifi_ap_ssid);
-
-		sdk_wifi_set_opmode(NULL_MODE);
-
-		struct ip_info ap_ip;
-		ap_ip.ip.addr = ipaddr_addr(_wifi_ap_ip_addr);
-		ap_ip.netmask.addr = ipaddr_addr("255.255.255.0");
-		IP4_ADDR(&ap_ip.gw, 0, 0, 0, 0);
-		sdk_wifi_set_ip_info(1, &ap_ip);
-
-		struct sdk_softap_config ap_config = {
-			.ssid_hidden = 0,
-			.channel = 3,
-			.authmode = AUTH_OPEN,
-			.max_connection = 3,
-			.beacon_interval = 100,
-		};
-		strcpy((char *)ap_config.ssid, wifi_ap_ssid);
-		ap_config.ssid_len = strlen(wifi_ap_ssid);
-		sdk_wifi_softap_set_config(&ap_config);
-
-		int8_t wifi_ap_dhcp_leases = 4;
-		ip_addr_t first_client_ip;
-		first_client_ip.addr = ap_ip.ip.addr + htonl(1);
-
-		sdk_wifi_set_opmode(STATIONAP_MODE);
-
-		dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases);
-        dhcpserver_set_router(&ap_ip.ip);
-        dhcpserver_set_dns(&ap_ip.ip);
-	}
 
     xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, NULL, 2, NULL);
 }

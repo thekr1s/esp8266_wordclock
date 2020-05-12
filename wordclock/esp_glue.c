@@ -73,33 +73,27 @@ uint32_t Sleep(uint32_t ms) {
 void test_sysparam() {
     char test[20];
     char *pTtest = test;
-    bool result = true;
-    printf("Check sysparam\n");
-    if (sysparam_set_string("test", "dummy") != SYSPARAM_OK) {
-        printf("Failed to program test string to sysparam\n");
-        result = false;
-    }
-    if (sysparam_get_string("test", &pTtest) != SYSPARAM_OK) {
-        printf("Failed to get test sysparam\n");
-        result = false;
-    }
-    if (strcmp(pTtest, "dummy") != 0) {
-        printf("Failed to read back sysparam\n");
-        result = false;
+    bool result = false;
+
+    if (sysparam_set_string("test", "dummy") == SYSPARAM_OK) {
+        if (sysparam_get_string("test", &pTtest) == SYSPARAM_OK) {
+            if (strcmp(pTtest, "dummy") == 0) {
+                printf("Sysparam is working properly\n");
+                result = true;
+            }
+        }
     }
     
     if (!result) {
-        uint32_t sysparam_addr;
-        sysparam_status_t status;
-        sysparam_addr = sdk_flashchip.chip_size - (5 + DEFAULT_SYSPARAM_SECTORS) * sdk_flashchip.sector_size;
-        status = sysparam_create_area(sysparam_addr, DEFAULT_SYSPARAM_SECTORS, true);
-        if (status == SYSPARAM_OK) {
-            printf("Sysparam create area succeeded\n");
-        } else {
-            printf("Failed to create Sysparam area: %d\n", status);
+        uint32_t sysparam_addr = sdk_flashchip.chip_size - (5 + DEFAULT_SYSPARAM_SECTORS) * sdk_flashchip.sector_size;
+        if (sysparam_create_area(sysparam_addr, DEFAULT_SYSPARAM_SECTORS, true) != SYSPARAM_OK) {
+            printf("Failed to create Sysparam area\n");
+            printf("Corrupt flash?, can't do any thing...\n");
+            SleepNI(1 * 1000);
+            return;
         }
         printf("Sysparam is cleared, reboot in 2 seconds\n");
-        vTaskDelay(2 * 1000);
+        SleepNI(2 * 1000);
         sdk_system_restart();
     }
 }
@@ -121,10 +115,6 @@ void user_init(void)
 	}
 	sdk_wifi_station_set_auto_connect(TRUE);
 
-    // for (int i =0; i < 2; i++) {
-    //     vTaskDelay(1000);
-    //     printf("Wait\n");
-    // }
     test_sysparam();
 
 	//Low level init

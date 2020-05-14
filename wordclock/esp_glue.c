@@ -125,5 +125,5 @@ void user_init(void)
     HbiInit();
     sntp_client_init();
     wificfg_init();
-	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 1, NULL);
+	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 2, NULL);
 }

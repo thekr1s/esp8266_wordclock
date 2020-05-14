@@ -2,7 +2,7 @@
 <DataChest>
   <Data name="ComboBoxFlashBaudrate.Text">
     <Type>String</Type>
-    <Value>230400</Value>
+    <Value>115200</Value>
   </Data>
   <Data name="ComboBoxFlashSize.ItemIndex">
     <Type>Integer</Type>

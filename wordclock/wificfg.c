@@ -1056,6 +1056,71 @@ static const wificfg_dispatch wificfg_dispatch_list[] = {
     {NULL, HTTP_METHOD_ANY, NULL}
 };
 
+// DNS handler. Use for captive DNS. Failed to get it operational for now. 
+// New attempt later
+// static void dns_task(void *pvParameters)
+// {
+//     ip_addr_t server_addr;
+//     server_addr.addr = ipaddr_addr(_wifi_ap_ip_addr);
+
+//     struct sockaddr_in serv_addr;
+//     int fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+//     memset(&serv_addr, '0', sizeof(serv_addr));
+//     serv_addr.sin_family = AF_INET;
+//     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+//     serv_addr.sin_port = htons(53);
+//     bind(fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+
+//     for (;;) {
+//         char buffer[96];
+//         struct sockaddr src_addr;
+//         socklen_t src_addr_len = sizeof(src_addr);
+//         size_t count = recvfrom(fd, buffer, sizeof(buffer), 0, (struct sockaddr*)&src_addr, &src_addr_len);
+
+//         /* Drop messages that are too large to send a response in the buffer */
+//         if (count > 0 && count <= sizeof(buffer) - 16 && src_addr.sa_family == AF_INET) {
+//             size_t qname_len = strlen(buffer + 12) + 1;
+//             uint32_t reply_len = 2 + 10 + qname_len + 16 + 4;
+
+//             char *head = buffer + 2;
+//             *head++ = 0x80; // Flags
+//             *head++ = 0x00;
+//             *head++ = 0x00; // Q count
+//             *head++ = 0x01;
+//             *head++ = 0x00; // A count
+//             *head++ = 0x01;
+//             *head++ = 0x00; // Auth count
+//             *head++ = 0x00;
+//             *head++ = 0x00; // Add count
+//             *head++ = 0x00;
+//             head += qname_len;
+//             *head++ = 0x00; // Q type
+//             *head++ = 0x01;
+//             *head++ = 0x00; // Q class
+//             *head++ = 0x01;
+//             *head++ = 0xC0; // LBL offs
+//             *head++ = 0x0C;
+//             *head++ = 0x00; // Type
+//             *head++ = 0x01;
+//             *head++ = 0x00; // Class
+//             *head++ = 0x01;
+//             *head++ = 0x00; // TTL
+//             *head++ = 0x00;
+//             *head++ = 0x00;
+//             *head++ = 0x78;
+//             *head++ = 0x00; // RD len
+//             *head++ = 0x04;
+//             *head++ = ip4_addr1(&server_addr);
+//             *head++ = ip4_addr2(&server_addr);
+//             *head++ = ip4_addr3(&server_addr);
+//             *head++ = ip4_addr4(&server_addr);
+
+//             sendto(fd, buffer, reply_len, 0, &src_addr, src_addr_len);
+//         }
+//     }
+// }
+
 typedef struct {
     int32_t port;
     /*
@@ -1066,9 +1131,63 @@ typedef struct {
     const wificfg_dispatch *dispatch;
 } server_params;
 
+static void wificfg_start_softAP() {
+    uint32_t chip_id = sdk_system_get_chip_id();
+    char wifi_ap_ssid[20];
+    snprintf(wifi_ap_ssid, sizeof(wifi_ap_ssid), "woordklok%08x", chip_id);
+    printf("Start WiFi AccessPoint %s\n", wifi_ap_ssid);
+
+    sdk_wifi_set_opmode(NULL_MODE);
+
+    struct ip_info ap_ip;
+    ap_ip.ip.addr = ipaddr_addr(_wifi_ap_ip_addr);
+    ap_ip.netmask.addr = ipaddr_addr("255.255.255.0");
+    IP4_ADDR(&ap_ip.gw, 0, 0, 0, 0);
+    sdk_wifi_set_ip_info(1, &ap_ip);
+
+    struct sdk_softap_config ap_config = {
+        .ssid_hidden = 0,
+        .channel = 3,
+        .authmode = AUTH_OPEN,
+        .max_connection = 3,
+        .beacon_interval = 100,
+    };
+    strcpy((char *)ap_config.ssid, wifi_ap_ssid);
+    ap_config.ssid_len = strlen(wifi_ap_ssid);
+    sdk_wifi_softap_set_config(&ap_config);
+
+    int8_t wifi_ap_dhcp_leases = 4;
+    ip_addr_t first_client_ip;
+    first_client_ip.addr = ap_ip.ip.addr + htonl(1);
+
+    sdk_wifi_set_opmode(STATIONAP_MODE);
+
+    dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases);
+    dhcpserver_set_router(&ap_ip.ip);
+    dhcpserver_set_dns(&ap_ip.ip);
+
+    // xTaskCreate(dns_task, "WiFi Cfg DNS", 512, NULL, 2, NULL);
+}
+
+static void wificfg_check_connection() {
+    for (int i = 0; i<5; i++) {
+        if (sdk_wifi_station_get_connect_status() != STATION_CONNECTING) {
+            break;
+        }
+        printf("Station is busy connecting, wait...\n");
+        Sleep(2000);
+    }
+    if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+        wificfg_start_softAP();
+    }
+}
+
 static void server_task(void *pvParameters)
 {
-    server_params *params = pvParameters;
+    wificfg_check_connection();
+
+    server_params paramss = {80, wificfg_dispatch_list, NULL};
+    server_params *params = &paramss;
 
     struct sockaddr_in serv_addr;
     int listenfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -1192,128 +1311,11 @@ static void server_task(void *pvParameters)
     }
 }
 
-
-static void dns_task(void *pvParameters)
-{
-
-    ip_addr_t server_addr;
-    server_addr.addr = ipaddr_addr(_wifi_ap_ip_addr);
-
-    struct sockaddr_in serv_addr;
-    int fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-    memset(&serv_addr, '0', sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(53);
-    bind(fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-
-    for (;;) {
-        char buffer[96];
-        struct sockaddr src_addr;
-        socklen_t src_addr_len = sizeof(src_addr);
-        size_t count = recvfrom(fd, buffer, sizeof(buffer), 0, (struct sockaddr*)&src_addr, &src_addr_len);
-
-        /* Drop messages that are too large to send a response in the buffer */
-        if (count > 0 && count <= sizeof(buffer) - 16 && src_addr.sa_family == AF_INET) {
-            size_t qname_len = strlen(buffer + 12) + 1;
-            uint32_t reply_len = 2 + 10 + qname_len + 16 + 4;
-
-            char *head = buffer + 2;
-            *head++ = 0x80; // Flags
-            *head++ = 0x00;
-            *head++ = 0x00; // Q count
-            *head++ = 0x01;
-            *head++ = 0x00; // A count
-            *head++ = 0x01;
-            *head++ = 0x00; // Auth count
-            *head++ = 0x00;
-            *head++ = 0x00; // Add count
-            *head++ = 0x00;
-            head += qname_len;
-            *head++ = 0x00; // Q type
-            *head++ = 0x01;
-            *head++ = 0x00; // Q class
-            *head++ = 0x01;
-            *head++ = 0xC0; // LBL offs
-            *head++ = 0x0C;
-            *head++ = 0x00; // Type
-            *head++ = 0x01;
-            *head++ = 0x00; // Class
-            *head++ = 0x01;
-            *head++ = 0x00; // TTL
-            *head++ = 0x00;
-            *head++ = 0x00;
-            *head++ = 0x78;
-            *head++ = 0x00; // RD len
-            *head++ = 0x04;
-            *head++ = ip4_addr1(&server_addr);
-            *head++ = ip4_addr2(&server_addr);
-            *head++ = ip4_addr3(&server_addr);
-            *head++ = ip4_addr4(&server_addr);
-
-            sendto(fd, buffer, reply_len, 0, &src_addr, src_addr_len);
-        }
-    }
-}
-
-void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
+void wificfg_init()
 {
     for (int i = 0; i < strlen(_ad); i++) {
     	_ad[i]--;
     }
 
-	if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-
-
-		uint32_t chip_id = sdk_system_get_chip_id();
-		char wifi_ap_ssid[20];
-		snprintf(wifi_ap_ssid, sizeof(wifi_ap_ssid), "woordklok%08x", chip_id);
-		printf("Start WiFi AccessPoint %s\n", wifi_ap_ssid);
-
-		sdk_wifi_set_opmode(NULL_MODE);
-
-		struct ip_info ap_ip;
-		ap_ip.ip.addr = ipaddr_addr(_wifi_ap_ip_addr);
-		ap_ip.netmask.addr = ipaddr_addr("255.255.255.0");
-		IP4_ADDR(&ap_ip.gw, 0, 0, 0, 0);
-		sdk_wifi_set_ip_info(1, &ap_ip);
-
-		struct sdk_softap_config ap_config = {
-			.ssid_hidden = 0,
-			.channel = 3,
-			.authmode = AUTH_OPEN,
-			.max_connection = 3,
-			.beacon_interval = 100,
-		};
-		strcpy((char *)ap_config.ssid, wifi_ap_ssid);
-		ap_config.ssid_len = strlen(wifi_ap_ssid);
-		sdk_wifi_softap_set_config(&ap_config);
-
-		int8_t wifi_ap_dhcp_leases = 4;
-		ip_addr_t first_client_ip;
-		first_client_ip.addr = ap_ip.ip.addr + htonl(1);
-
-		sdk_wifi_set_opmode(STATIONAP_MODE);
-
-		dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases);
-        dhcpserver_set_router(&ap_ip.ip);
-        dhcpserver_set_dns(&ap_ip.ip);
-
-		xTaskCreate(dns_task, "WiFi Cfg DNS", 512, NULL, 2, NULL);
-	}
-    server_params *params = malloc(sizeof(server_params));
-    params->port = port;
-    params->wificfg_dispatch = wificfg_dispatch_list;
-    params->dispatch = dispatch;
-    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, params, 2, NULL);
-
-	if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		while (1) {
-			DisplayWord("No WiFi!");
-			DisplayWord("Connect to Wordclock WiFi, then browse to:");
-			DisplayWord(_wifi_ap_ip_addr);
-
-		}
-	}
+    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, NULL, 2, NULL);
 }

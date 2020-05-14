@@ -38,6 +38,11 @@
 - I Have created a FreeCAD pyhton macro for generating a Letterplate, ..\hardware\lettering_plates\FreeCAD_drawings\freecad_macro
 - The letterplate is paramatic so can be used for 11*11 of 13*13
 - After the generation is done, export the part as .STEP (the DXF generator from freecad is not smooth)
+- FreeCAD export DXF WORKS (0.18.4):
+    - Edit -> Preference -> Inport-Export -> DXF
+    - Max Spline Segment to 0,1 or 0,01 mm (NOTE use , instead of .)
+    - Select all elements
+    - File -> Export -> Autodesk DXF 2d
 - Import the .STEP file into Fusion for creating the DXF file of gcode
 - Gcode
     - Create A body by setting the hight

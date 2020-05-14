@@ -165,7 +165,10 @@ static void GetHierBenIk() {
 }
 
 void HbiTask(void *pvParameters){
-
+	while (strcmp(g_settings.hierbenikUrl, "") == 0) {
+		printf("Invalid Hier ben ik config, sleep task for 10 minutes\n");
+		SleepNI(10*60*1000);
+	}
 	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
 		// printf("%s: Wait for connect\n", __FUNCTION__);
 		SleepNI(5000);

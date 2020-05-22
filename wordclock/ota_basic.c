@@ -14,7 +14,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "esp8266.h"
-#include "ssid_config.h"
 #include "mbedtls/sha256.h"
 
 #include "ota-tftp.h"
@@ -23,12 +22,7 @@
 #include "settings.h"
 
 /* TFTP client will request this image filenames from this server */
-#define TFTP_IMAGE_SERVER_RUTGER "192.168.2.63"
-//#define TFTP_IMAGE_SERVER "192.168.178.10"
-#define TFTP_IMAGE_SERVER "rwassens.ddns.net"
-#define TFTP_SERVER_PORT 10070
-#define TFTP_IMAGE_FILENAME1 "ws2812_buffer.bin"
-
+#define TFTP_IMAGE_FILENAME1 "woordklok.bin"
 
 static bool _isBusy = false;
 
@@ -39,11 +33,9 @@ static void tftpclient_download_and_verify_file1(int slot, rboot_config *conf)
 {
     printf("Downloading %s to slot %d...\n", TFTP_IMAGE_FILENAME1, slot);
     int res;
-    if (ownerOfClock == USER_RUTGER_HUIJGEN) {
-        res = ota_tftp_download(TFTP_IMAGE_SERVER_RUTGER, TFTP_SERVER_PORT, TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
-    } else {
-        res = ota_tftp_download(TFTP_IMAGE_SERVER, TFTP_SERVER_PORT, TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
-    }
+    
+
+    res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
     printf("ota_tftp_download %s result %d\n", TFTP_IMAGE_FILENAME1, res);
 
     if (res != 0) {
@@ -92,7 +84,7 @@ static void tftp_client_task(void *pvParameters)
     */
     while(retries > 0) {
         tftpclient_download_and_verify_file1(slot, &conf);
-        vTaskDelay(5000 / portTICK_RATE_MS);
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
         retries--;
 
     }
@@ -117,5 +109,5 @@ void OtaUpdateInit(void)
         printf("%c%d: offset 0x%08x\r\n", i == conf.current_rom ? '*':' ', i, conf.roms[i]);
     }
 
-    xTaskCreate(&tftp_client_task, (signed char *)"tftp_client", 2048, NULL, 2, NULL);
+    xTaskCreate(&tftp_client_task, "tftp_client", 2048, NULL, 2, NULL);
 }

@@ -33,11 +33,9 @@
 #include <buttons.h>
 #include "displaySettings.h"
 #include "settings.h"
-
-
-
-extern uint8_t user_ip_addr[4];
-
+#include "controller.h"
+#include "breakout.h"
+#include "tetris.h"
 
 
 static void ShowSome(uint32_t delayMS)
@@ -72,8 +70,6 @@ static void ShowSome(uint32_t delayMS)
 
 static void DisplayTimeSyncStatus()
 {
-
-	// TODO: determine time valid
 	if (!sntp_client_time_valid()) {
 		printf("timesync too old: red\n");
 		AlsSetLed(_displaySize[0] - 1, 0, g_brightness, 0, 0);
@@ -92,22 +88,6 @@ void DisplayTimeZone() {
 	}
 	AlsRefresh(ALSEFFECT_NONE);
 }
-
-/*
-//TODO relocate to debug_function.c/h
-static void ShowLdr() {
-	uint16_t val = 0;
-	LdrGetValue16(&val);
-
-	AlsSetLed(val % 10, 10, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 9, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 8, 0, 0, ApplyBrightness(255));
-	val /= 10;
-	AlsSetLed(val % 10, 7, 0, 0, ApplyBrightness(255));
-}
-*/
 
 static void ShowDist(int dist)
 {
@@ -152,17 +132,6 @@ static void ShowDist(int dist)
 	AlsSetLed(t1, 10 - t2, r, g, b);
 }
 
-static void PrintCurrentTime() {
-	time_t ts = time(NULL);
-	if (g_settings.isSummerTime) {
-		ts += 3600;
-	}
-	struct tm *pTM = localtime(&ts);
-
-	printf("%02d%02d%02d %02d:%02d:%02d\n", pTM->tm_year % 100, pTM->tm_mon + 1, pTM->tm_mday,
-			pTM->tm_hour, pTM->tm_min, pTM->tm_sec);
-}
-
 void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s){
 	time_t ts = time(NULL);
 	if (g_settings.isSummerTime) {
@@ -186,12 +155,7 @@ void ShowTime(int delayMS) {
 	uint32_t endTicks;
 	bool DoReDisplay = true;
 
-	printf("idx %d rgb %d %d %d br:%d : %d %d %d", g_settings.colorIdx,
-			g_settings.aColors[g_settings.colorIdx].r ,g_settings.aColors[g_settings.colorIdx].g ,g_settings.aColors[g_settings.colorIdx].b,
-			g_brightness , RGB_FROM_SETTING);
-
-	PrintCurrentTime();
-	endTicks = xTaskGetTickCount() + (delayMS / portTICK_RATE_MS);
+	endTicks = xTaskGetTickCount() + (delayMS / portTICK_PERIOD_MS);
 	while (xTaskGetTickCount() < endTicks){
 		TimeGet(&h, &m, &s);
 		if (ButtonHandleButtons()) {
@@ -199,7 +163,7 @@ void ShowTime(int delayMS) {
 			DoReDisplay = true;
 			prevMin = m; // Prevent transition effect
 			SettingsScheduleStore();
-			endTicks = xTaskGetTickCount() + 5000/portTICK_RATE_MS;
+			endTicks = xTaskGetTickCount() + 5000/portTICK_PERIOD_MS;
 		}
 		if (Interrupted()) {
 			// Interrupted via WEB interface
@@ -225,42 +189,36 @@ void ShowTime(int delayMS) {
 				CWDisplayTime(h, m, RGB_FROM_SETTING);
 			}
 			DisplayTimeSyncStatus();
+
+			if (g_settings.colorIdx == COLOR_INDEX_RAINBOW) {
+				AlsApplyFilter(ALSFILTER_RAINBOW);
+			} 
+
 //			ShowLdr();
 			HbiGetDistAndAge(&dist, &age);
 			if (age < 120 ) {
 				ShowDist(dist);
 			}
-			// Set some random incorrect led. The Gerda bug
-			if (rand() % 50 == 0) {
-				AlsSetRandom(g_brightness);
+			
+			if (g_settings.perfectImperfections == 1) {
+				if (rand() % 50 == 0) {
+					AlsSetRandom(g_brightness);
+				}
 			}
 			AlsRefresh(effect);
 		}
-		DoReDisplay = false;
+		DoReDisplay = false; 
 		Sleep(300);
 	}
 }
 
-static xQueueHandle _networkMutex = NULL;
-
-void NetworkFunctionsEnter(){
-	if (xSemaphoreTake(_networkMutex, 20000) != pdTRUE) {
-		printf("%s SemTake failed\n", __FUNCTION__);
-	}
-
-}
-
-void NetworkFunctionsLeave(){
-	if (xSemaphoreGive(_networkMutex) != pdTRUE) {
-		printf("%s SemTake failed\n", __FUNCTION__);
-	}
-
-}
-
-static void ShowIpAddress(uint8_t* ip){
+static void ShowIpAddress(void){
 	char str[20];
-	snprintf(str, sizeof(str),"%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
-	DisplayWord(str);
+	struct ip_info info;
+    if (sdk_wifi_get_ip_info(STATION_IF, &info)) {
+		snprintf(str, sizeof(str), IPSTR, IP2STR(&info.ip));
+		DisplayWord(str);
+	}
 }
 
 void WordclockMain(void* p)
@@ -268,45 +226,39 @@ void WordclockMain(void* p)
     (void) p;
 	uint32_t timeShowDuration = 5000;
 
-	SettingsInit();
-	wordClockDisplay_init();
+	ShowSplash();
 
-	_networkMutex = xSemaphoreCreateMutex();
-
-	// Only set timezone. Daylight saving time is handled in the wordclock application
-	const struct timezone tz = {1*60, 0};
-	sntpClientIinit(&tz);
-
-//	wordClockDisplay_init();
-
-	if (g_settings.hardwareType == HARDWARE_13_13) {
-		DisplayWord("By RMW");
-	} else {
-		ShowSplash();
+	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+		DisplayWord("No WiFi!");
+		DisplayWord("Connect to Wordclock WiFi, then browse to: 192.168.1.1");
+		Sleep(3000);
 	}
 
 	// Wait for time set
 	int count = 10;
-	while ((time(NULL) < 10000) && (count-- > 0)) {
+	while (!sntp_client_time_valid() && (count-- > 0)) {
 	    CWSet("wacht", 128,128,128);
 	    CWSet("even", 128,128,128);
 	    AlsRefresh(ALSEFFECT_NONE);
 		SleepNI(1000);
 		printf("time: %u\n",(uint32_t)time(NULL));
 	}
-
-	ShowIpAddress(user_ip_addr);
-
-	wificfg_init(80, NULL);
+	
+	ShowIpAddress();
 
 	while (1) {
+		switch (ControllerGameGet())
+		{
+			case GAME_BREAKOUT: DoBreakout(); break;
+			case GAME_TETRIS: DoTetris(); break;
+			default: break;
+		}
 
 		if (OtaIsBusy()) {
 			DisplayWord("Updating firmware");
 		} else if (g_settings.animation == ANIMATION_ALL_ON) {
 			uint8_t orgBrightness = g_brightness;
 			g_brightness = 10 + g_settings.brightnessOffset * 10;
-			printf("all on: br: %d, %d, %d, %d\n", g_brightness, RGB_FROM_SETTING);
 			AlsFill(RGB_FROM_SETTING);
 			AlsRefresh(ALSEFFECT_NONE);
 			Sleep(5000);
@@ -319,14 +271,14 @@ void WordclockMain(void* p)
 		} else {
 			ShowTime(timeShowDuration);
 			// Once in a while shome something different
-			if (rand() % 100 == 0) {
-				ShowSome(5000);
+			if (g_settings.perfectImperfections == 1) {
+				if (rand() % 100 == 0) {
+					ShowSome(5000);
+				}
 			}
 			timeShowDuration = 2000;
 			if (g_settings.animation == ANIMATION_ALL && !DisplayInNightMode()) {
 				DoAnimation();
-			} else if (g_settings.animation == ANIMATION_TETRIS && !DisplayInNightMode()) {
-				DoTetris();
 			} else {
 				timeShowDuration = 5000;
 			}
@@ -338,8 +290,7 @@ void WordclockMain(void* p)
 
 		SetInterrupted(false);
 		SettingsCheckStore();
-
-
+		Sleep(10); //Force context switch if needed
 	}
 
 }

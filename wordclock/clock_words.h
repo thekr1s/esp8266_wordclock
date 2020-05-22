@@ -10,9 +10,6 @@
 
 #include "stdbool.h"
 
-#define TRUE true
-#define FALSE false
-
 void CWInit(uint32_t rows, uint32_t cols);
 void CWSet(const char* word, uint8_t r, uint8_t g, uint8_t b);
 void CWDisplayTime(uint32_t hours, uint32_t minutes, uint8_t r, uint8_t g, uint8_t b);

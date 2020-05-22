@@ -25,7 +25,6 @@ void AnimationSetMessageText(char* txt);
 char* AnimationGetMessageText();
 void DisplayWord(char* str);
 void Fire(uint32_t ms);
-void DoTetris();
 void DisplayGreeting();
 
 

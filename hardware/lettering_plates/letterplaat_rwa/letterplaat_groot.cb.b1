@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.9.8.0" Name="letterplaat_groot">
+  <layers>
+    <layer name="0" color="255,255,255">
+      <ModificationCount>2</ModificationCount>
+      <objects>
+        <line id="2">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0,0</p>
+            <p>500,0</p>
+          </pts>
+        </line>
+        <line id="3">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>500,0</p>
+            <p>500,500</p>
+          </pts>
+        </line>
+        <line id="4">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>500,500</p>
+            <p>0,500</p>
+          </pts>
+        </line>
+        <line id="5">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0,500</p>
+            <p>0,0</p>
+          </pts>
+        </line>
+        <text id="29" p1="70.9344625331148,254.832566215306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />DRIEVIEREEN</text>
+        <text id="30" p1="70.9344625331148,221.499232882306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />TWEEEWACHTE</text>
+        <text id="31" p1="70.9344625331148,188.165899549306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />ZEVENEGENBM</text>
+        <text id="32" p1="70.9344625331148,154.832566216306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />TIENELFVIJF</text>
+        <text id="33" p1="70.9344625331148,121.499232883306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />CUURLBYPRMW</text>
+        <text id="34" p1="70.9344625331148,88.1658995503061,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />ALGEWEESTKP</text>
+        <text id="35" p1="70.9344625331148,288.165899548306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />ZESTWAALFSE</text>
+        <text id="36" p1="70.9344625331148,321.499232881306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />OVERQZHALFD</text>
+        <text id="37" p1="70.9344625331148,354.832566214306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />VIJFXRVOORT</text>
+        <text id="38" p1="70.9344625331148,388.165899547306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />NUSKWARTIEN</text>
+        <text id="39" p1="70.9344625331148,421.499232880306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>58</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+        <circle id="40" c="250,470,0" d="5.2">
+          <ModificationCount>4</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+      </objects>
+    </layer>
+    <layer name="gaten" color="127,255,0" visible="false">
+      <ModificationCount>1</ModificationCount>
+      <objects>
+        <circle id="18" c="50.0000002,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="16" c="83.3333335,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="17" c="116.6666668,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="10" c="150.0000001,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="11" c="183.3333334,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="8" c="216.6666667,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="7" c="250,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="6" c="283.3333333,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="13" c="316.6666666,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="12" c="349.9999999,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="15" c="383.3333332,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="14" c="416.6666665,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="9" c="449.9999998,250,0" d="28">
+          <ModificationCount>2</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+      </objects>
+    </layer>
+    <layer name="text" color="127,255,0" visible="false">
+      <ModificationCount>3</ModificationCount>
+      <objects>
+        <text id="1" p1="70.9344625331148,254.832566215306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>24</ModificationCount>
+          <mat m="Identity" />DRIEVIEREEN</text>
+        <text id="19" p1="70.9344625331148,221.499232882306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>16</ModificationCount>
+          <mat m="Identity" />TWEEEWACHTE</text>
+        <text id="20" p1="70.9344625331148,188.165899549306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>15</ModificationCount>
+          <mat m="Identity" />ZEVENEGENBM</text>
+        <text id="21" p1="70.9344625331148,154.832566216306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>16</ModificationCount>
+          <mat m="Identity" />TIENELFVIJF</text>
+        <text id="22" p1="70.9344625331148,121.499232883306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>15</ModificationCount>
+          <mat m="Identity" />CUURLBYPRMW</text>
+        <text id="23" p1="70.9344625331148,88.1658995503061,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>15</ModificationCount>
+          <mat m="Identity" />ALGEWEESTKP</text>
+        <text id="24" p1="70.9344625331148,288.165899548306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>16</ModificationCount>
+          <mat m="Identity" />ZESTWAALFSE</text>
+        <text id="25" p1="70.9344625331148,321.499232881306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>15</ModificationCount>
+          <mat m="Identity" />OVERQZHALFD</text>
+        <text id="26" p1="70.9344625331148,354.832566214306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>16</ModificationCount>
+          <mat m="Identity" />VIJFXRVOORT</text>
+        <text id="27" p1="70.9344625331148,388.165899547306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>15</ModificationCount>
+          <mat m="Identity" />NUSKWARTIEN</text>
+        <text id="28" p1="70.9344625331148,421.499232880306,0" p2="" Height="30" Font="Taurus Mono Stencil" charspace="1.333" align="center,left" style="bold">
+          <ModificationCount>14</ModificationCount>
+          <mat m="Identity" />HETLISEBYNA</text>
+      </objects>
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <Stock>
+      <PMin>0,0</PMin>
+      <PMax>0,0</PMax>
+      <Color>255,165,0</Color>
+    </Stock>
+    <ToolDiameter>1.5</ToolDiameter>
+    <ToolProfile>Unspecified</ToolProfile>
+  </MachiningOptions>
+  <parts>
+    <part Name="Part1">
+      <machineops>
+        <profile Enabled="true">
+          <TargetDepth state="Default">0</TargetDepth>
+          <DepthIncrement state="Value">1.5</DepthIncrement>
+          <FinalDepthIncrement state="Default">0</FinalDepthIncrement>
+          <CutOrdering state="Default">DepthFirst</CutOrdering>
+          <CutWidth state="Default">0</CutWidth>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">Plunge Feedrate</StepoverFeedrate>
+          <InsideOutside state="Value">Inside</InsideOutside>
+          <MillingDirection state="Default">Conventional</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <CornerOvercut state="Default">False</CornerOvercut>
+          <LeadInMove state="Default" />
+          <LeadOutMove state="Default" />
+          <HoldingTabs state="Default">
+            <TabMethod>None</TabMethod>
+            <Width>3</Width>
+            <Height>3</Height>
+            <MinimumTabs>3</MinimumTabs>
+            <MaximumTabs>6</MaximumTabs>
+            <TabDistance>40</TabDistance>
+            <SizeThreshold>4</SizeThreshold>
+            <UseLeadIns>False</UseLeadIns>
+            <TabStyle>Triangle</TabStyle>
+          </HoldingTabs>
+          <SideProfile state="Default" />
+          <StockSurface state="Value">3</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Value">10</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Default">1000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>39</prim>
+            <prim>38</prim>
+            <prim>37</prim>
+            <prim>36</prim>
+            <prim>35</prim>
+            <prim>29</prim>
+            <prim>30</prim>
+            <prim>31</prim>
+            <prim>32</prim>
+            <prim>33</prim>
+            <prim>34</prim>
+          </primitive>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">1.5</ToolDiameter>
+          <ToolNumber state="Default">0</ToolNumber>
+          <ToolProfile state="Default">Unspecified</ToolProfile>
+          <PlungeFeedrate state="Default">300</PlungeFeedrate>
+          <CutFeedrate state="Default">800</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <StartPoint state="Default" />
+          <CustomMOPHeader state="Default" />
+          <CustomMOPFooter state="Default" />
+          <Name>Profile1</Name>
+        </profile>
+      </machineops>
+      <Stock>
+        <PMin>0,0</PMin>
+        <PMax>0,0</PMax>
+        <Color>255,165,0</Color>
+      </Stock>
+      <ToolProfile>Unspecified</ToolProfile>
+      <Nesting>
+        <BasePoint />
+        <NestMethod>None</NestMethod>
+      </Nesting>
+    </part>
+  </parts>
+  <ActiveLayer>text</ActiveLayer>
+  <ActivePart>Part1</ActivePart>
+</CADFile>

@@ -10,26 +10,12 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-#define TRUE true
-#define FALSE false
-
 uint32_t GetTicksDiffMs(uint32_t start, uint32_t end);
 void SetInterrupted(bool isInterrupted);
 bool Interrupted();
-void Sleep(uint32_t ms);
+uint32_t Sleep(uint32_t ms);
 void SleepNI(uint32_t ms);
 
 void user_init(void);
-
-
-
-
-
-
-
-
-
-
-
 
 #endif //ESP_GLUE_H_

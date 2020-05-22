@@ -18,42 +18,30 @@
 #include <lwip/netdb.h>
 #include <lwip/dns.h>
 
-#include <ssid_config.h>
-
 /* Add extras/sntp component to makefile for this include to work */
 #include <sntp.h>
 #include <time.h>
 
-
-#include "event_handler.h"
-
 #define SNTP_SERVERS 	"0.pool.ntp.org", "1.pool.ntp.org", \
 						"2.pool.ntp.org", "3.pool.ntp.org"
 
-#define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_RATE_MS)
+#define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_PERIOD_MS)
 #define UNUSED_ARG(x)	(void)x
 #define UPDATE_INERVAL (5 * 60000)
-static struct timezone _tz = {0, 0};
+
+static struct timezone _tz = {1*60, 0};
+static volatile uint32_t _rtcTicsPerSec = 0;
+static const char *servers[] = {SNTP_SERVERS};
 
 void sntp_tsk(void *pvParameters)
 {
-	char *servers[] = {SNTP_SERVERS};
 	UNUSED_ARG(pvParameters);
 
 	printf("SNTP: Wait for WiFi connection... \n");
-	while(sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		vTaskDelayMs(1000);
+	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+		printf("SNTP: Wait for WiFi connection... \n");
+		vTaskDelayMs(2000);
 	}
-
-	/* Start SNTP */
-	printf("Starting SNTP... \n");
-	/* SNTP will request an update each 15 minutes */
-	sntp_set_update_delay(UPDATE_INERVAL);
-	/* Set GMT+1 zone, daylight savings off. DST is handled in the wordclock app itself */
-	/* SNTP initialization */
-	sntp_initialize(&_tz);
-	/* Servers must be configured right after initialization */
-	sntp_set_servers(servers, sizeof(servers) / sizeof(char*));
 
 	printf("Wait for NTP time...\n");
 	while (time(NULL) < 10000) {
@@ -64,20 +52,29 @@ void sntp_tsk(void *pvParameters)
 
 	/* Print date and time each 5 seconds */
 	while(1) {
-		vTaskDelayMs(5000);
-//		time_t ts = time(NULL);
-//		printf("TIME: %s", ctime(&ts));
+		const uint32_t delaySec = 5;
+		uint32_t t = RTC.COUNTER;
+		vTaskDelayMs(delaySec * 1000);
+		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;		
+		// time_t ts = time(NULL);
+		// printf("TIME: %s", ctime(&ts));
 	}
 }
 
-bool sntp_client_time_valid() {
-	// TODO: implement
-	return (sntp_get_last_update_age_sec() <= (2 * UPDATE_INERVAL) / 1000)? true : false;
+bool sntp_client_time_valid(void) {
+	if (_rtcTicsPerSec == 0) return false;
+
+	uint32_t age = time(NULL) - sntp_last_update_ts();
+	return (age <= (2 * UPDATE_INERVAL) / 1000)? true : false;
 }
 
-void sntpClientIinit(const struct timezone* tz)
+void sntp_client_init(void)
 {
-	_tz = *tz;
-     xTaskCreate(sntp_tsk, (signed char *)"SNTP", 1024, NULL, 1, NULL);
-}
+	printf("Starting SNTP... \n");
 
+	sntp_set_update_delay(UPDATE_INERVAL);
+	sntp_set_servers(servers, sizeof(servers) / sizeof(char*));
+	sntp_initialize(&_tz);
+    
+	xTaskCreate(sntp_tsk, "SNTP", 256, NULL, 1, NULL);
+}

@@ -17,18 +17,22 @@
 #include <string.h>
 #include <time.h>
 #include <sys/types.h>
+#include <sysparam.h>
 
+#include <esp_glue.h>
 #include <event_handler.h>
 #include <buttons.h>
 #include <hier_ben_ik.h>
+#include <wificfg.h>
+#include <sntp_client.h>
 #include <wordclock_main.h>
 #include <settings.h>
 
-static bool _isInterrupted = false;
+static volatile bool _isInterrupted = false;
 
 uint32_t GetTicksDiffMs(uint32_t start, uint32_t end) {
     uint32_t diff = end-start;
-    return diff * portTICK_RATE_MS;
+    return diff * portTICK_PERIOD_MS;
 }
 
 void SetInterrupted(bool isInterrupted) {
@@ -47,73 +51,51 @@ void SleepNI(uint32_t ms) {
 	if (ms == 0) {
 		vTaskDelay(0);
 	} else {
-		vTaskDelay(1 + (ms) / portTICK_RATE_MS);
+		vTaskDelay(1 + (ms) / portTICK_PERIOD_MS);
 	}
 }
 
 /**
  * Sleep interruptable by buttonpress or call to SetInterrupted()
+ * 
+ * Returns: number of ms left when interrupted. 0 when not interrupted
  */
-void Sleep(uint32_t ms) {
+uint32_t Sleep(uint32_t ms) {
 	while ( ms > 0) {
-		if (_isInterrupted) return;
+		if (_isInterrupted) return ms;
 		SetInterrupted(ButtonsAnyPressed());
 		SleepNI(ms > 100 ? 100 : ms);
 		ms = ms > 100 ? ms - 100 : 0;
 	}
+    return ms;
 }
 
-//function is not used any more
-void HexDump (char *desc, void *addr, int len) {
-    int i;
-    unsigned char buff[17];
-    unsigned char *pc = (unsigned char*)addr;
+void test_sysparam() {
+    char test[20];
+    char *pTtest = test;
+    bool result = false;
 
-    // Output description if given.
-    if (desc != NULL)
-        printf ("%s:\n", desc);
-
-    if (len == 0) {
-        printf("  ZERO LENGTH\n");
-        return;
-    }
-    if (len < 0) {
-        printf("  NEGATIVE LENGTH: %i\n",len);
-        return;
-    }
-
-    // Process every byte in the data.
-    for (i = 0; i < len; i++) {
-        // Multiple of 16 means new line (with line offset).
-
-        if ((i % 16) == 0) {
-            // Just don't print ASCII for the zeroth line.
-            if (i != 0)
-                printf ("  %s\n", buff);
-
-            // Output the offset.
-            printf ("  %04x ", i);
+    if (sysparam_set_string("test", "dummy") == SYSPARAM_OK) {
+        if (sysparam_get_string("test", &pTtest) == SYSPARAM_OK) {
+            if (strcmp(pTtest, "dummy") == 0) {
+                printf("Sysparam is working properly\n");
+                result = true;
+            }
         }
-
-        // Now the hex code for the specific character.
-        printf (" %02x", pc[i]);
-
-		// And store a printable ASCII character for later.
-		if ((pc[i] < 0x20) || (pc[i] > 0x7e))
-			buff[i % 16] = '.';
-		else
-			buff[i % 16] = pc[i];
-		buff[(i % 16) + 1] = '\0';
-	}
-
-	// Pad out last line if not exactly 16 characters.
-	while ((i % 16) != 0) {
-        printf ("   ");
-        i++;
     }
-
-    // And print the final ASCII bit.
-    printf ("  %s\n", buff);
+    
+    if (!result) {
+        uint32_t sysparam_addr = sdk_flashchip.chip_size - (5 + DEFAULT_SYSPARAM_SECTORS) * sdk_flashchip.sector_size;
+        if (sysparam_create_area(sysparam_addr, DEFAULT_SYSPARAM_SECTORS, true) != SYSPARAM_OK) {
+            printf("Failed to create Sysparam area\n");
+            printf("Corrupt flash?, can't do any thing...\n");
+            SleepNI(1 * 1000);
+            return;
+        }
+        printf("Sysparam is cleared, reboot in 2 seconds\n");
+        SleepNI(2 * 1000);
+        sdk_system_restart();
+    }
 }
 
 /*
@@ -128,42 +110,20 @@ void user_init(void)
     uart_set_baud(0, 115200);
     printf("--- RMW Wordclock ---\r\n");
 
-    struct sdk_station_config config = {"", "", 0, {0}};
+    sdk_wifi_set_opmode(STATION_MODE);
+    sdk_wifi_station_set_auto_connect(TRUE);
 
-	if (!sdk_wifi_station_get_config(&config)) {
-		printf("ERROR sdk_wifi_station_get_config\n");
-	}
-	printf("wifi config: ssid:%s, pw:%s.\n", config.ssid, config.password);
-//	if (strlen(config.ssid) == 0) {
-//		strncpy((char*) config.ssid, "default", sizeof(config.ssid));
-//		strncpy((char*) config.password, "default", sizeof(config.password));
-//		sdk_wifi_set_opmode(STATION_MODE);
-//		if (!sdk_wifi_station_set_config(&config)) {
-//			printf("ERROR sdk_wifi_station_set_config\n");
-//		}
-//		printf("No wifi config. Written default wifi config\n");
-//        vTaskDelay(1000 / portTICK_RATE_MS);
-//        sdk_system_restart();
-//	}
+    test_sysparam();
 
-	if (!sdk_wifi_set_opmode(STATION_MODE)){
-		printf("Error sdk_wifi_set_opmode\n");
-	}
-	sdk_wifi_station_connect();
-
-	EvtHdlInit();
-
+	//Low level init
+    SettingsInit();
+	wordClockDisplay_init();
 	ButtonsInit();
-    char* ssidRobert="Robert";
-    char* ssidRutger="Sjormie";
-    if (strncasecmp(ssidRobert, (char*)config.ssid, strlen(ssidRobert)) == 0) {
-        ownerOfClock = USER_ROBERT_WASSENS;
-		HbiInit();
-    } else if (strncmp(ssidRutger, (char*)config.ssid, strlen(ssidRobert)) == 0) {
-        ownerOfClock = USER_RUTGER_HUIJGEN;
-    } else {
-	    ownerOfClock = USER_GUEST;
-	}
 
-	xTaskCreate(WordclockMain, (signed char *)"Main task", 1024, NULL, 1, NULL);
+    //Start tasks
+	EvtHdlInit();
+    HbiInit();
+    sntp_client_init();
+    wificfg_init();
+	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 2, NULL);
 }

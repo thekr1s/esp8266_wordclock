@@ -1,0 +1,11 @@
+
+wordclock/build/
+wordclock/firmware/
+esp-open-sdk/
+*.pyc
+lettering_plates/freecad_13_13/dxfReader.py
+lettering_plates/freecad_13_13/dxfLibrary.py
+lettering_plates/freecad_13_13/dxfImportObjects.py
+lettering_plates/freecad_13_13/dxfColorMap.py
+tools/Config/*png
+tools/Config/ESP8266MAC.txt

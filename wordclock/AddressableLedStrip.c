@@ -13,7 +13,7 @@
 #include "settings.h"
 
 
-#define ALS_BYTES_PER_LED  3
+#define ALS_BYTES_PER_LED  4
 #define ALS_MAX_LED_COUNT  (WORDCLOCK_ROWS_MAX * WORDCLOCK_COLLS_MAX)
 
 static uint8_t _redIdx   = 0;
@@ -351,8 +351,102 @@ static void RefreshWipe(void)
 
 }
 
+static void RainbowSetColor(uint16_t nrOfActiveLeds, uint16_t currentLedIndex, uint8_t* r, uint8_t* g, uint8_t* b)
+{
+    // Input a value 0 to 255 to get a color value.
+    // The colours are a transition r - g - b - back to r.
+
+	uint16_t gIdx = nrOfActiveLeds / 3;       
+	uint16_t bIdx = (nrOfActiveLeds * 2) / 3;
+	uint16_t rIdx = nrOfActiveLeds;
+
+	if (nrOfActiveLeds < 3) {
+		*r = 255; 
+		*g = 0;
+		*b = 0;
+	} else if (currentLedIndex <= gIdx) {
+		// Color between r and g
+		*r = 255 * (gIdx - currentLedIndex) / gIdx; 
+		*g = 255 * currentLedIndex / gIdx;
+		*b = 0;
+	} else if (currentLedIndex <= bIdx) {
+		// Color between g and b. Shift gIdx to zero
+		currentLedIndex -= gIdx;
+		bIdx -= gIdx;
+		*r = 0;
+		*g = 255 * (bIdx - currentLedIndex) / bIdx; 
+		*b = 255 * currentLedIndex / bIdx;
+	}else {
+		// Color between b and r. Shift bIdx to zero
+		currentLedIndex -= bIdx;
+		rIdx -= bIdx;
+		*g = 0;
+		*b = 255 * (rIdx - currentLedIndex) / rIdx; 
+		*r = 255 * currentLedIndex / rIdx;
+	}
+
+	*r = ApplyBrightness(*r);
+	*g = ApplyBrightness(*g);
+	*b = ApplyBrightness(*b);
+
+}
+
+static uint16_t getNrOfActiveLeds(void)
+{
+    uint8_t row, col;
+    uint8_t r, g, b;
+    uint16_t nrOfLedsOn = 0;
+
+    for (row = 0; row < _rows; row++) {
+        for (col = 0; col < _cols; col++) {
+            GetLedFromFrame(_nextFrame, row, col, &r, &g, &b);
+            if ((r + g + b) > 0) {
+                nrOfLedsOn ++;
+            }
+        }
+    }
+    return nrOfLedsOn;
+}
+
+static void FilterRainbow(void)
+{
+    uint8_t row, col;
+    uint8_t r, g, b;
+    uint16_t nrOfActiveLeds = getNrOfActiveLeds();
+    uint16_t currentLed = 0;
+    for (row = 0; row < _rows; row++) {
+        for (col = 0; col < _cols; col++) {
+            GetLedFromFrame(_nextFrame, _rows - 1 - row, col, &r, &g, &b);
+            if ((r + g + b) > 0) {
+                RainbowSetColor(nrOfActiveLeds, currentLed, &r, &g, &b);
+                SetLedInFrame(_nextFrame, _rows - 1 - row, col, r, g, b);
+                currentLed ++;
+            }
+        }
+    }
+    //_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+}
+
+void AlsApplyFilter(TAlsFilters filter)
+{
+    if (filter == ALSFILTER_RANDOM) {
+        //currently only 1 filter so this will not do anything
+        filter = rand() % 1 + ALSFILTER_RANDOM + 1;
+    }
+    switch(filter) {
+    case ALSFILTER_NONE:
+        break;
+    case ALSFILTER_RAINBOW:
+        FilterRainbow();
+        break;
+    default:
+        break;
+    }
+}
+
 void AlsRefresh(TAlsEffects effect)
 { 
+
 	if (effect == ALSEFFECT_RANDOM_EFFECT) {
 		effect = rand() % 6 + ALSEFFECT_RANDOM_EFFECT + 1;
 	}

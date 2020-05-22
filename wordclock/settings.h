@@ -6,16 +6,15 @@
  */
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
-#define TRUE true
-#define FALSE false
 
 #include "stdint.h"
 #include "stdbool.h"
+#include "c_types.h"
 
 #include "animations.h"
 #include "displaySettings.h"
 
-#define FLASH_MAGIC 0xBABEBAB2
+#define FLASH_MAGIC 0xBABEBAB0
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
 
@@ -29,6 +28,14 @@ typedef struct {
     uint32_t magic;
     EAnimationType animation;
     EHardwareType hardwareType;
+    uint32_t perfectImperfections;
+    char hierbenikUrl[MAX_URL_SIZE];
+    char hierbenikPort[MAX_PORT_SIZE];
+    char hierbenikRequest[MAX_URL_SIZE];
+    float hierbenikHomeLat;
+    float hierbenikHomeLon;
+    char otaFwUrl[MAX_URL_SIZE];
+    char otaFwPort[MAX_PORT_SIZE];
     const uint8_t aBrightness[BRIGHTNESS_COUNT];
     int8_t reserved0;
     int8_t brightnessOffset;
@@ -37,15 +44,8 @@ typedef struct {
     uint32_t timerPeriodTicks;
     uint32_t isSummerTime;
     TColor aColors[COLOR_COUNT];
+    uint32_t magic_end;
 } TSettings;
-
-typedef enum {
-    USER_GUEST,
-    USER_ROBERT_WASSENS,
-    USER_RUTGER_HUIJGEN,
-} EOwnerClock;
-
-EOwnerClock ownerOfClock;
 
 TSettings g_settings __attribute__((aligned(4)));
 

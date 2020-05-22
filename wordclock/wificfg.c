@@ -46,9 +46,56 @@ static char* _wifi_ap_ip_addr = "192.168.1.1";
 
 #include "ota_basic.h"
 #include "settings.h"
+#include "controller.h"
 #include "esp_glue.h"
+#include "hier_ben_ik.h"
 
 static char _ad[] = "spcfsuAxttot/om";
+static volatile bool _wifiScanDone = false;
+
+#define MAX_SSID_LEN 32 
+#define MAX_SSID_COUNT 50
+
+static char _ssidList[MAX_SSID_COUNT][MAX_SSID_LEN+1]; // + zero termination
+static volatile int _ssidCount = 0;
+static const char * const auth_modes [] = {
+    [AUTH_OPEN]         = "Open",
+    [AUTH_WEP]          = "WEP",
+    [AUTH_WPA_PSK]      = "WPA/PSK",
+    [AUTH_WPA2_PSK]     = "WPA2/PSK",
+    [AUTH_WPA_WPA2_PSK] = "WPA/WPA2/PSK"
+};
+
+// Handle callback of wifi AP scan
+static void scan_done_cb(void *arg, sdk_scan_status_t status)
+{
+    if (status != SCAN_OK)
+    {
+        printf("Error: WiFi scan failed\n");
+        return;
+    }
+
+    struct sdk_bss_info *bss = (struct sdk_bss_info *)arg;
+    // first one is invalid
+    bss = bss->next.stqe_next;
+
+    printf("\n----------------------------------------------------------------------------------\n");
+    printf("                             Wi-Fi networks\n");
+    printf("----------------------------------------------------------------------------------\n");
+    _ssidCount = 0;
+    while (NULL != bss)
+    {
+        strncpy(_ssidList[_ssidCount], (char*)bss->ssid, MAX_SSID_LEN);
+        _ssidList[_ssidCount][MAX_SSID_LEN] = 0; // zero terminate to be sure
+
+        printf("%32s (" MACSTR ") RSSI: %02d, security: %s\n", _ssidList[_ssidCount],
+            MAC2STR(bss->bssid), bss->rssi, auth_modes[bss->authmode]);
+        bss = bss->next.stqe_next;
+        _ssidCount++;
+    }
+    _wifiScanDone = true;
+}
+
 /*
  * Read a line terminated by "\r\n" or "\n" to be robust. Used to read the http
  * status line and headers. On success returns the number of characters read,
@@ -64,7 +111,7 @@ static int read_crlf_line(int s, char *buf, size_t len)
 
     do {
         char c;
-        int r = read(s, &c, 1);
+        int r = lwip_read(s, &c, 1);
 
         /* Expecting a known terminator so fail on EOF. */
         if (r <= 0)
@@ -98,7 +145,7 @@ int wificfg_form_name_value(int s, bool *valp, size_t *rem, char *buf, size_t le
             break;
 
         char c;
-        int r = read(s, &c, 1);
+        int r = lwip_read(s, &c, 1);
 
         /* Expecting a known number of characters so fail on EOF. */
         if (r <= 0) return -1;
@@ -306,13 +353,15 @@ static char *skip_to_whitespace(char *string)
 
 int wificfg_write_string(int s, const char *str)
 {
-    int res = write(s, str, strlen(str));
+    int res = lwip_write(s, str, strlen(str));
     return res;
 }
 
 typedef enum {
     FORM_NAME_STA_SSID,
     FORM_NAME_STA_PASSWORD,
+    FORM_NAME_STA_SSID_DROPDOWN,
+    FORM_NAME_STA_COMMAND,
     FORM_NAME_NONE
 } form_name;
 
@@ -322,6 +371,8 @@ static const struct {
 } form_name_table[] = {
     {"sta_ssid", FORM_NAME_STA_SSID},
     {"sta_password", FORM_NAME_STA_PASSWORD},
+    {"select_ap", FORM_NAME_STA_SSID_DROPDOWN},
+    {"sta_command", FORM_NAME_STA_COMMAND},
 };
 
 static form_name intern_form_name(char *str)
@@ -389,6 +440,14 @@ static const char http_redirect_header_clockcfg[] = "HTTP/1.0 302 \r\n"
     "Location: /wificfg/clockcfg.html\r\n"
     "\r\n";
 
+static const char http_redirect_header_hwcfg[] = "HTTP/1.0 302 \r\n"
+    "Location: /wificfg/hwcfg.html\r\n"
+    "\r\n";
+
+static const char http_redirect_header_controller[] = "HTTP/1.0 302 \r\n"
+    "Location: /wificfg/controller.html\r\n"
+    "\r\n";
+
 static const char http_redirect_header_delayed[] = "<html> <head>"
         "<meta http-equiv=\"refresh\" content=\"10;url=/wificfg/clockcfg.html\" />"
     "</head> <body> <h1>Resetting, refresh manually when clock is up...</h1> </body></html>";
@@ -407,12 +466,13 @@ static void handle_ipaddr_redirect(int s, char *buf, size_t len)
 
     struct sockaddr addr;
     socklen_t addr_len = sizeof(addr);
-    getsockname(s, (struct sockaddr*)&addr, &addr_len);
-    struct sockaddr_in *sa = (struct sockaddr_in *)&addr;
-    snprintf(buf, len, "" IPSTR "/\r\n\r\n", IP2STR(&sa->sin_addr));
-    wificfg_write_string(s, buf);
-}
+    if (getsockname(s, (struct sockaddr*)&addr, &addr_len) == 0) {
+        struct sockaddr_in *sa = (struct sockaddr_in *)&addr;
+        snprintf(buf, len, IPSTR, IP2STR((ip4_addr_t *)&sa->sin_addr.s_addr));
+        wificfg_write_string(s, buf);
+    }
 
+}
 
 
 static const char *http_wifi_station_content[] = {
@@ -426,16 +486,28 @@ static void handle_wifi_station(int s, wificfg_method method,
 {
     if (wificfg_write_string(s, http_success_header) < 0) return;
 
+    _wifiScanDone = false;
+    printf("Start AP scan\r\n");
+    sdk_wifi_station_scan(NULL, scan_done_cb);
+    int timeout = 5;
+    _ssidCount = 0;
+    while (!_wifiScanDone) {
+        Sleep(1000);
+        timeout--;
+        if (timeout == 0) _wifiScanDone = true;
+    }
+
     if (method != HTTP_METHOD_HEAD) {
         if (wificfg_write_string(s, http_wifi_station_content[0]) < 0) return;
-
+        wificfg_write_string(s, "<option value=\"100\">Select...</option>");
+        static char line[100]; 
+        for (int i = 0; i < _ssidCount; i++) {
+            snprintf(line, sizeof(line), "<option value=\"%d\">%s</option>", i, _ssidList[i]);
+            if (wificfg_write_string(s, line) < 0) return;
+        }
         if (wificfg_write_string(s, http_wifi_station_content[1]) < 0) return;
-        if (wificfg_write_string(s, http_wifi_station_content[2]) < 0) return;
-    	printf("%s %d %s\n", __FUNCTION__, __LINE__, http_wifi_station_content[0]);
-    	printf("%s %d %s\n", __FUNCTION__, __LINE__, http_wifi_station_content[1]);
-    	printf("%s %d %s\n", __FUNCTION__, __LINE__, http_wifi_station_content[2]);
     }
-    close(s);
+    closesocket(s);
 }
 
 static void handle_wifi_station_post(int s, wificfg_method method,
@@ -445,6 +517,7 @@ static void handle_wifi_station_post(int s, wificfg_method method,
 {
 	static char ssid[50] = "";
 	static char password[50] = "";
+    int selected;
 
     if (content_type != HTTP_CONTENT_TYPE_WWW_FORM_URLENCODED) {
         wificfg_write_string(s, "HTTP/1.0 400 \r\nContent-Type: text/html\r\n\r\n");
@@ -475,33 +548,47 @@ static void handle_wifi_station_post(int s, wificfg_method method,
             wificfg_form_url_decode(buf);
             printf("handle_wifi_station_post %d %s\n", name, buf);
             switch (name) {
+            case FORM_NAME_STA_SSID_DROPDOWN:
+                selected = atoi(buf);
+                if (selected < _ssidCount) {
+                    strncpy(ssid, _ssidList[selected], sizeof(ssid) - 1);
+                    printf("Selected ssid: %s\r\n", ssid);
+                }
+
+                break;
             case FORM_NAME_STA_SSID:
                 sysparam_set_string("wifi_sta_ssid", buf);
-                bzero(ssid, sizeof(ssid));
-                strncpy(ssid, buf, sizeof(ssid) - 1);
+                if (buf[0]!='\0') {
+                    bzero(ssid, sizeof(ssid));
+                    strncpy(ssid, buf, sizeof(ssid) - 1);
+                }
                 break;
             case FORM_NAME_STA_PASSWORD:
                 sysparam_set_string("wifi_sta_password", buf);
                 bzero(password, sizeof(password));
                 strncpy(password, buf, sizeof(password) - 1);
-
-                if (ssid[0] == '\0' || password == '\0') {
-					close(s);
-					return;
-                } else {
-					struct sdk_station_config config = {"", "", 0, {0}};
-					strncpy((char*)config.ssid, ssid, sizeof(config.ssid));
-					strncpy((char*)config.password, password, sizeof(config.password));
-					sdk_wifi_set_opmode(STATION_MODE);
-					if (!sdk_wifi_station_set_config(&config)) {
-						printf("ERROR sdk_wifi_station_set_config\n");
-					}
-					wificfg_write_string(s, "Rebooting with new configuration\r\n");
-					close(s);
-					vTaskDelay(1000 / portTICK_RATE_MS);
-					sdk_system_restart();
-                }
                 break;
+            case FORM_NAME_STA_COMMAND:
+                printf("Buf: %s, %s %s\r\n", buf, ssid, password);
+                if (strcmp(buf, "Save") == 0) {
+                    if (ssid[0] != '\0' && password[0] != '\0') {
+                        wificfg_write_string(s, "Rebooting with new WIFI settings\r\n");
+                        closesocket(s);
+                        Sleep(1000);
+                        struct sdk_station_config config = {"", "", 0, {0}};
+                        strncpy((char*)config.ssid, ssid, sizeof(config.ssid));
+                        strncpy((char*)config.password, password, sizeof(config.password));
+                        sdk_wifi_set_opmode(STATION_MODE);
+                        if (!sdk_wifi_station_set_config(&config)) {
+                            printf("ERROR sdk_wifi_station_set_config\n");
+                        }
+                        sdk_system_restart();
+                    } else {
+                        closesocket(s);
+                        return;
+                    }
+
+                }
             default:
                 break;
             }
@@ -530,7 +617,7 @@ static void handle_clock_cfg(int s, wificfg_method method,
     if (method != HTTP_METHOD_HEAD) {
     	if (wificfg_write_string(s, http_clock_cfg_content[idx]) < 0) return;
     	// Color
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < COLOR_COUNT; i++) {
         	if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
         	if (g_settings.colorIdx == i) wificfg_write_string(s, "selected");
         }
@@ -546,7 +633,6 @@ static void handle_clock_cfg(int s, wificfg_method method,
         	if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
         	if (g_settings.bgColorIdx == i) wificfg_write_string(s, "selected");
         }
-
 
         // DST
         wificfg_write_string(s, http_clock_cfg_content[++idx]);
@@ -571,8 +657,8 @@ static void handle_clock_cfg(int s, wificfg_method method,
         wificfg_write_string(s, buildDate);
         
         wificfg_write_string(s, "<br/>rev. : ");
-        wificfg_write_string(s, svnVersion);
-        printf("svn:%s", svnVersion);
+        wificfg_write_string(s, version);
+        printf("svn:%s", version);
     }
 }
 
@@ -628,11 +714,6 @@ static void handle_clock_cfg_post(int s, wificfg_method method,
             	if (strcmp(buf, "Reset") == 0){
             	    wificfg_write_string(s, http_redirect_header_delayed);
             		SettingsClockReset();
-            	} else if (strcmp(buf, "OtaUpdate") == 0){
-            		OtaUpdateInit();
-            		wificfg_write_string(s, "OTA UPDATING");
-            		SetInterrupted(true);
-            		return;
             	}
             }
 
@@ -653,6 +734,7 @@ static void handle_hw_cfg(int s, wificfg_method method,
                                 char *buf, size_t len)
 {
 	int idx = 0;
+    char tempStr[20];
 	printf("%s %d\n", __FUNCTION__, __LINE__);
     if (wificfg_write_string(s, http_success_header) < 0) return;
 	printf("%s %d\n", __FUNCTION__, __LINE__);
@@ -665,11 +747,147 @@ static void handle_hw_cfg(int s, wificfg_method method,
 			if (g_settings.hardwareType == i) wificfg_write_string(s, "selected");
 		}
 
+        // Perfect Imperfections
+        wificfg_write_string(s, http_hw_cfg_content[++idx]);
+        if (g_settings.perfectImperfections == 1) wificfg_write_string(s, "checked");
+        
+        // HierBenIk url
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        wificfg_write_string(s, g_settings.hierbenikUrl);
+        // HierBenIk port
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        wificfg_write_string(s, g_settings.hierbenikPort);
+        // HierBenIk request
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        wificfg_write_string(s, g_settings.hierbenikRequest);
+
+        // HierBenIk home lat
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        snprintf(tempStr, sizeof(tempStr), "%f", g_settings.hierbenikHomeLat);
+        wificfg_write_string(s, tempStr);
+        // HierBenIk home lon
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        snprintf(tempStr, sizeof(tempStr), "%f", g_settings.hierbenikHomeLon);
+        wificfg_write_string(s, tempStr);
+
+        // FW update url
+        wificfg_write_string(s, http_hw_cfg_content[++idx]);
+        if (wificfg_write_string(s, g_settings.otaFwUrl) < 0) return;
+        // FW update port
+        wificfg_write_string(s, http_hw_cfg_content[++idx]);
+        if (wificfg_write_string(s, g_settings.otaFwPort) < 0) return;
+
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
     }
 }
 
 static void handle_hw_cfg_post(int s, wificfg_method method,
+                                     uint32_t content_length,
+                                     wificfg_content_type content_type,
+                                     char *buf, size_t len)
+{
+    if (content_type != HTTP_CONTENT_TYPE_WWW_FORM_URLENCODED) {
+        wificfg_write_string(s, "HTTP/1.0 400 \r\nContent-Type: text/html\r\n\r\n");
+        return;
+    }
+
+    printf("BUF: %s\n", buf);
+    size_t rem = content_length;
+    bool valp = false;
+
+    g_settings.perfectImperfections = 0; //Checkbox don't send anything when unchecked, so first set the value to unset.
+    while (rem > 0) {
+        int r = wificfg_form_name_value(s, &valp, &rem, buf, len);
+
+        if (r < 0) {
+            break;
+        }
+
+        wificfg_form_url_decode(buf);
+
+        char name[30];
+        bzero(name, sizeof(name));
+        strncpy(name, buf, sizeof(name) - 1);
+
+        if (valp) {
+            int r = wificfg_form_name_value(s, NULL, &rem, buf, len);
+            if (r < 0) {
+                break;
+            }
+
+            wificfg_form_url_decode(buf);
+            printf("%s %s %s\n", __FUNCTION__, name, buf);
+            if (strcmp(name, "hw_hardwaretype") == 0) {
+                g_settings.hardwareType = atoi(buf);
+            } else if (strcmp(name, "hw_imperfections") == 0) {
+                if (strstr(buf, "CheckOn") != NULL) {
+                    g_settings.perfectImperfections = 1;
+                }
+            } else if (strcmp(name, "hw_hierbenik_url") == 0) {
+                bzero(g_settings.hierbenikUrl, sizeof(g_settings.hierbenikUrl));
+                strncpy(g_settings.hierbenikUrl, buf, sizeof(g_settings.hierbenikUrl) - 1);
+            } else if (strcmp(name, "hw_hierbenik_port") == 0) {
+                bzero(g_settings.hierbenikPort, sizeof(g_settings.hierbenikPort));
+                strncpy(g_settings.hierbenikPort, buf, sizeof(g_settings.hierbenikPort) - 1);
+            } else if (strcmp(name, "hw_hierbenik_req") == 0) {
+                bzero(g_settings.hierbenikRequest, sizeof(g_settings.hierbenikRequest));
+                strncpy(g_settings.hierbenikRequest, buf, sizeof(g_settings.hierbenikRequest) - 1);
+            } else if (strcmp(name, "home_lat") == 0) {
+                sscanf(buf, "%f", &g_settings.hierbenikHomeLat);
+            } else if (strcmp(name, "home_lon") == 0) {
+                sscanf(buf, "%f", &g_settings.hierbenikHomeLon);
+            } else if (strcmp(name, "hw_otafw_url") == 0) {
+                bzero(g_settings.otaFwUrl, sizeof(g_settings.otaFwUrl));
+                strncpy(g_settings.otaFwUrl, buf, sizeof(g_settings.otaFwUrl) - 1);
+            } else if (strcmp(name, "hw_otafw_port") == 0) {
+                bzero(g_settings.otaFwPort, sizeof(g_settings.otaFwPort));
+                strncpy(g_settings.otaFwPort, buf, sizeof(g_settings.otaFwPort) - 1);
+            } else if (strcmp(name, "cl_command") == 0) {
+                printf("cl_command: %s", buf);
+            	if (strcmp(buf, "SetHome") == 0){
+                    HbiGetLatLon(&g_settings.hierbenikHomeLat, &g_settings.hierbenikHomeLon);
+                    printf("%f %f\n", g_settings.hierbenikHomeLat, g_settings.hierbenikHomeLon);
+            	} else if (strcmp(buf, "Save") == 0){
+                    SettingsWrite();
+            	} else if (strcmp(buf, "OtaUpdate") == 0){
+            		OtaUpdateInit();
+            		wificfg_write_string(s, "OTA UPDATING");
+            		SetInterrupted(true);
+            		return;
+            	} else if (strcmp(buf, "Reboot") == 0){
+                    wificfg_write_string(s, "Rebooting\r\n");
+                    closesocket(s);
+                    vTaskDelay(1000 / portTICK_PERIOD_MS);
+                    sdk_system_restart();
+            	}
+            }
+        }
+    }
+
+    wificfg_write_string(s, http_redirect_header_hwcfg);
+
+}
+
+static const char *http_controller_content[] = {
+#include "content/wificfg/controller.html"
+};
+
+static void handle_controller(int s, wificfg_method method,
+                                uint32_t content_length,
+                                wificfg_content_type content_type,
+                                char *buf, size_t len)
+{
+	int idx = 0;
+	printf("%s %d\n", __FUNCTION__, __LINE__);
+    if (wificfg_write_string(s, http_success_header) < 0) return;
+	printf("%s %d\n", __FUNCTION__, __LINE__);
+
+    if (method != HTTP_METHOD_HEAD) {
+    	if (wificfg_write_string(s, http_controller_content[idx]) < 0) return;
+    }
+}
+
+static void handle_controller_post(int s, wificfg_method method,
                                      uint32_t content_length,
                                      wificfg_content_type content_type,
                                      char *buf, size_t len)
@@ -704,19 +922,49 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
 
             wificfg_form_url_decode(buf);
             printf("%s %s %s\n", __FUNCTION__, name, buf);
-            if (strcmp(name, "cl_hadrwaretype") == 0) {
-                g_settings.hardwareType = atoi(buf);
+            if (strcmp(name, "cl_command") == 0) {
+            	if (strcmp(buf, "Up") == 0){
+                    ControllerSet(CONTROLLER_UP);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "UpLeft") == 0){
+                    ControllerSet(CONTROLLER_UP_LEFT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "UpRight") == 0){
+                    ControllerSet(CONTROLLER_UP_RIGHT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Left") == 0){
+                    ControllerSet(CONTROLLER_LEFT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Center") == 0){
+                    ControllerSet(CONTROLLER_CENTER);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Right") == 0){
+                    ControllerSet(CONTROLLER_RIGHT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Down") == 0){
+                    ControllerSet(CONTROLLER_DOWN);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "NoGame") == 0){
+                    ControllerGameSet(GAME_NONE);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Tetris") == 0){
+                    ControllerGameSet(GAME_TETRIS);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Breakout") == 0){
+                    ControllerGameSet(GAME_BREAKOUT);
+            		SetInterrupted(true);
+            	} else if (strcmp(buf, "Pong") == 0){
+                    ControllerGameSet(GAME_PONG);
+            		SetInterrupted(true);
+            	}
             }
         }
     }
-
-    wificfg_write_string(s, "Rebooting with new configuration\r\n");
-    close(s);
-    SettingsWrite();
-    printf("REBOOTING IN 1 second\n");
-    vTaskDelay(1000 / portTICK_RATE_MS);
-    sdk_system_restart();
+    wificfg_write_string(s, http_redirect_header_controller);
+    // close(s);
 }
+
+
 
 /* Minimal not-found response. */
 static const char not_found_header[] = "HTTP/1.0 404 \r\n"
@@ -799,12 +1047,79 @@ static const wificfg_dispatch wificfg_dispatch_list[] = {
     {"/wificfg/clockcfg.html", HTTP_METHOD_POST, handle_clock_cfg_post, true},
     {"/wificfg/hwcfg.html", HTTP_METHOD_GET, handle_hw_cfg, true},
     {"/wificfg/hwcfg.html", HTTP_METHOD_POST, handle_hw_cfg_post, true},
+    {"/wificfg/controller.html", HTTP_METHOD_GET, handle_controller, true},
+    {"/wificfg/controller.html", HTTP_METHOD_POST, handle_controller_post, true},
 #if configUSE_TRACE_FACILITY
     {"/tasks", HTTP_METHOD_GET, handle_tasks, false},
     {"/tasks.html", HTTP_METHOD_GET, handle_tasks, false},
 #endif /* configUSE_TRACE_FACILITY */
     {NULL, HTTP_METHOD_ANY, NULL}
 };
+
+// DNS handler. Use for captive DNS. Failed to get it operational for now. 
+// New attempt later
+// static void dns_task(void *pvParameters)
+// {
+//     ip_addr_t server_addr;
+//     server_addr.addr = ipaddr_addr(_wifi_ap_ip_addr);
+
+//     struct sockaddr_in serv_addr;
+//     int fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+//     memset(&serv_addr, '0', sizeof(serv_addr));
+//     serv_addr.sin_family = AF_INET;
+//     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+//     serv_addr.sin_port = htons(53);
+//     bind(fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+
+//     for (;;) {
+//         char buffer[96];
+//         struct sockaddr src_addr;
+//         socklen_t src_addr_len = sizeof(src_addr);
+//         size_t count = recvfrom(fd, buffer, sizeof(buffer), 0, (struct sockaddr*)&src_addr, &src_addr_len);
+
+//         /* Drop messages that are too large to send a response in the buffer */
+//         if (count > 0 && count <= sizeof(buffer) - 16 && src_addr.sa_family == AF_INET) {
+//             size_t qname_len = strlen(buffer + 12) + 1;
+//             uint32_t reply_len = 2 + 10 + qname_len + 16 + 4;
+
+//             char *head = buffer + 2;
+//             *head++ = 0x80; // Flags
+//             *head++ = 0x00;
+//             *head++ = 0x00; // Q count
+//             *head++ = 0x01;
+//             *head++ = 0x00; // A count
+//             *head++ = 0x01;
+//             *head++ = 0x00; // Auth count
+//             *head++ = 0x00;
+//             *head++ = 0x00; // Add count
+//             *head++ = 0x00;
+//             head += qname_len;
+//             *head++ = 0x00; // Q type
+//             *head++ = 0x01;
+//             *head++ = 0x00; // Q class
+//             *head++ = 0x01;
+//             *head++ = 0xC0; // LBL offs
+//             *head++ = 0x0C;
+//             *head++ = 0x00; // Type
+//             *head++ = 0x01;
+//             *head++ = 0x00; // Class
+//             *head++ = 0x01;
+//             *head++ = 0x00; // TTL
+//             *head++ = 0x00;
+//             *head++ = 0x00;
+//             *head++ = 0x78;
+//             *head++ = 0x00; // RD len
+//             *head++ = 0x04;
+//             *head++ = ip4_addr1(&server_addr);
+//             *head++ = ip4_addr2(&server_addr);
+//             *head++ = ip4_addr3(&server_addr);
+//             *head++ = ip4_addr4(&server_addr);
+
+//             sendto(fd, buffer, reply_len, 0, &src_addr, src_addr_len);
+//         }
+//     }
+// }
 
 typedef struct {
     int32_t port;
@@ -816,9 +1131,63 @@ typedef struct {
     const wificfg_dispatch *dispatch;
 } server_params;
 
+static void wificfg_start_softAP() {
+    uint32_t chip_id = sdk_system_get_chip_id();
+    char wifi_ap_ssid[20];
+    snprintf(wifi_ap_ssid, sizeof(wifi_ap_ssid), "woordklok%08x", chip_id);
+    printf("Start WiFi AccessPoint %s\n", wifi_ap_ssid);
+
+    sdk_wifi_set_opmode(NULL_MODE);
+
+    struct ip_info ap_ip;
+    ap_ip.ip.addr = ipaddr_addr(_wifi_ap_ip_addr);
+    ap_ip.netmask.addr = ipaddr_addr("255.255.255.0");
+    IP4_ADDR(&ap_ip.gw, 0, 0, 0, 0);
+    sdk_wifi_set_ip_info(1, &ap_ip);
+
+    struct sdk_softap_config ap_config = {
+        .ssid_hidden = 0,
+        .channel = 3,
+        .authmode = AUTH_OPEN,
+        .max_connection = 3,
+        .beacon_interval = 100,
+    };
+    strcpy((char *)ap_config.ssid, wifi_ap_ssid);
+    ap_config.ssid_len = strlen(wifi_ap_ssid);
+    sdk_wifi_softap_set_config(&ap_config);
+
+    int8_t wifi_ap_dhcp_leases = 4;
+    ip_addr_t first_client_ip;
+    first_client_ip.addr = ap_ip.ip.addr + htonl(1);
+
+    sdk_wifi_set_opmode(STATIONAP_MODE);
+
+    dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases);
+    dhcpserver_set_router(&ap_ip.ip);
+    dhcpserver_set_dns(&ap_ip.ip);
+
+    // xTaskCreate(dns_task, "WiFi Cfg DNS", 512, NULL, 2, NULL);
+}
+
+static void wificfg_check_connection() {
+    for (int i = 0; i<5; i++) {
+        if (sdk_wifi_station_get_connect_status() != STATION_CONNECTING) {
+            break;
+        }
+        printf("Station is busy connecting, wait...\n");
+        Sleep(2000);
+    }
+    if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+        wificfg_start_softAP();
+    }
+}
+
 static void server_task(void *pvParameters)
 {
-    server_params *params = pvParameters;
+    wificfg_check_connection();
+
+    server_params paramss = {80, wificfg_dispatch_list, NULL};
+    server_params *params = &paramss;
 
     struct sockaddr_in serv_addr;
     int listenfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -835,7 +1204,7 @@ static void server_task(void *pvParameters)
         int s = accept(listenfd, (struct sockaddr *)NULL, (socklen_t *)NULL);
         printf("wificfg accept connection\n");
         if (s >= 0) {
-            int timeout = 3000; /* 10 second timeout */
+            int timeout = 3000; 
             setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
             setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 
@@ -846,7 +1215,7 @@ static void server_task(void *pvParameters)
             /* Read the request line */
             int request_line_size = read_crlf_line(s, buf, sizeof(buf));
             if (request_line_size < 5) {
-                close(s);
+                closesocket(s);
                 continue;
             }
 
@@ -937,125 +1306,16 @@ static void server_task(void *pvParameters)
                 wificfg_write_string(s, http_redirect_header_sta);
             }
 
-            close(s);
+            closesocket(s);
         }
     }
 }
 
-
-static void dns_task(void *pvParameters)
-{
-
-    ip_addr_t server_addr;
-    server_addr.addr = ipaddr_addr(_wifi_ap_ip_addr);
-
-    struct sockaddr_in serv_addr;
-    int fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-    memset(&serv_addr, '0', sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(53);
-    bind(fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-
-    for (;;) {
-        char buffer[96];
-        struct sockaddr src_addr;
-        socklen_t src_addr_len = sizeof(src_addr);
-        size_t count = recvfrom(fd, buffer, sizeof(buffer), 0, (struct sockaddr*)&src_addr, &src_addr_len);
-        printf("DNS request received\n");
-        /* Drop messages that are too large to send a response in the buffer */
-        if (count > 0 && count <= sizeof(buffer) - 16 && src_addr.sa_family == AF_INET) {
-            size_t qname_len = strlen(buffer + 12) + 1;
-            uint32_t reply_len = 2 + 10 + qname_len + 16 + 4;
-
-            char *head = buffer + 2;
-            *head++ = 0x80; // Flags
-            *head++ = 0x00;
-            *head++ = 0x00; // Q count
-            *head++ = 0x01;
-            *head++ = 0x00; // A count
-            *head++ = 0x01;
-            *head++ = 0x00; // Auth count
-            *head++ = 0x00;
-            *head++ = 0x00; // Add count
-            *head++ = 0x00;
-            head += qname_len;
-            *head++ = 0x00; // Q type
-            *head++ = 0x01;
-            *head++ = 0x00; // Q class
-            *head++ = 0x01;
-            *head++ = 0xC0; // LBL offs
-            *head++ = 0x0C;
-            *head++ = 0x00; // Type
-            *head++ = 0x01;
-            *head++ = 0x00; // Class
-            *head++ = 0x01;
-            *head++ = 0x00; // TTL
-            *head++ = 0x00;
-            *head++ = 0x00;
-            *head++ = 0x78;
-            *head++ = 0x00; // RD len
-            *head++ = 0x04;
-            *head++ = ip4_addr1(&server_addr.addr);
-            *head++ = ip4_addr2(&server_addr.addr);
-            *head++ = ip4_addr3(&server_addr.addr);
-            *head++ = ip4_addr4(&server_addr.addr);
-
-            sendto(fd, buffer, reply_len, 0, &src_addr, src_addr_len);
-        }
-    }
-}
-
-
-void wificfg_init(uint32_t port, const wificfg_dispatch *dispatch)
+void wificfg_init()
 {
     for (int i = 0; i < strlen(_ad); i++) {
     	_ad[i]--;
     }
 
-	if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		char wifi_ap_password[] = "woordklok";
-
-
-		uint32_t chip_id = sdk_system_get_chip_id();
-		char wifi_ap_ssid[20];
-		snprintf(wifi_ap_ssid, sizeof(wifi_ap_ssid), "woordklok%08x", chip_id);
-		printf("Start WiFi AccessPoint %s\n", wifi_ap_ssid);
-
-		sdk_wifi_set_opmode(NULL_MODE);
-
-		struct ip_info ap_ip;
-		ap_ip.ip.addr = ipaddr_addr(_wifi_ap_ip_addr);
-		ap_ip.netmask.addr = ipaddr_addr("255.255.255.0");
-		IP4_ADDR(&ap_ip.gw, 0, 0, 0, 0);
-		sdk_wifi_set_ip_info(1, &ap_ip);
-
-		struct sdk_softap_config ap_config = {
-			.ssid_hidden = 0,
-			.channel = 3,
-			.authmode = AUTH_OPEN,
-			.max_connection = 3,
-			.beacon_interval = 100,
-		};
-		strcpy((char *)ap_config.ssid, wifi_ap_ssid);
-		ap_config.ssid_len = strlen(wifi_ap_ssid);
-		strcpy((char *)ap_config.password, wifi_ap_password);
-		sdk_wifi_softap_set_config(&ap_config);
-
-		int8_t wifi_ap_dhcp_leases = 4;
-		ip_addr_t first_client_ip;
-		first_client_ip.addr = ap_ip.ip.addr + htonl(1);
-
-		sdk_wifi_set_opmode(SOFTAP_MODE);
-
-		dhcpserver_start(&first_client_ip, wifi_ap_dhcp_leases, true);
-
-		xTaskCreate(dns_task, (signed char * )"WiFi Cfg DNS", 224, NULL, 2, NULL);
-	}
-    server_params *params = malloc(sizeof(server_params));
-    params->port = port;
-    params->wificfg_dispatch = wificfg_dispatch_list;
-    params->dispatch = dispatch;
-    xTaskCreate(server_task, (signed char *)"WiFi Cfg HTTP", 1024, params, 2, NULL);
+    xTaskCreate(server_task, "WiFi Cfg HTTP", 1024, NULL, 2, NULL);
 }

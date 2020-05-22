@@ -17,40 +17,75 @@
 #include "lwip/netdb.h"
 #include "lwip/dns.h"
 
+#include <math.h>
 #include "espressif/esp_common.h"
 
 #include "esp_glue.h"
-
-#define WEB_SERVER "hierbenik.wssns.nl"
-#define WEB_PORT 80
+#include "settings.h"
 
 uint32_t _dist = 10000;
 uint32_t _age = 10000;
-
+float _lat = 0.0;
+float _lon = 0.0;
 
 void HbiGetDistAndAge(uint32_t* pDist, uint32_t* pAge) {
-	// TODO
 	*pDist = _dist;
 	*pAge = _age;
 }
 
+void HbiGetLatLon(float* pLat, float* pLon) {
+	*pLat = _lat;
+	*pLon = _lon;
+}
+
+float deg2rad(float deg) {
+  return deg * (M_PI/180);
+}
+
+float CalcDist(float lat1, float lon1, float lat2, float lon2) {
+  float R = 6371; // Radius of the earth in km
+  float dLat = deg2rad(lat2-lat1);  // deg2rad below
+  float dLon = deg2rad(lon2-lon1); 
+  float a = 
+    sin(dLat/2) * sin(dLat/2) +
+    cos(deg2rad(lat1)) * cos(deg2rad(lat2)) * 
+    sin(dLon/2) * sin(dLon/2)
+    ; 
+  float c = 2 * atan2(sqrt(a), sqrt(1-a)); 
+  float d = R * c; // Distance in km
+  return d;
+}
+
+
 static void ParseResponse(char* pResp){
-//	int i;
 	const char* ageTag = "age:";
 	const char* distTag = "dist:";
+	const char* latTag = "lat:";
+	const char* lonTag = "lon:";
 	char* p;
 	int t, t2;
+	float f;
 
 	p = strstr(pResp, ageTag);
-
-	if (sscanf(p, "age:%d", &t) == 1) {
+	if ( p && sscanf(p, "age:%d", &t) == 1) {
 		_age = t;
 		printf("age: %d\n", t);
 	}
 	p = strstr(pResp, distTag);
-	if (sscanf(p, "dist:%d.%3d", &t, &t2) == 2) {
+	if (p && sscanf(p, "dist:%d.%3d", &t, &t2) == 2) {
 		_dist = t * 1000 + t2;
 		printf("dist: %d\n", _dist);
+	}
+	p = strstr(pResp, latTag);
+	if (p && sscanf(p, "lat:%f", &f) == 1) {
+		_lat = f;
+		printf("lat: %f\n", _lat);
+	}
+	p = strstr(pResp, lonTag);
+	if (p && sscanf(p, "lon:%f", &f) == 1) {
+		_lon = f;
+		_dist = (1000.0 * CalcDist(_lat, _lon, g_settings.hierbenikHomeLat, g_settings.hierbenikHomeLon));
+		printf("lat: %f, lon: %f, dist: %d\n", _lat, _lon, _dist);
 	}
 }
 
@@ -59,19 +94,19 @@ static void GetHierBenIk() {
 	printf("%s %d enter\n", __FUNCTION__, __LINE__);
 	static struct sockaddr addr;
 	static int addrLen = 0;
-
+	int err;
 	if (addrLen == 0) {
 		struct addrinfo *res = NULL;
 		const struct addrinfo hints = { .ai_family = AF_INET, .ai_socktype =
 				SOCK_STREAM, };
-
-		int err = getaddrinfo(WEB_SERVER, "80", &hints, &res);
+		
+		err = getaddrinfo(g_settings.hierbenikUrl, g_settings.hierbenikPort, &hints, &res);
 
 		if (err != 0 || res == NULL ) {
-			printf("DNS lookup failed err=%d res=%p\r\n", err, res);
+			printf("DNS lookup failed (%s) err=%d res=%p\r\n", g_settings.hierbenikUrl, err, res);
 			if (res)
 				freeaddrinfo(res);
-			vTaskDelay(1000 / portTICK_RATE_MS);
+			vTaskDelay(1000 / portTICK_PERIOD_MS);
 			failures++;
 			return;
 		}
@@ -82,31 +117,31 @@ static void GetHierBenIk() {
 	int s = socket(AF_INET, SOCK_STREAM, 0);
 	if (s < 0) {
 		printf("... Failed to allocate socket.\r\n");
-		vTaskDelay(1000 / portTICK_RATE_MS);
+		vTaskDelay(1000 / portTICK_PERIOD_MS);
 		failures++;
 		return;
 	}
 
 	if (connect(s, &addr, addrLen) != 0) {
-		close(s);
+		closesocket(s);
 		printf("... socket connect failed.\r\n");
-		vTaskDelay(4000 / portTICK_RATE_MS);
+		vTaskDelay(4000 / portTICK_PERIOD_MS);
 		failures++;
-		close(s);
+		closesocket(s);
 		addrLen = 0; // Resolve IP adress next time.
 		return;
 	}
 
-
-	const char *req =
-			"GET /get_with_age.php HTTP/1.1\r\n"
-					"Host: hierbenik.wssns.nl\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n";
-	if (write(s, req, strlen(req)) < 0) {
+	char tempRequest[76+MAX_URL_SIZE+MAX_URL_SIZE];
+	sprintf(tempRequest, "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n", g_settings.hierbenikRequest, g_settings.hierbenikUrl);
+	err = lwip_write(s, tempRequest, strlen(tempRequest));
+	
+	if (err < 0) {
 		printf("... socket send failed\r\n");
-		close(s);
-		vTaskDelay(4000 / portTICK_RATE_MS);
+		closesocket(s);
+		vTaskDelay(4000 / portTICK_PERIOD_MS);
 		failures++;
-		close(s);
+		closesocket(s);
 		addrLen = 0; // Resolve IP adress next time.
 		return;
 	}
@@ -115,26 +150,27 @@ static void GetHierBenIk() {
 	int r;
 	int i = 0;
 	bzero(recv_buf, sizeof(recv_buf));
-	do {
-		r = read(s, &recv_buf[i], sizeof(recv_buf) - i - 1);
-		i += r;
-	} while (r > 0);
-//		printf("%s\n---\n", recv_buf);
+	SleepNI(1000);
+	r = lwip_read(s, &recv_buf[i], sizeof(recv_buf) - i - 1);
+	i += r;
 	ParseResponse(recv_buf);
 
 	if (r != 0)
 		failures++;
 	else
 		successes++;
-	close(s);
-	printf("%s %d leave, \n%s\n", __FUNCTION__, __LINE__, recv_buf);
+	closesocket(s);
+	// printf("%s %d leave, \n", __FUNCTION__, __LINE__);
 
 }
 
 void HbiTask(void *pvParameters){
-
+	while (strcmp(g_settings.hierbenikUrl, "") == 0) {
+		printf("Invalid Hier ben ik config, sleep task for 10 minutes\n");
+		SleepNI(10*60*1000);
+	}
 	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		printf("%s: Wait for connect\n", __FUNCTION__);
+		// printf("%s: Wait for connect\n", __FUNCTION__);
 		SleepNI(5000);
 	}
 	while (true) {
@@ -150,5 +186,5 @@ void HbiTask(void *pvParameters){
 
 
 void HbiInit() {
-    xTaskCreate(HbiTask, (signed char *)"HierBenIk task", 1024, NULL, 1, NULL);
+    xTaskCreate(HbiTask, "HierBenIk task", 1024, NULL, 1, NULL);
 }

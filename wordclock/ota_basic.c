@@ -32,15 +32,18 @@ static bool _isBusy = false;
 */
 static void tftpclient_download_and_verify_file1(int slot, rboot_config *conf)
 {
-    printf("Downloading %s to slot %d...\n", TFTP_IMAGE_FILENAME1, slot);
     int res;
+    char fwFileName[20];
     
     if (g_settings.otaFwType == OTA_FW_RELEASE) {
-        res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), TFTP_IMAGE_FILENAME_RELEASE, 1000, slot, NULL);
+        strcpy(fwFileName, TFTP_IMAGE_FILENAME_RELEASE);
     } else {
-        res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), TFTP_IMAGE_FILENAME_DEBUG, 1000, slot, NULL);
+        strcpy(fwFileName, TFTP_IMAGE_FILENAME_DEBUG);
     }
-    printf("ota_tftp_download %s result %d\n", TFTP_IMAGE_FILENAME1, res);
+    
+    printf("Downloading %s to slot %d...\n", fwFileName, slot);
+    res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), fwFileName, 1000, slot, NULL);
+    printf("ota_tftp_download %s result %d\n", fwFileName, res);
 
     if (res != 0) {
         return;

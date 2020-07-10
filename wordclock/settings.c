@@ -32,6 +32,7 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      0.0, // home lon
      "rwassens.ddns.net",  // otaFwUrl
      "10070",   // otaFwPort
+     OTA_FW_RELEASE, //otaFwType
      {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
      1, // reserved
      0, // brightnessOffset

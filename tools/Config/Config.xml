@@ -46,7 +46,7 @@
   </Data>
   <Data name="FrameConfigLine3.FilePath">
     <Type>String</Type>
-    <Value>..\wordclock\firmware\ws2812_buffer.bin</Value>
+    <Value>..\wordclock\firmware\woordklok.bin</Value>
   </Data>
   <Data name="FrameConfigLine3.Offset">
     <Type>String</Type>

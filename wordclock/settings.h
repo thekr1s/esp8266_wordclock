@@ -14,7 +14,7 @@
 #include "animations.h"
 #include "displaySettings.h"
 
-#define FLASH_MAGIC 0xBABEBAB0
+#define FLASH_MAGIC 0xBABEBAB1
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
 

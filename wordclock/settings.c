@@ -38,7 +38,6 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      0, // colorIdx
      0, // bgColorIdx
      52220, // timerPeriodTicks
-     FALSE, // isSummerTime
      {
         {255,255,255},
         {185,150,255},

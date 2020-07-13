@@ -14,7 +14,7 @@
 #include "animations.h"
 #include "displaySettings.h"
 
-#define FLASH_MAGIC 0xBABEBAB0
+#define FLASH_MAGIC 0xBABEBAB2
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
 
@@ -42,7 +42,6 @@ typedef struct {
     int8_t colorIdx;
     int8_t bgColorIdx;
     uint32_t timerPeriodTicks;
-    uint32_t isSummerTime;
     TColor aColors[COLOR_COUNT];
     uint32_t magic_end;
 } TSettings;

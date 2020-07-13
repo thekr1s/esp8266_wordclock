@@ -70,10 +70,6 @@ void ButtonShowMode(ButtonMode mode)
         F5x7WriteChar(1,6,'U', g_brightness, g_brightness, g_brightness);
         break;
 
-    case BUTTONMODE_DST:
-        DisplayTimeZone();
-        break;
-
 //  case BUTTONMODE_BRIGHTNESS:
 //      F4x5WriteChar(1,0,'B', g_brightness, g_brightness, g_brightness);
 //      F4x5WriteChar(1,5,'r', g_brightness, g_brightness, g_brightness);
@@ -150,12 +146,6 @@ void ButtonHandleUpDown(ButtonMode mode, bool up)
 //      h %= 24;
 //      TimeSet(h, m, s, false);
 //      break;
-
-    case BUTTONMODE_DST:
-        g_settings.isSummerTime = ! g_settings.isSummerTime;
-        DisplayTimeZone();
-        SleepNI(1000);
-        break;
 
 //  case BUTTONMODE_BRIGHTNESS:
 //      _brightnessIdx = up ? _brightnessIdx + 1 : _brightnessIdx - 1;

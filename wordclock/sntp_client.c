@@ -101,17 +101,21 @@ void sntp_tsk(void *pvParameters)
 	printf("Wait for NTP time...\n");
 	while (time(NULL) < 10000) {
 		vTaskDelayMs(1000);
-
 	}
 	printf("Time set...\n");
-
+	
+	correctDST();
+	sntp_set_update_delay(UPDATE_INERVAL);
+	
 	/* Print date and time each 5 seconds */
 	while(1) {
 		const uint32_t delaySec = 5;
 		uint32_t t = RTC.COUNTER;
 		vTaskDelayMs(delaySec * 1000);
 		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;	
+		
 		correctDST();
+		
 		// time_t ts = time(NULL);
 		// printf("TIME: %s", ctime(&ts));
 	}
@@ -128,7 +132,7 @@ void sntp_client_init(void)
 {
 	printf("Starting SNTP... \n");
 
-	sntp_set_update_delay(UPDATE_INERVAL);
+	sntp_set_update_delay(UPDATE_INERVAL/60); //Increase the startup update interval
 	sntp_set_servers(servers, sizeof(servers) / sizeof(char*));
 	sntp_initialize(&_tz);
     

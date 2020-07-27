@@ -47,4 +47,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: wordclock binary
-        path: wordclock/firmware/woordklok.bin
+        path: wordclock/firmware/woordklok_dbg.bin

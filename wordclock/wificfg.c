@@ -768,6 +768,11 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // FW update port
         wificfg_write_string(s, http_hw_cfg_content[++idx]);
         if (wificfg_write_string(s, g_settings.otaFwPort) < 0) return;
+        // FW update Type
+		for (int i = 0; i < 2; i++) {
+			if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+			if (g_settings.otaFwType == i) wificfg_write_string(s, "selected");
+		}
 
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
     }
@@ -834,6 +839,8 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             } else if (strcmp(name, "hw_otafw_port") == 0) {
                 bzero(g_settings.otaFwPort, sizeof(g_settings.otaFwPort));
                 strncpy(g_settings.otaFwPort, buf, sizeof(g_settings.otaFwPort) - 1);
+            } else if (strcmp(name, "image_Type") == 0) {
+                g_settings.otaFwType = atoi(buf);
             } else if (strcmp(name, "cl_command") == 0) {
                 printf("cl_command: %s", buf);
             	if (strcmp(buf, "SetHome") == 0){

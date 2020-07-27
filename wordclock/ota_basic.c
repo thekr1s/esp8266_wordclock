@@ -22,7 +22,8 @@
 #include "settings.h"
 
 /* TFTP client will request this image filenames from this server */
-#define TFTP_IMAGE_FILENAME1 "woordklok.bin"
+#define TFTP_IMAGE_FILENAME_RELEASE "woordklok.bin"
+#define TFTP_IMAGE_FILENAME_DEBUG   "woordklok_dbg.bin"
 
 static bool _isBusy = false;
 
@@ -31,12 +32,18 @@ static bool _isBusy = false;
 */
 static void tftpclient_download_and_verify_file1(int slot, rboot_config *conf)
 {
-    printf("Downloading %s to slot %d...\n", TFTP_IMAGE_FILENAME1, slot);
     int res;
+    char fwFileName[20];
     
-
-    res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
-    printf("ota_tftp_download %s result %d\n", TFTP_IMAGE_FILENAME1, res);
+    if (g_settings.otaFwType == OTA_FW_RELEASE) {
+        strcpy(fwFileName, TFTP_IMAGE_FILENAME_RELEASE);
+    } else {
+        strcpy(fwFileName, TFTP_IMAGE_FILENAME_DEBUG);
+    }
+    
+    printf("Downloading %s to slot %d...\n", fwFileName, slot);
+    res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), fwFileName, 1000, slot, NULL);
+    printf("ota_tftp_download %s result %d\n", fwFileName, res);
 
     if (res != 0) {
         return;

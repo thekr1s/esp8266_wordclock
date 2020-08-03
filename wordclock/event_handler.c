@@ -90,7 +90,7 @@ void EvtHdlInit() {
 }
 
 void EvtHdlButtonStateChange() {
-	if (pdFAIL == xTimerStart(_buttonTimer, 0)) {
+	if (pdFAIL == xTimerStart(_buttonTimer, 0)) { //TODO RHU this should be: xTimerStartFromISR()....
 		printf("%s: Timer set failed\n", __FUNCTION__);
 		return;
 	}

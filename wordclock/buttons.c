@@ -26,13 +26,13 @@ void interrupt_handler(uint8_t gpio_num){
 void ButtonsInit(void){
     gpio_enable(_buttondownGpio, GPIO_INPUT);
     gpio_set_pullup(_buttondownGpio, true, true);
-    gpio_set_interrupt(_buttondownGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
+    //gpio_set_interrupt(_buttondownGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
     gpio_enable(_buttonModeGpio, GPIO_INPUT);
     gpio_set_pullup(_buttonModeGpio, true, true);
-    gpio_set_interrupt(_buttonModeGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
+    //gpio_set_interrupt(_buttonModeGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
     gpio_enable(_buttonUpGpio, GPIO_INPUT);
     gpio_set_pullup(_buttonUpGpio, true, true);
-    gpio_set_interrupt(_buttonUpGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
+    //gpio_set_interrupt(_buttonUpGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
 
 }
 

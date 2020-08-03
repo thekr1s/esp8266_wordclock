@@ -121,7 +121,7 @@ void user_init(void)
 	ButtonsInit();
 
     //Start tasks
-	EvtHdlInit();
+	//EvtHdlInit(); //This task doesn't do any thing
     HbiInit();
     sntp_client_init();
     wificfg_init();

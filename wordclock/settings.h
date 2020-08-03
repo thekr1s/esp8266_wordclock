@@ -19,6 +19,11 @@
 #define FLASH_INVALIDATED 0xB0B0BABE
 
 typedef enum {
+    OTA_FW_RELEASE = 0,
+    OTA_FW_DEBUG = 1,
+} EOtaFwType;
+
+typedef enum {
     HARDWARE_11_11 = 0,
     HARDWARE_13_13 = 1,
     HARDWARE_9_8 = 2,
@@ -36,6 +41,7 @@ typedef struct {
     float hierbenikHomeLon;
     char otaFwUrl[MAX_URL_SIZE];
     char otaFwPort[MAX_PORT_SIZE];
+    EOtaFwType otaFwType;
     const uint8_t aBrightness[BRIGHTNESS_COUNT];
     int8_t reserved0;
     int8_t brightnessOffset;

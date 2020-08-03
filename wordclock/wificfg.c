@@ -200,7 +200,7 @@ static void wifi_monitor_task(void *pvParameters) {
         Sleep(2000);
     }
     
-    http_server_start();
+    http_server_start(); //socket is reused for soft AP and normal mode
     
     wifiState_t state = INVALID;
     while (true) {
@@ -208,17 +208,13 @@ static void wifi_monitor_task(void *pvParameters) {
         if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
             if (state != SOFT_AP) { //only do something on a state change
                 printf("Woordclock is unable to connect to Wifi\n");
-                //http_server_stop();
                 wificfg_start_softAP();
-                //http_server_start();
                 state = SOFT_AP;
             }
         } else {
             if (state != CONNECTED) { 
                 printf("Woordclock is now connected to the Wifi\n");
-                //http_server_stop();
                 wificfg_stop_soft_AP();
-                //http_server_start();
                 state = CONNECTED;
             }
         }

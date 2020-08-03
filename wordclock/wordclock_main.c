@@ -76,19 +76,6 @@ static void DisplayTimeSyncStatus()
 	}
 }
 
-void DisplayTimeZone() {
-	AlsFill(0,0,0);
-	if (g_settings.isSummerTime) {
-		F5x7WriteChar(1,0,'Z', g_brightness, g_brightness, g_brightness);
-		F5x7WriteChar(1,6,'T', g_brightness, g_brightness, g_brightness);
-	} else {
-		F5x7WriteChar(1,0,'W', g_brightness, g_brightness, g_brightness);
-		F5x7WriteChar(1,6,'T', g_brightness, g_brightness, g_brightness);
-		
-	}
-	AlsRefresh(ALSEFFECT_NONE);
-}
-
 static void ShowDist(int dist)
 {
 	uint8_t r = 0;
@@ -132,16 +119,16 @@ static void ShowDist(int dist)
 	AlsSetLed(t1, 10 - t2, r, g, b);
 }
 
+
+
 void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s){
 	time_t ts = time(NULL);
-	if (g_settings.isSummerTime) {
-		ts += 3600;
-	}
+	
 	struct tm *pTM = localtime(&ts);
+
 	*h = pTM->tm_hour;
     *m = pTM->tm_min;
     *s = pTM->tm_sec;
-
 }
 /**
  *

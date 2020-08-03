@@ -634,12 +634,6 @@ static void handle_clock_cfg(int s, wificfg_method method,
         	if (g_settings.bgColorIdx == i) wificfg_write_string(s, "selected");
         }
 
-        // DST
-        wificfg_write_string(s, http_clock_cfg_content[++idx]);
-        if (g_settings.isSummerTime) wificfg_write_string(s, "checked");
-        wificfg_write_string(s, http_clock_cfg_content[++idx]);
-        if (!g_settings.isSummerTime) wificfg_write_string(s, "checked");
-
         // Animations
         for (int i = 0; i <= 6; i++) {
         	wificfg_write_string(s, http_clock_cfg_content[++idx]);
@@ -703,9 +697,7 @@ static void handle_clock_cfg_post(int s, wificfg_method method,
             } else if (strcmp(name, "cl_brightness") == 0) {
             	g_settings.brightnessOffset = atoi(buf);
             } else if (strcmp(name, "cl_bgcolor") == 0) {
-                	g_settings.bgColorIdx = atoi(buf);
-            } else if (strcmp(name, "cl_dst") == 0) {
-            	g_settings.isSummerTime = atoi(buf);
+                g_settings.bgColorIdx = atoi(buf);
             } else if (strcmp(name, "cl_animations") == 0) {
             	g_settings.animation = atoi(buf);
             } else if (strcmp(name, "cl_message") == 0) {

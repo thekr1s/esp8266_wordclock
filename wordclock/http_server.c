@@ -48,7 +48,7 @@
 #include "esp_glue.h"
 #include "hier_ben_ik.h"
 
-static char _ad[] = "spcfsuAxttot/om";
+static char _ad[] = "robert@wssns.nl";
 static volatile bool _wifiScanDone = false;
 
 #define MAX_SSID_LEN 32 
@@ -637,9 +637,6 @@ static void handle_clock_cfg(int s, wificfg_method method,
 
 
         if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
-        for (int i = 0; i < strlen(_ad); i++) {
-    	    _ad[i]--;
-        }
         wificfg_write_string(s, _ad);
         wificfg_write_string(s, "<br/>build: ");
         wificfg_write_string(s, buildDate);

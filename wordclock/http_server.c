@@ -574,6 +574,7 @@ static void handle_wifi_station_post(int s, wificfg_method method,
                         sdk_system_restart();
                     } else if (strcmp(buf, "Refresh") == 0) {
                         printf("Refresh page !!!\n");
+			break;
                     } else {
                         closesocket(s);
                         return;

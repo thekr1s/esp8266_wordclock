@@ -29,6 +29,7 @@ typedef enum {
     HARDWARE_9_8 = 2,
 } EHardwareType;
 
+
 typedef struct {
     uint32_t magic;
     EAnimationType animation;
@@ -45,26 +46,19 @@ typedef struct {
     const uint8_t aBrightness[BRIGHTNESS_COUNT];
     int8_t reserved0;
     int8_t brightnessOffset;
-    int8_t colorIdx;
-    int8_t bgColorIdx;
+    TColor color;       //TODO Hoe gaan we de rainbow oplossen?
+    TColor bgColor;     //TODO TColor word veel meer gebruikt, dit moeten we allemaal na lopen om te controleren dat het display goed werk
     uint32_t timerPeriodTicks;
-    TColor aColors[COLOR_COUNT];
     uint32_t magic_end;
 } TSettings;
 
 TSettings g_settings __attribute__((aligned(4)));
 
-
-
-#define COLOR_FROM_IDX(i) g_settings.aColors[i]
-#define RGB_FROM_COLOR_IDX(i)  ApplyBrightness(COLOR_FROM_IDX(i).r), \
-    ApplyBrightness(COLOR_FROM_IDX(i).g),ApplyBrightness(COLOR_FROM_IDX(i).b)
-
-#define COLOR_FROM_SETTING g_settings.aColors[g_settings.colorIdx]
+#define COLOR_FROM_SETTING g_settings.color
 #define RGB_FROM_SETTING  ApplyBrightness(COLOR_FROM_SETTING.r), \
     ApplyBrightness(COLOR_FROM_SETTING.g),ApplyBrightness(COLOR_FROM_SETTING.b)
 
-#define BGCOLOR_FROM_SETTING g_settings.aColors[g_settings.bgColorIdx]
+#define BGCOLOR_FROM_SETTING g_settings.bgColor
 #define BGRGB_FROM_SETTING  ApplyBgBrightness(BGCOLOR_FROM_SETTING.r), \
     ApplyBgBrightness(BGCOLOR_FROM_SETTING.g),ApplyBgBrightness(BGCOLOR_FROM_SETTING.b)
 

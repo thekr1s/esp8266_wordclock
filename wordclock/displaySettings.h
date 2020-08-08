@@ -16,7 +16,6 @@
 #define BRIGHTNESS_COUNT  12
 #define MAX_URL_SIZE 100
 #define MAX_PORT_SIZE 6
-#define COLOR_COUNT  15
 #define COLOR_INDEX_RAINBOW 14
 #define LEDSTRIP_GPIO_NR 5 //the hardware GPIO used for controlling the display
 
@@ -43,10 +42,12 @@ typedef enum {
     COLOR_BLUE,
     COLOR_OFF
 } TColorIdx;
+#define COLOR_COUNT COLOR_OFF   //OFF is no color
 
 uint8_t _displaySize[2]; //the cols and rows are set on init
 uint8_t g_brightness;
 
+TColor GetColorFromIdx(TColorIdx idx);
 bool DisplayInNightMode(void);
 bool SetBrightness(void);
 uint8_t ApplyBrightness(uint8_t color);

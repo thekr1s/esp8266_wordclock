@@ -36,26 +36,9 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
      1, // reserved
      0, // brightnessOffset
-     0, // colorIdx
-     0, // bgColorIdx
+     {255,255,255}, // colorIdx = White
+     {0,0,0},       // bgColorIdx = Black
      52220, // timerPeriodTicks
-     {
-        {255,255,255},
-        {185,150,255},
-        {128,000,255},
-        {255,000,255},
-        {255,000,128},
-        {255,000,000},
-        {255,128,000},
-        {255,255,000},
-        {128,255,000},
-        {000,255,000},
-        {000,255,128},
-        {000,255,255},
-        {000,128,255},
-        {000,000,255},
-        {255,255,255},//dummy used for rainbow
-     },
      FLASH_MAGIC
 };
 

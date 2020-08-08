@@ -48,11 +48,10 @@
 #include "esp_glue.h"
 #include "hier_ben_ik.h"
 
-static char _ad[] = "robert@wssns.nl";
-static volatile bool _wifiScanDone = false;
-
 #define MAX_SSID_LEN 32 
 #define MAX_SSID_COUNT 50
+
+static char _ad[] = "robert@wssns.nl";
 
 static char _ssidList[MAX_SSID_COUNT][MAX_SSID_LEN+1]; // + zero termination
 static volatile int _ssidCount = 0;
@@ -64,11 +63,12 @@ static const char * const auth_modes [] = {
     [AUTH_WPA_WPA2_PSK] = "WPA/WPA2/PSK"
 };
 
-// Handle callback of wifi AP scan
+SemaphoreHandle_t wifi_networks_mutex;
+TaskHandle_t _http_server_task_handle;
+TaskHandle_t _wifi_scan_ap_task_handle;
 static void scan_done_cb(void *arg, sdk_scan_status_t status)
 {
-    if (status != SCAN_OK)
-    {
+    if (status != SCAN_OK) {
         printf("Error: WiFi scan failed\n");
         return;
     }
@@ -77,21 +77,21 @@ static void scan_done_cb(void *arg, sdk_scan_status_t status)
     // first one is invalid
     bss = bss->next.stqe_next;
 
-    printf("\n----------------------------------------------------------------------------------\n");
-    printf("                             Wi-Fi networks\n");
-    printf("----------------------------------------------------------------------------------\n");
+    xSemaphoreTake(wifi_networks_mutex, portMAX_DELAY);
+
     _ssidCount = 0;
     while (NULL != bss)
     {
         strncpy(_ssidList[_ssidCount], (char*)bss->ssid, MAX_SSID_LEN);
         _ssidList[_ssidCount][MAX_SSID_LEN] = 0; // zero terminate to be sure
 
-        printf("%32s (" MACSTR ") RSSI: %02d, security: %s\n", _ssidList[_ssidCount],
-            MAC2STR(bss->bssid), bss->rssi, auth_modes[bss->authmode]);
+        // printf("%32s (" MACSTR ") RSSI: %02d, security: %s\n", _ssidList[_ssidCount],
+        //    MAC2STR(bss->bssid), bss->rssi, auth_modes[bss->authmode]);
         bss = bss->next.stqe_next;
         _ssidCount++;
     }
-    _wifiScanDone = true;
+    xSemaphoreGive(wifi_networks_mutex);
+    printf("Updated WiFi network names\n");
 }
 
 /*
@@ -475,25 +475,18 @@ static void handle_wifi_station(int s, wificfg_method method,
 {
     if (wificfg_write_string(s, http_success_header) < 0) return;
 
-    _wifiScanDone = false;
-    printf("Start AP scan\r\n");
-    sdk_wifi_station_scan(NULL, scan_done_cb);
-    int timeout = 5;
-    _ssidCount = 0;
-    while (!_wifiScanDone) {
-        Sleep(1000);
-        timeout--;
-        if (timeout == 0) _wifiScanDone = true;
-    }
-
     if (method != HTTP_METHOD_HEAD) {
         if (wificfg_write_string(s, http_wifi_station_content[0]) < 0) return;
         wificfg_write_string(s, "<option value=\"100\">Select...</option>");
         static char line[100]; 
+        xSemaphoreTake(wifi_networks_mutex, portMAX_DELAY);
         for (int i = 0; i < _ssidCount; i++) {
             snprintf(line, sizeof(line), "<option value=\"%d\">%s</option>", i, _ssidList[i]);
-            if (wificfg_write_string(s, line) < 0) return;
+            if (wificfg_write_string(s, line) < 0) {
+                break;
+            }
         }
+        xSemaphoreGive(wifi_networks_mutex);
         if (wificfg_write_string(s, http_wifi_station_content[1]) < 0) return;
     }
     closesocket(s);
@@ -603,15 +596,16 @@ static void handle_clock_cfg(int s, wificfg_method method,
 	char tmpStr[20];
 	printf("%s %d\n", __FUNCTION__, __LINE__);
     if (wificfg_write_string(s, http_success_header) < 0) return;
-	printf("%s %d\n", __FUNCTION__, __LINE__);
 
     if (method != HTTP_METHOD_HEAD) {
     	if (wificfg_write_string(s, http_clock_cfg_content[idx]) < 0) return;
+        
     	// Color
-        for (int i = 0; i < COLOR_COUNT; i++) {
-        	if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
-        	if (g_settings.colorIdx == i) wificfg_write_string(s, "selected");
-        }
+        if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
+        uint32_t hexColor = (g_settings.color.r << 16) | (g_settings.color.g << 8) | (g_settings.color.b << 0);
+        bzero(tmpStr, sizeof(tmpStr));
+        snprintf(tmpStr, sizeof(tmpStr)-1, "#%06x", hexColor);
+        if (wificfg_write_string(s, tmpStr) < 0) return;
 
         // Brightness
         if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
@@ -620,10 +614,11 @@ static void handle_clock_cfg(int s, wificfg_method method,
         if (wificfg_write_string(s, tmpStr) < 0) return;
 
         // Background Color
-        for (int i = 0; i < 14; i++) {
-        	if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
-        	if (g_settings.bgColorIdx == i) wificfg_write_string(s, "selected");
-        }
+        if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
+        hexColor = (g_settings.bgColor.r << 16) | (g_settings.bgColor.g << 8) | (g_settings.bgColor.b << 0);
+        bzero(tmpStr, sizeof(tmpStr));
+        snprintf(tmpStr, sizeof(tmpStr)-1, "#%06x", hexColor);
+        if (wificfg_write_string(s, tmpStr) < 0) return;
 
         // Animations
         for (int i = 0; i <= 6; i++) {
@@ -643,7 +638,7 @@ static void handle_clock_cfg(int s, wificfg_method method,
         
         wificfg_write_string(s, "<br/>rev. : ");
         wificfg_write_string(s, version);
-        printf("svn:%s", version);
+        printf("svn:%s\n", version);
     }
 }
 
@@ -684,11 +679,19 @@ static void handle_clock_cfg_post(int s, wificfg_method method,
             wificfg_form_url_decode(buf);
             printf("%s %s %s\n", __FUNCTION__, name, buf);
             if (strcmp(name, "cl_color") == 0) {
-            	g_settings.colorIdx = atoi(buf);
+                uint32_t hexColor = 0;
+                sscanf(buf, "#%06x", &hexColor);
+                g_settings.color.r = hexColor >> 16 & 0xff; 
+                g_settings.color.g = hexColor >> 8  & 0xff;
+                g_settings.color.b = hexColor >> 0  & 0xff;
             } else if (strcmp(name, "cl_brightness") == 0) {
             	g_settings.brightnessOffset = atoi(buf);
             } else if (strcmp(name, "cl_bgcolor") == 0) {
-                g_settings.bgColorIdx = atoi(buf);
+                uint32_t hexColor = 0;
+                sscanf(buf, "#%06x", &hexColor);
+                g_settings.bgColor.r = hexColor >> 16 & 0xff; 
+                g_settings.bgColor.g = hexColor >> 8  & 0xff;
+                g_settings.bgColor.b = hexColor >> 0  & 0xff;
             } else if (strcmp(name, "cl_animations") == 0) {
             	g_settings.animation = atoi(buf);
             } else if (strcmp(name, "cl_message") == 0) {
@@ -1203,7 +1206,24 @@ static void http_server_task(void *pvParameters)
     vTaskDelete(NULL);
 }
 
-TaskHandle_t _http_server_task_handle;
+static void wifi_scan_ap_task(void *pvParameters) {
+    printf("Starting WiFi scan");
+    while (true) {
+        if (sdk_wifi_get_opmode() != STATIONAP_MODE) {
+            break;
+        }
+        sdk_wifi_station_scan(NULL, scan_done_cb);
+        Sleep(10 * 1000);
+    }
+    vTaskDelete(NULL);
+}
+
+void wifi_scan_ap_start() {
+    wifi_networks_mutex = xSemaphoreCreateBinary();
+    xSemaphoreGive(wifi_networks_mutex);
+    xTaskCreate(wifi_scan_ap_task, "WiFi scan AP", 256, NULL, 2, &_wifi_scan_ap_task_handle);
+}
+
 void http_server_start() {
     while (_http_server_task_handle) {
         printf("HTTP server already started ERROR!!!!!!!\n");

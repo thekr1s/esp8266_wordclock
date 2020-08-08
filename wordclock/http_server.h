@@ -61,6 +61,6 @@ typedef struct {
 extern const char version[];
 extern const char buildDate[];
 
-
+void wifi_scan_ap_start(void);
 void http_server_start();
 void http_server_stop();

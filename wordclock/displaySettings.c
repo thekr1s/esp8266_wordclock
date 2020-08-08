@@ -29,6 +29,27 @@
 uint16_t _aLdrLevels[] = {808, 800, 700, 550, 300, 100, 50, 30, 10, 5};
 static bool g_inNightMode = false;
 
+TColor _definedColors[] = {
+{255,255,255},    
+{185,150,255},        
+{128,000,255},    
+{255,000,255},    
+{255,000,128},
+{255,000,000},
+{255,128,000},    
+{255,255,000},    
+{128,255,000},        
+{000,255,000},
+{000,255,128},        
+{000,255,255},
+{000,128,255},        
+{000,000,255}};
+
+TColor GetColorFromIdx(TColorIdx idx)
+{
+    return _definedColors[idx];
+}
+
 bool DisplayInNightMode(void)
 {
     return g_inNightMode;
@@ -98,7 +119,12 @@ uint8_t ApplyBrightness(uint8_t color)
 uint8_t ApplyBgBrightness(uint8_t color)
 {
     // If backgrondcolor white, then turn led off.
-    if (g_settings.bgColorIdx == 0) return 0;
+    if (g_settings.bgColor.r == 0 &&
+        g_settings.bgColor.g == 0 &&
+        g_settings.bgColor.b == 0) return 0;
+    if (g_settings.bgColor.r == 255 &&
+        g_settings.bgColor.g == 255 &&
+        g_settings.bgColor.b == 255) return 0;
     uint32_t t;
     t = color * g_brightness;
     return (uint8_t)(t / 512);

@@ -92,7 +92,6 @@ void sntp_tsk(void *pvParameters)
 {
 	UNUSED_ARG(pvParameters);
 
-	printf("SNTP: Wait for WiFi connection... \n");
 	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
 		printf("SNTP: Wait for WiFi connection... \n");
 		vTaskDelayMs(2000);

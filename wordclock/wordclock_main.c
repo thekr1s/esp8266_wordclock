@@ -41,9 +41,9 @@
 static void ShowSome(uint32_t delayMS)
 {
 	uint8_t r,g,b;
-	r = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].r);
-	g = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].g);
-	b = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].b);
+	r = ApplyBrightness(g_settings.color.r);
+	g = ApplyBrightness(g_settings.color.g);
+	b = ApplyBrightness(g_settings.color.b);
 
 	AlsFill(0, 0, 0);
 	switch (rand() % 3) {
@@ -93,7 +93,7 @@ static void ShowDist(int dist)
 		g = 255 - (t2 * 255) / t1;
 		r = 255 - g;
 	} else {
-		TColor c = g_settings.aColors[g_settings.colorIdx];
+		TColor c = g_settings.color;
 		if (c.g > (c.r + c.b)) {
 			b = 255;
 		} else {
@@ -177,7 +177,9 @@ void ShowTime(int delayMS) {
 			}
 			DisplayTimeSyncStatus();
 
-			if (g_settings.colorIdx == COLOR_INDEX_RAINBOW) {
+			if (g_settings.color.r == 255 &&
+				g_settings.color.g == 255 &&
+				g_settings.color.b == 255) {
 				AlsApplyFilter(ALSFILTER_RAINBOW);
 			} 
 

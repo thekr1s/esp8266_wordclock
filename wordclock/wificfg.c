@@ -185,6 +185,7 @@ static void wificfg_start_softAP() {
 static void wificfg_stop_soft_AP() {
     dhcpserver_stop();
     dns_stop();
+    wifi_scan_ap_stop();
     sdk_wifi_set_opmode(STATION_MODE);
 }
 

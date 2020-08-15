@@ -62,5 +62,6 @@ extern const char version[];
 extern const char buildDate[];
 
 void wifi_scan_ap_start(void);
+void wifi_scan_ap_stop(void);
 void http_server_start();
 void http_server_stop();

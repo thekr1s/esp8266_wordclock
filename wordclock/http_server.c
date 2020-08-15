@@ -65,7 +65,7 @@ static const char * const auth_modes [] = {
 
 SemaphoreHandle_t wifi_networks_mutex;
 TaskHandle_t _http_server_task_handle;
-TaskHandle_t _wifi_scan_ap_task_handle;
+TaskHandle_t _wifi_scan_ap_task_handle = NULL;
 static void scan_done_cb(void *arg, sdk_scan_status_t status)
 {
     if (status != SCAN_OK) {
@@ -473,12 +473,13 @@ static void handle_wifi_station(int s, wificfg_method method,
                                 wificfg_content_type content_type,
                                 char *buf, size_t len)
 {
+    wifi_scan_ap_start(); //In case the user wands to reconfigure the wifi settings the scan task needs to be started.
     if (wificfg_write_string(s, http_success_header) < 0) return;
 
     if (method != HTTP_METHOD_HEAD) {
         if (wificfg_write_string(s, http_wifi_station_content[0]) < 0) return;
         wificfg_write_string(s, "<option value=\"100\">Select...</option>");
-        static char line[100]; 
+        static char line[100];
         xSemaphoreTake(wifi_networks_mutex, portMAX_DELAY);
         for (int i = 0; i < _ssidCount; i++) {
             snprintf(line, sizeof(line), "<option value=\"%d\">%s</option>", i, _ssidList[i]);
@@ -629,7 +630,6 @@ static void handle_clock_cfg(int s, wificfg_method method,
         // Message text
         if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
         wificfg_write_string(s,AnimationGetMessageText());
-
 
         if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
         wificfg_write_string(s, _ad);
@@ -1196,7 +1196,6 @@ static void http_server_task(void *pvParameters)
             } else {
                 wificfg_write_string(s, http_redirect_header_sta);
             }
-
             lwip_close(s);
         }
     }
@@ -1207,34 +1206,51 @@ static void http_server_task(void *pvParameters)
 }
 
 static void wifi_scan_ap_task(void *pvParameters) {
-    printf("Starting WiFi scan");
-    while (true) {
-        if (sdk_wifi_get_opmode() != STATIONAP_MODE) {
-            break;
+    printf("Starting WiFi scan\n");
+    for(int i = 0; i < 30; i++) { //Stop scanning after 5 minutes
+        uint32_t task_value = 0;
+        if (xTaskNotifyWait(0, 1, &task_value, 0) == pdTRUE) {
+            if (task_value) {
+                break;
+            }
         }
         sdk_wifi_station_scan(NULL, scan_done_cb);
         Sleep(10 * 1000);
     }
+    _wifi_scan_ap_task_handle = NULL;
     vTaskDelete(NULL);
+    vSemaphoreDelete(wifi_networks_mutex);
+    printf("WiFi scan Stopped\n");
 }
 
 void wifi_scan_ap_start() {
+    if (_wifi_scan_ap_task_handle) {
+        printf("Already scanning access points\n");
+        return;
+    }
     wifi_networks_mutex = xSemaphoreCreateBinary();
     xSemaphoreGive(wifi_networks_mutex);
-    xTaskCreate(wifi_scan_ap_task, "WiFi scan AP", 256, NULL, 2, &_wifi_scan_ap_task_handle);
+    xTaskCreate(wifi_scan_ap_task, "WiFi scan AP", 256, NULL, 3, &_wifi_scan_ap_task_handle);
+}
+
+void wifi_scan_ap_stop() {
+    if (!_wifi_scan_ap_task_handle) {
+        return;
+    }
+    xTaskNotify(_wifi_scan_ap_task_handle, 1, eSetValueWithOverwrite);
 }
 
 void http_server_start() {
     while (_http_server_task_handle) {
         printf("HTTP server already started ERROR!!!!!!!\n");
-        Sleep(1 * 1000);
+        return;
     }
     xTaskCreate(http_server_task, "http server", 1024, NULL, 2, &_http_server_task_handle);
 }
 
 void http_server_stop() {
-    if (!_http_server_task_handle)
+    if (!_http_server_task_handle) {
         return;
-
+    }
     xTaskNotify(_http_server_task_handle, 1, eSetValueWithOverwrite);
 }

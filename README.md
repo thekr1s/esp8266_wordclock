@@ -1,11 +1,12 @@
-# Get started on ubuntu 14.04 upto 19.10 (64 bits)
+# Get started on ubuntu 18.04 upto 20.04 (64 bits)
 ```
 git clone https://github.com/thekr1s/esp8266_wordclock.git
 cd esp8266_wordclock/esp-open-rtos
 git submodule update --init --recursive
 cd ..
 tar -xvf esp-open-sdk.tgz 
-sudo apt-get install make python-serial gcc g++
+sudo apt-get install make gcc g++
+sudo pip install esptool
 . env.sh
 cd wordclock
 make

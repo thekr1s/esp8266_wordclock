@@ -33,6 +33,6 @@ all: #$(FW_FILE)
 	echo stripped CRC from $(FW_FILE) 
 
 do_flash:
-	esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 40m -fs 32m -fm dio
-	esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 40m -fs 32m -fm dio
-	esptool.py --baud 115200 write_flash 0x02000 firmware/woordklok_dbg.bin -ff 40m -fs 32m -fm dio
+	../esp-open-sdk/esptool/esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 40m -fs 32m -fm dio
+	../esp-open-sdk/esptool/esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 40m -fs 32m -fm dio
+	../esp-open-sdk/esptool/esptool.py --baud 115200 write_flash 0x02000 firmware/woordklok_dbg.bin -ff 40m -fs 32m -fm dio

@@ -12,7 +12,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -25,7 +25,6 @@ jobs:
         head /proc/cpuinfo -n 6
         head /proc/meminfo -n 2
         head /etc/*-release -n 4
-        set
 
     - name: prepare build env
       run: |
@@ -33,16 +32,13 @@ jobs:
         git submodule update --init --recursive
         cd ..
         tar -xvf esp-open-sdk.tgz
-        rm -f ./esp-open-sdk/xtensa-lx106-elf/bin/esptool.py
-        rm -rf esp-open-sdk/esptool
-        pip install esptool
+        sudo apt-get install python-serial
         
     - name: Build the wordclock
       run: |
         PROJECT_HOME=$(dirname '$0')
         export PATH=$PROJECT_HOME/esp-open-sdk/xtensa-lx106-elf/bin:$PATH
         export PATH=$PWD/esp-open-sdk/xtensa-lx106-elf/bin:$PATH
-        export PATH=$HOME/.local/bin/:$PATH
         export SDK_PATH=$PROJECT_HOME/ESP8266_RTOS_SDK
         export BIN_PATH=$PROJECT_HOME/bin
         cd wordclock

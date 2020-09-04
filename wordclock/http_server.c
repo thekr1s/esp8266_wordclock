@@ -845,8 +845,6 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                     sdk_system_restart();
             	} else if (strcmp(buf, "FactoryReset") == 0){
             	    wificfg_write_string(s, http_redirect_header_delayed);
-                    struct sdk_station_config config = {"", "", 0, {0}};
-                    sdk_wifi_station_set_config(&config);
             		SettingsClockReset();
             	}
            		

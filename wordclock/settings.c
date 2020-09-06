@@ -24,14 +24,23 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      FLASH_MAGIC,
      ANIMATION_TRANSITION,
      HARDWARE_11_11,
+#ifdef BUILD_BY_RUTGER
+     0,   // perfectImperfections
+#else
      1,   // perfectImperfections
+#endif
      "",  // hierbenikUrl
      "80",   // hierbenikPort
      "/get_with_age.php",  // hierbenikRequest
      0.0, // home lat
      0.0, // home lon
+#ifdef BUILD_BY_RUTGER
+     "rutger798.mynetgear.com",  // otaFwUrl
+     "6912",   // otaFwPort
+#else
      "http://download.wssns.nl",  // otaFwUrl
      "80",   // otaFwPort
+#endif
      OTA_FW_RELEASE, //otaFwType
      {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
      1, // reserved

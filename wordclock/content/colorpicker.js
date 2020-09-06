@@ -39,6 +39,8 @@
 "});\r\n"
 "\r\n"
 "backgroundColorPicker.on([\"color:change\"], function(color) {\r\n"
+"  color.setChannel('hsva', 'a', 1);"
+"  color.setChannel('hsva', 's', 100);"
 "  backgroundCl.value = color.hexString;\r\n"
 "  backgroundCl.style.backgroundColor = color.hexString;\r\n"
 "});\r\n"

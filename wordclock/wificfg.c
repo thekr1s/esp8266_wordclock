@@ -204,10 +204,6 @@ static void wifi_monitor_task(void *pvParameters) {
     
     wifiState_t state = INVALID;
     while (true) {
-<<<<<<< HEAD
-=======
-        printf("Check WIFI connection\n");
->>>>>>> develop
         if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
             if (state != SOFT_AP) { //only do something on a state change
                 printf("Woordclock is unable to connect to Wifi\n");

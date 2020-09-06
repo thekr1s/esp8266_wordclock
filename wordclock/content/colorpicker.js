@@ -18,6 +18,8 @@
 "\r\n"
 "letterColorPicker.on([\"color:init\"], function(color) {\r\n"
 "  color.hexString = letterCl.value;\r\n"
+"  color.setChannel('hsva', 'a', 1);"   //Make sure the sliders that are not used are fully on
+"  color.setChannel('hsva', 'v', 100);" 
 "  letterCl.style.backgroundColor = letterCl.value;\r\n"
 "});\r\n"
 "\r\n"
@@ -35,12 +37,12 @@
 "\r\n"
 "backgroundColorPicker.on([\"color:init\"], function(color) {\r\n"
 "  color.hexString = backgroundCl.value;\r\n"
+"  color.setChannel('hsva', 'a', 1);"   //Make sure the sliders that are not used are fully on
+"  color.setChannel('hsva', 's', 100);"
 "  backgroundCl.style.backgroundColor = backgroundCl.value;\r\n"
 "});\r\n"
 "\r\n"
 "backgroundColorPicker.on([\"color:change\"], function(color) {\r\n"
-"  color.setChannel('hsva', 'a', 1);"
-"  color.setChannel('hsva', 's', 100);"
 "  backgroundCl.value = color.hexString;\r\n"
 "  backgroundCl.style.backgroundColor = color.hexString;\r\n"
 "});\r\n"

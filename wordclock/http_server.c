@@ -705,18 +705,24 @@ static void handle_clock_cfg_post(int s, wificfg_method method,
             printf("%s %s %s\n", __FUNCTION__, name, buf);
             if (strcmp(name, "cl_color") == 0) {
                 uint32_t hexColor = 0;
-                sscanf(buf, "#%06x", &hexColor);
-                g_settings.color.r = hexColor >> 16 & 0xff; 
-                g_settings.color.g = hexColor >> 8  & 0xff;
-                g_settings.color.b = hexColor >> 0  & 0xff;
+                if (sscanf(buf, "#%06x", &hexColor) == 1 && hexColor <= 0xffffff) {
+                    g_settings.color.r = hexColor >> 16 & 0xff; 
+                    g_settings.color.g = hexColor >> 8  & 0xff;
+                    g_settings.color.b = hexColor >> 0  & 0xff;
+                } else {
+                    printf("Received invalid Color value\r\n");
+                }
             } else if (strcmp(name, "cl_brightness") == 0) {
             	g_settings.brightnessOffset = atoi(buf);
             } else if (strcmp(name, "cl_bgcolor") == 0) {
                 uint32_t hexColor = 0;
-                sscanf(buf, "#%06x", &hexColor);
-                g_settings.bgColor.r = hexColor >> 16 & 0xff; 
-                g_settings.bgColor.g = hexColor >> 8  & 0xff;
-                g_settings.bgColor.b = hexColor >> 0  & 0xff;
+                if (sscanf(buf, "#%06x", &hexColor) == 1 && hexColor <= 0xffffff) {
+                    g_settings.bgColor.r = hexColor >> 16 & 0xff; 
+                    g_settings.bgColor.g = hexColor >> 8  & 0xff;
+                    g_settings.bgColor.b = hexColor >> 0  & 0xff;
+                } else {
+                    printf("Received invalid background Color value\r\n");
+                }
             } else if (strcmp(name, "cl_animations") == 0) {
             	g_settings.animation = atoi(buf);
             } else if (strcmp(name, "cl_message") == 0) {

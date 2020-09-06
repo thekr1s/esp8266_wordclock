@@ -177,9 +177,10 @@ void ShowTime(int delayMS) {
 			}
 			DisplayTimeSyncStatus();
 
-			if (g_settings.color.r == 255 &&
-				g_settings.color.g == 255 &&
-				g_settings.color.b == 255) {
+			// TODO RAINBOW IS NOT WORKING..
+			if (g_settings.color.r == 0 &&
+				g_settings.color.g == 0 &&
+				g_settings.color.b == 0) {
 				AlsApplyFilter(ALSFILTER_RAINBOW);
 			} 
 

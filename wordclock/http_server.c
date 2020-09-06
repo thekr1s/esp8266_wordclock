@@ -412,6 +412,31 @@ static void handle_style(int s, wificfg_method method,
     wificfg_write_string(s, http_style);
 }
 
+static const char http_iro[] =
+#include "content/iro.js"
+;
+
+static void handle_iro(int s, wificfg_method method,
+                           uint32_t content_length,
+                           wificfg_content_type content_type,
+                           char *buf, size_t len)
+{
+    wificfg_write_string(s, http_iro);
+}
+
+static const char http_colorPicker[] =
+#include "content/colorpicker.js"
+;
+
+static void handle_colorPicker(int s, wificfg_method method,
+                           uint32_t content_length,
+                           wificfg_content_type content_type,
+                           char *buf, size_t len)
+{
+    wificfg_write_string(s, http_colorPicker);
+}
+
+
 static const char http_script[] =
 #include "content/script.js"
 ;
@@ -1031,7 +1056,9 @@ static void handle_tasks(int s, wificfg_method method,
 static const wificfg_dispatch wificfg_dispatch_list[] = {
     {"/favicon.ico", HTTP_METHOD_GET, handle_favicon, false},
     {"/style.css", HTTP_METHOD_GET, handle_style, false},
+    {"/iro.js", HTTP_METHOD_GET, handle_iro, false},
     {"/script.js", HTTP_METHOD_GET, handle_script, false},
+    {"/colorpicker.js", HTTP_METHOD_GET, handle_colorPicker, false},
     {"/", HTTP_METHOD_GET, handle_wificfg_redirect, false},
     {"/index.html", HTTP_METHOD_GET, handle_wificfg_redirect, false},
     {"/wificfg/sta.html", HTTP_METHOD_GET, handle_wifi_station, true},
@@ -1195,6 +1222,7 @@ static void http_server_task(void *pvParameters)
                 (*match->handler)(s, method, content_length, content_type, buf, sizeof(buf));
             } else {
                 wificfg_write_string(s, http_redirect_header_sta);
+                printf("Unhandeld request!!: %s\n", path_string);
             }
             lwip_close(s);
         }

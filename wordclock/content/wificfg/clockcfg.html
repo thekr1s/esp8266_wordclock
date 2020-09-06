@@ -19,18 +19,26 @@
 "<fieldset>",
 "<legend>Woordklok Configuratie</legend>"
 "<dl class=\"dlh\">"
-"<dt><label for=\"co\">Kleur</label></dt>"
-"<dd><input id=\"co\" type=\"color\" name=\"cl_color\""
+"<dt><label for=\"letterColorId\">Kleur</label></dt>"
+"<dd><input id=\"letterColorId\" type=\"text\" name=\"cl_color\" size=\"6px\""
 "value=\"",
-"\"></dd>"
+"\">"
+"<input id=\"letterButton\" type=\"button\" value=\"select\"></dd>"
+"<div id=\"letterPopUp\" class=\"popUpBox\">"
+"<div id=\"letter-picker\" class=\"popUpContent\"></div>"
+"</div>"
 "<dt><label for=\"ch\">Helderheid</label></dt>"
 "<dd><input id=\"ch\" type=\"number\" size=\"1\" min=\"0\" max=\"5\" step=\"1\" "
 "name=\"cl_brightness\" placeholder=\"1\" value=\"",
 "\"></dd>"
-"<dt><label for=\"co\">Achtergrondkleur</label></dt>"
-"<dd><input id=\"co\" type=\"color\" name=\"cl_bgcolor\""
+"<dt><label for=\"backColorId\">Achtergrondkleur</label></dt>"
+"<dd><input id=\"backColorId\" type=\"text\" name=\"cl_bgcolor\" size=\"6px\""
     "value=\"",
-    "\"></dd>"
+"\">"
+"<input id=\"backgroundButton\" type=\"button\" value=\"select\"></dd>"
+"<div id=\"backgroundPopUp\" class=\"popUpBox\">"
+"<div id=\"background-picker\" class=\"popUpContent\"></div>"
+"</div>"
 "<dt><label for=\"an\">Animaties</label></dt>"
 "<dd><select id=\"an\" name=\"cl_animations\">"
 "<option value=\"0\"",
@@ -58,5 +66,7 @@
 "</center>"
 "</fieldset>"
 "</form>"
+"<script src=\"/iro.js\"></script>"
+"<script src=\"/colorpicker.js\"></script>"
 "</body></html>",
 ""

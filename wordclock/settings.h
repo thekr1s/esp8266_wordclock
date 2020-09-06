@@ -47,7 +47,7 @@ typedef struct {
     int8_t reserved0;
     int8_t brightnessOffset;
     TColor color;       //TODO Hoe gaan we de rainbow oplossen?
-    TColor bgColor;     //TODO TColor word veel meer gebruikt, dit moeten we allemaal na lopen om te controleren dat het display goed werk
+    TColor bgColor;
     uint32_t timerPeriodTicks;
     uint32_t magic_end;
 } TSettings;

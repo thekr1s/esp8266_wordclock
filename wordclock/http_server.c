@@ -1134,9 +1134,8 @@ static void http_server_task(void *pvParameters)
         int s = accept(listenfd, (struct sockaddr *)NULL, (socklen_t *)NULL);
         printf("wificfg accept connection\n");
         if (s >= 0) {
-            int timeout = 60; 
+            const struct timeval timeout = { 5, 0 }; /* 2 second timeout */
             setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
-            //setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 
             /* Buffer for reading the request and headers and the post method
              * names and values. */

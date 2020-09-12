@@ -25,10 +25,11 @@ typedef enum {
 } TAlsEffects;
 
 typedef enum {
-    ALSFILTER_NONE,
-    ALSFILTER_RANDOM,
-    ALSFILTER_RAINBOW,
-} TAlsFilters;
+    TEXTEFFECT_NONE,
+    TEXTEFFECT_RAINBOW,
+	TEXTEFFECT_RANDOM,
+	TEXTEFFECT_MAX,
+} ETextEffect;
 
 typedef void (*TAlsWriteFunction)(uint8_t* pData, uint32_t byteCount);
 
@@ -39,7 +40,7 @@ uint32_t AlsGetCols();
 void AlsFill(uint8_t red, uint8_t green, uint8_t blue);
 void AlsSetLed(uint32_t row, uint32_t col, uint8_t red, uint8_t green, uint8_t blue);
 void AlsGetLed(uint32_t row, uint32_t col, uint8_t* pRed, uint8_t* pGreen, uint8_t* pBlue);
-void AlsApplyFilter(TAlsFilters filter);
+void AlsApplyTextEffect(ETextEffect filter);
 void AlsRefresh(TAlsEffects effect);
 
 void AlsSetRandom(uint8_t brightness);

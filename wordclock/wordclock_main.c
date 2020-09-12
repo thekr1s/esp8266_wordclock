@@ -177,12 +177,7 @@ void ShowTime(int delayMS) {
 			}
 			DisplayTimeSyncStatus();
 
-			// TODO RAINBOW IS NOT WORKING..
-			if (g_settings.color.r == 0 &&
-				g_settings.color.g == 0 &&
-				g_settings.color.b == 0) {
-				AlsApplyFilter(ALSFILTER_RAINBOW);
-			} 
+			AlsApplyTextEffect(g_settings.textEffect);
 
 //			ShowLdr();
 			HbiGetDistAndAge(&dist, &age);
@@ -218,12 +213,6 @@ void WordclockMain(void* p)
 
 	ShowSplash();
 
-	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		DisplayWord("No WiFi!");
-		DisplayWord("Connect to Wordclock WiFi, then browse to: 192.168.1.1");
-		Sleep(3000);
-	}
-
 	// Wait for time set
 	int count = 10;
 	while (!sntp_client_time_valid() && (count-- > 0)) {
@@ -232,6 +221,12 @@ void WordclockMain(void* p)
 	    AlsRefresh(ALSEFFECT_NONE);
 		SleepNI(1000);
 		printf("time: %u\n",(uint32_t)time(NULL));
+	}
+
+	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+		DisplayWord("No WiFi!");
+		DisplayWord("Connect to Wordclock WiFi, then browse to: 192.168.1.1");
+		Sleep(3000);
 	}
 	
 	ShowIpAddress();

@@ -13,8 +13,9 @@
 
 #include "animations.h"
 #include "displaySettings.h"
+#include "AddressableLedStrip.h"
 
-#define FLASH_MAGIC 0xBABEBAB2
+#define FLASH_MAGIC 0xBABEBAB3
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
 
@@ -33,6 +34,7 @@ typedef enum {
 typedef struct {
     uint32_t magic;
     EAnimationType animation;
+    ETextEffect textEffect;
     EHardwareType hardwareType;
     uint32_t perfectImperfections;
     char hierbenikUrl[MAX_URL_SIZE];
@@ -46,7 +48,7 @@ typedef struct {
     const uint8_t aBrightness[BRIGHTNESS_COUNT];
     int8_t reserved0;
     int8_t brightnessOffset;
-    TColor color;       //TODO Hoe gaan we de rainbow oplossen?
+    TColor color;
     TColor bgColor;
     uint32_t timerPeriodTicks;
     uint32_t magic_end;

@@ -632,6 +632,12 @@ static void handle_clock_cfg(int s, wificfg_method method,
         bzero(tmpStr, sizeof(tmpStr));
         snprintf(tmpStr, sizeof(tmpStr)-1, "#%06x", hexColor);
         if (wificfg_write_string(s, tmpStr) < 0) return;
+        
+        // Text Effect
+        for (int i = 0; i < TEXTEFFECT_MAX; i++) {
+        	wificfg_write_string(s, http_clock_cfg_content[++idx]);
+        	if (g_settings.textEffect == i) wificfg_write_string(s, "selected");
+        }
 
         // Brightness
         if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
@@ -647,7 +653,7 @@ static void handle_clock_cfg(int s, wificfg_method method,
         if (wificfg_write_string(s, tmpStr) < 0) return;
 
         // Animations
-        for (int i = 0; i <= 6; i++) {
+        for (int i = 0; i < ANIMATION_MAX; i++) {
         	wificfg_write_string(s, http_clock_cfg_content[++idx]);
         	if (g_settings.animation == i) wificfg_write_string(s, "selected");
         }
@@ -712,6 +718,8 @@ static void handle_clock_cfg_post(int s, wificfg_method method,
                 } else {
                     printf("Received invalid Color value\r\n");
                 }
+            } else if (strcmp(name, "cl_textEffect") == 0) {
+            	g_settings.textEffect = atoi(buf);
             } else if (strcmp(name, "cl_brightness") == 0) {
             	g_settings.brightnessOffset = atoi(buf);
             } else if (strcmp(name, "cl_bgcolor") == 0) {

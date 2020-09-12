@@ -427,16 +427,16 @@ static void FilterRainbow(void)
     //_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
 }
 
-void AlsApplyFilter(TAlsFilters filter)
+void AlsApplyTextEffect(ETextEffect filter)
 {
-    if (filter == ALSFILTER_RANDOM) {
+    if (filter == TEXTEFFECT_RANDOM) {
         //currently only 1 filter so this will not do anything
-        filter = rand() % 1 + ALSFILTER_RANDOM + 1;
+        filter = rand() % TEXTEFFECT_RANDOM;
     }
     switch(filter) {
-    case ALSFILTER_NONE:
+    case TEXTEFFECT_NONE:
         break;
-    case ALSFILTER_RAINBOW:
+    case TEXTEFFECT_RAINBOW:
         FilterRainbow();
         break;
     default:

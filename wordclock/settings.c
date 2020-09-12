@@ -23,6 +23,7 @@ static volatile uint32_t g_storeTS = 0;
 static const TSettings g_settings_default __attribute__((aligned(4))) = {
      FLASH_MAGIC,
      ANIMATION_TRANSITION,
+     TEXTEFFECT_NONE, // textEffect
      HARDWARE_11_11,
 #ifdef BUILD_BY_RUTGER
      0,   // perfectImperfections

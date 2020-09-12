@@ -127,8 +127,7 @@ uint8_t ApplyBgBrightness(uint8_t color)
         g_settings.bgColor.b == 255) return 0;
     uint32_t t;
     t = color * g_brightness;
-    return (uint8_t)(t / 512);
-
+    return (uint8_t)(t / 255);
 }
 
 static void WS2812_I2S_WriteData(uint8_t* p, uint32_t length){  

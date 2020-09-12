@@ -1,3 +1,3 @@
 [submodule "esp-open-rtos"]
 	path = esp-open-rtos
-	url = https://github.com/Rutger798/esp-open-rtos.git
+	url = https://github.com/thekr1s/esp-open-rtos.git

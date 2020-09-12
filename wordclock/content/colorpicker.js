@@ -44,7 +44,8 @@
 "});\r\n"
 "\r\n"
 "function reportWindowSize() {\r\n"
-"    var max_width = (window.innerWidth / 2) - 15;\r\n"
+"    var width = Math.min(window.innerWidth, window.outerWidth);\r\n" //Chrome for android has a terble definition of innerWidth
+"    var max_width = (width / 2) - 15;\r\n"
 "    letterColorPicker.resize(max_width);\r\n"
 "    backgroundColorPicker.resize(max_width);\r\n"
 "}\r\n"

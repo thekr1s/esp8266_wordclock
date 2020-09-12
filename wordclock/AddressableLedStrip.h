@@ -27,8 +27,8 @@ typedef enum {
 typedef enum {
     TEXTEFFECT_NONE,
     TEXTEFFECT_RAINBOW,
-	TEXTEFFECT_RANDOM,
-	TEXTEFFECT_MAX,
+    TEXTEFFECT_RANDOM,
+    TEXTEFFECT_MAX,
 } ETextEffect;
 
 typedef void (*TAlsWriteFunction)(uint8_t* pData, uint32_t byteCount);

@@ -27,13 +27,13 @@ EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserve
 LIBS += m
 include ../esp-open-rtos/common.mk
 
-strip_crc:
+all:
 	# strip CRC from the end of the file. The Wordclocks software rejects the file size.
-	$(shell cp $(FW_FILE) $(FW_FILE)_crc_striped)
-	$(shell truncate -s -4 $(FW_FILE)_crc_striped)
-	echo stripped CRC from $(FW_FILE)_crc_striped
+	$(shell cp $(FW_FILE) $(FW_FILE)_crc)
+	$(shell truncate -s -4 $(FW_FILE))
+	echo stripped CRC from $(FW_FILE)
 
 do_flash: strip_crc
 	esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 40m -fs 32m -fm dio
 	esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 40m -fs 32m -fm dio
-	esptool.py --baud 115200 write_flash 0x02000 $(FW_FILE)_crc_striped -ff 40m -fs 32m -fm dio
+	esptool.py --baud 115200 write_flash 0x02000 $(FW_FILE) -ff 40m -fs 32m -fm dio

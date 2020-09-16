@@ -1134,7 +1134,7 @@ static void http_server_task(void *pvParameters)
         int s = accept(listenfd, (struct sockaddr *)NULL, (socklen_t *)NULL);
         printf("wificfg accept connection\n");
         if (s >= 0) {
-            const struct timeval timeout = { 5, 0 }; /* 2 second timeout */
+            const struct timeval timeout = { 5, 0 };
             setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 
             /* Buffer for reading the request and headers and the post method
@@ -1254,7 +1254,7 @@ static void wifi_scan_ap_task(void *pvParameters) {
             }
         }
         sdk_wifi_station_scan(NULL, scan_done_cb);
-        Sleep(10 * 1000);
+        SleepNI(10 * 1000);
     }
     _wifi_scan_ap_task_handle = NULL;
     vTaskDelete(NULL);
@@ -1280,7 +1280,7 @@ void wifi_scan_ap_stop() {
 }
 
 void http_server_start() {
-    while (_http_server_task_handle) {
+    if (_http_server_task_handle) {
         printf("HTTP server already started ERROR!!!!!!!\n");
         return;
     }

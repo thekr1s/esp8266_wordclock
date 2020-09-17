@@ -4,6 +4,7 @@
 #include "font.h"
 #include "AddressableLedStrip.h"
 #include "settings.h"
+#include "displaySettings.h"
 
 TPiece i = {0, 
 
@@ -171,8 +172,6 @@ TPiece z = {0,
 		    0b0110,
 		    0b0100,
 		    0b0000}}
-
-
 , COLOR_BLUE, 0, 0};
 
 TPiece *piece_list[PIECE_COUNT] = {&i, &j, &l, &o, &s, &t, &z};
@@ -180,8 +179,9 @@ TPiece *piece_list[PIECE_COUNT] = {&i, &j, &l, &o, &s, &t, &z};
 
 static void DrawPiece(TPiece *piece)
 {
+	TColor c = GetColorFromIdx(piece->colorIdx);
 	FontPutCharTD(PIECE_BLOCKS_SIZE, PIECE_BLOCKS_SIZE, piece->y, piece->x, &piece->matrix[piece->n][0],
-			RGB_FROM_COLOR_IDX(piece->color));
+			c.r, c.g, c.b);
 }
 
 static void WipePiece(TPiece *piece)

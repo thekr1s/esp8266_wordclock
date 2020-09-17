@@ -49,17 +49,15 @@
 #include "controller.h"
 #include "esp_glue.h"
 
-static char* _wifi_ap_ip_addr = "192.168.1.1";
-
-TaskHandle_t _http_task_handle;
-TaskHandle_t _dns_task_handle;
-
 typedef enum {
     INVALID,
     CONNECTED,
     SOFT_AP,
 } wifiState_t;
 
+static char* _wifi_ap_ip_addr = "192.168.1.1";
+TaskHandle_t _http_task_handle;
+TaskHandle_t _dns_task_handle;
 
 static void dns_task(void *pvParameters)
 {
@@ -124,7 +122,7 @@ static void dns_task(void *pvParameters)
             *head++ = ip4_addr2(&server_addr);
             *head++ = ip4_addr3(&server_addr);
             *head++ = ip4_addr4(&server_addr);
-            printf("RHU DNS !!!!!query, sending response\n");
+            printf("DNS query, sending response\n");
             sendto(fd, buffer, reply_len, 0, &src_addr, src_addr_len);
         }
         uint32_t task_value = 0;
@@ -181,11 +179,13 @@ static void wificfg_start_softAP() {
     dhcpserver_set_dns(&ap_ip.ip);
     
     dns_start();
+    wifi_scan_ap_start();
 }
 
 static void wificfg_stop_soft_AP() {
     dhcpserver_stop();
     dns_stop();
+    wifi_scan_ap_stop();
     sdk_wifi_set_opmode(STATION_MODE);
 }
 
@@ -204,7 +204,6 @@ static void wifi_monitor_task(void *pvParameters) {
     
     wifiState_t state = INVALID;
     while (true) {
-        printf("Check WIFI connection\n");
         if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
             if (state != SOFT_AP) { //only do something on a state change
                 printf("Woordclock is unable to connect to Wifi\n");

@@ -12,7 +12,7 @@
 typedef struct {
     int n;
     uint8_t matrix[4][4];
-    TColorIdx color;
+    TColorIdx colorIdx;
     int x;
     int y;
 } TPiece;

@@ -28,7 +28,9 @@
 - ESP(VU) -> LedStrip (5v)
 - LDR(1) -> ESP(GND)
 - LDR(2) -> ESP(A0)
-- ESP(A0) -> RESISTOR(100kOhm) -> ESP(3v) 
+- ESP(A0) -> RESISTOR(100kOhm) -> ESP(3v)
+
+- <img src="images/usb_wire.jpg" alt="drawing" width="300"/>
 
 # Build Types
 The wordclock can be created in 2 sizes becuase of the used ledstrip. Its 60 LED's per meter or 30 LED's per meter.
@@ -61,7 +63,7 @@ The Big clock can be created with 11x11 letters or 13x13 letters
 <img src="images/big_frameless_13_13.jpg" alt="drawing" width="200"/>
 
 # Assemble
-The assambly can be devided in the following parts:
+The assambly can be devided into the following parts:
 - led-panel
 - light-divider
 - letterplate
@@ -83,7 +85,7 @@ The big clock can be made with 12mm or 15mm MDF plate.
     - Use a speed drill or a countersink bit
     - For the normal clock the hole is 12mm
     - For the big clock the hole is 30mm
-- For the frameless clock the bottom, right and left side can be shorted so the letterplate will flowed from the wall
+- For the frameless clock the bottom, right and left side can be shorted so the letterplate will floating from the wall
     - The top side is used to hang the clock
 - The result should look like the cnc light-divider
 
@@ -111,7 +113,7 @@ The big clock can be made with 12mm or 15mm MDF plate.
 
 ## Connect the led-panel with the light-divider
 - Place the light-divider on the led-panel and make sure all leds are centerd
-- Drill (2mm) hole through both panels. These hols can later be used to connect both pannels
+- Drill (1.5mm) hole through both panels. These hols can later be used to connect both pannels
 - Flip it and screw both panales to eatchoter.
 - Frameless ESP placement
     - Big clock place the ESP in the upper right cornor (hot glue)

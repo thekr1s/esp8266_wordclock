@@ -4,7 +4,7 @@
 - Led strip: WS2812B [Link](https://www.ebay.com/itm/1-5m-WS2812B-RGB-Led-Strip-Light-30-60-144Leds-m-Individual-Addressable-IC-DC5V/401755047203?var=671534865138)
 - LDR: 5MM GL5537 [Link](https://www.ebay.com/itm/20pcs-Photoresistor-5MM-GL5537-LDR-Photo-Resistors-Light-Dependent-Resistor/381374819080?epid=1381908731&hash=item58cbb5eb08:g:INIAAOxyYSdTAJq4)
 - 100kOhm Resistor [link](https://www.ebay.com/itm/100PCS-1-4W-0-25W-Metal-Film-Resistor-1-Full-Range-of-Values-0-to-10M/252838503547?hash=item3ade59647b:m:m9AAPzkedx9P_upvXOpgF9Q) 
-- flatcable
+- flat cable
 - Power wire
 - micro USB
 - USB A
@@ -19,13 +19,13 @@
 - Plaatschroef 3x13 mm cilinderkop
 ## Special:
 - letterplate
-    - lasercutting: €50.0/€150.0
+    - laser cutting: €50.0/€150.0
 - led-divider cnc: (time)
 
 # Electronic Wiring
-- ESP(Rx) -> LedStrip (Data)
-- ESP(GND) -> LedStrip (GND)
-- ESP(VU) -> LedStrip (5v)
+- ESP(Rx) -> Led Strip (Data)
+- ESP(GND) -> Led Strip (GND)
+- ESP(VU) -> Led Strip (5v)
 - LDR(1) -> ESP(GND)
 - LDR(2) -> ESP(A0)
 - ESP(A0) -> RESISTOR(100kOhm) -> ESP(3v)
@@ -33,7 +33,7 @@
 - <img src="images/usb_wire.jpg" alt="drawing" width="300"/>
 
 # Build Types
-The wordclock can be created in 2 sizes becuase of the used ledstrip. Its 60 LED's per meter or 30 LED's per meter.
+The wordclock can be created in 2 sizes because of the used led strip. Its 60 LED's per meter or 30 LED's per meter.
 ## Normal (Desk size)
 - 60 Leds per meter
     - 11x11 letters => 121 LED's => (2.01m) => 3 meter ledstrip
@@ -63,7 +63,7 @@ The Big clock can be created with 11x11 letters or 13x13 letters
 <img src="images/big_frameless_13_13.jpg" alt="drawing" width="200"/>
 
 # Assemble
-The assambly can be devided into the following parts:
+The assembly can be divided into the following parts:
 - led-panel
 - light-divider
 - letterplate
@@ -73,15 +73,15 @@ The assambly can be devided into the following parts:
 <img src="images/led_divider_big.jpeg" alt="drawing" width="200"/>
 
 ### light-divider by hand
-For the famed Clock the MDF plate need's to be 23x23 or 50x50 cm. For the frameless the MDF plate can be lxb 21x20 or 45,5x47 but start with 23x23 or 50x50.
+For the famed Clock the MDF plate need's to be 23x23 or 50x50 cm. For the frameless the MDF plate can be LxB 21x20 or 45,5x47 but start with 23x23 or 50x50.
 The Normal clock can be made with 9mm or 12mm MDF plate.
 The big clock can be made with 12mm or 15mm MDF plate.
-- Determen the center of the plate by drawing 2 lines
+- Determine the center of the plate by drawing 2 lines
 - From the center draw a grid of lines
-    - For the 60 led's per meter -> distanse between lines is 1.6666 cm
-    - For the 30 led's per meter -> distanse between lines is 3.3333 cm
+    - For the 60 led's per meter -> distance between lines is 1.6666 cm
+    - For the 30 led's per meter -> distance between lines is 3.3333 cm
 - <img src="images/line_grid.jpg" alt="drawing" width="100"/>
-- Drill a hole through eatch line crossing
+- Drill a hole through each line crossing
     - Use a speed drill or a countersink bit
     - For the normal clock the hole is 12mm
     - For the big clock the hole is 30mm
@@ -91,20 +91,20 @@ The big clock can be made with 12mm or 15mm MDF plate.
 
 ## led-panel
 - Place the led-panel under the light-divider.
-- Trace the firt, middel and last holes from the light-divider on the led panel
-- Trace the outher line fromt the light-divider
-    - in case of the frameless the top can be shortend 2 cm
-- Cut peaces from the ledstrip, (cut on the line that is drawn on the 3 copper paths)
+- Trace the first, middle and last holes from the light-divider on the led panel
+- Trace the outer line from the light-divider
+    - in case of the frameless the top can be shorten 2 cm
+- Cut peace’s from the ledstrip, (cut on the line that is drawn on the 3 copper paths)
     - For the 11x11 clock the ledstrip should be 11 leds long 
     - For the 13x13 clock the ledstrip should be 13 leds long 
-- Place the led-strips with the led centerd on the taces on the hardboard by following the this pattern:
+- Place the led-strips with the led centred on the traces on the hardboard by following the this pattern:
     - Start upper left with Din and place it to the upper Right side end with Dout
     - The second row start with Dout on the left side and ends with Din
     - continue this zigzag pattern until all rows are done
-- Use a Flatcable to connect the ledstrips from Dout to Din.
-    - Cut flatcable, strip and tin both ends, cut the both ends so they are separeted from eatch other
+- Use a Flat cable to connect the ledstrips from Dout to Din.
+    - Cut flat cable, strip and tin both ends, cut the both ends so they are separated from each other
     - pre-solder both ends of the ledstrip
-    - Start upper right with Dout solder all 3 pins(GND, Dout, 5V) Fold the flacable 90 degrees down, fold it 90 degrees towarts Din Solder again
+    - Start upper right with Dout solder all 3 pins(GND, Dout, 5V) Fold the flat cable 90 degrees down, fold it 90 degrees towards Din Solder again
 - drill a hole next to the first led, and next to the last led
 - Connect power supply from the first led to the last led with the red/black wire
 - Connect the powers supply and the Din with the ESP (see Electronic Wiring)
@@ -112,12 +112,12 @@ The big clock can be made with 12mm or 15mm MDF plate.
 - You should be able to test the LED panel by connection the ESP to its power supply
 
 ## Connect the led-panel with the light-divider
-- Place the light-divider on the led-panel and make sure all leds are centerd
-- Drill (1.5mm) hole through both panels. These hols can later be used to connect both pannels
-- Flip it and screw both panales to eatchoter.
+- Place the light-divider on the led-panel and make sure all leds are centred
+- Drill (1.5mm) hole through both panels. These hols can later be used to connect both panels
+- Flip it and screw both panels to each other.
 - Frameless ESP placement
-    - Big clock place the ESP in the upper right cornor (hot glue)
-    - Normal clock the ESP will be scruwed to the back
+    - Big clock place the ESP in the upper right corner (hot glue)
+    - Normal clock the ESP will be screwed to the back
 - <img src="images/led_divider_and_led_panel.jpeg" alt="drawing" width="200"/>
 
 ## Diffuser (to be improved)
@@ -127,25 +127,25 @@ The big clock can be made with 12mm or 15mm MDF plate.
 ## Letterplate
 ### frame
 - Connect the LDR and the resistor (see Electronic Wiring)
-- fix the ESP with a scruw to the back of the led-panal
+- fix the ESP with a screw to the back of the led-panel
 - Place the letterplate and the light divider in the frame
-- place some foame in the back so all is pushed formwared
+- place some foam in the back so all is pushed forwarded
 - Close the frame
 ### frameless
 - Center the light-divider on the letterplate and drill the LDR hole
 - Draw the outer line from the light-divider
-- Cut the aluminium strip so it fits nicely around the light-divider (left, right and botom)
+- Cut the aluminium strip so it fits nicely around the light-divider (left, right and bottom)
 - Make both the letterplate and the aluminium strip rough with sanding paper
 - drill 3 holes in all aluminium strips (used for connecting the letterplate to the light-divider)
 - glue the aluminium strip on the letterplate (use glue clamps) wait 24 hours
-- scruw the letterplate to the light-divider
+- screw the letterplate to the light-divider
 - <img src="images/alu_strip.jpg" alt="drawing" width="200"/>
 
 
 # Hardware Drawings
 ## letterplate
 - I Have created a FreeCAD pyhton macro for generating a Letterplate, ..\hardware\lettering_plates\FreeCAD_drawings\freecad_macro
-- The letterplate is paramatic so can be used for 11*11 of 13*13
+- The letterplate is parametric so can be used for 11*11 of 13*13
 - After the generation is done, export the part as .STEP (the DXF generator from freecad is not smooth)
 - FreeCAD export DXF WORKS (0.18.4):
     - Edit -> Preference -> Inport-Export -> DXF
@@ -153,8 +153,8 @@ The big clock can be made with 12mm or 15mm MDF plate.
     - Select all elements
     - File -> Export -> Autodesk DXF 2d
 - Import the .STEP file into Fusion for creating the DXF file of gcode
-- Gcode
-    - Create A body by setting the hight
+- G-code
+    - Create A body by setting the Hight
     - Switch to manufacture
     - start creating the Gcode
 - DXF:
@@ -163,9 +163,9 @@ The big clock can be made with 12mm or 15mm MDF plate.
     - Select the Body from the letterplate
     - Save Sketch -> right klik the Sketch and save as DXF
 ## ledschotten
-- The LDR for the 11*11 clock is 214.444 mm from the bottem (This information is printed by FreeCAD)
-- The LDR for the 13*13 clock is 477.778 mm from the bottem
-- The LEDschotten is completly drawn in Fusion360, and is partly paramatic.
+- The LDR for the 11*11 clock is 214.444 mm from the bottom (This information is printed by FreeCAD)
+- The LDR for the 13*13 clock is 477.778 mm from the bottom
+- The LEDschotten is completely drawn in Fusion360, and is partly parametric.
 
 
 # Tips & tricks:

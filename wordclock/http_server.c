@@ -54,6 +54,7 @@
 static char _ad[] = "robert@wssns.nl";
 
 static char _ssidList[MAX_SSID_COUNT][MAX_SSID_LEN+1]; // + zero termination
+static int8_t _ssidRssi[MAX_SSID_COUNT];
 static volatile int _ssidCount = 0;
 static const char * const auth_modes [] = {
     [AUTH_OPEN]         = "Open",
@@ -84,11 +85,30 @@ static void scan_done_cb(void *arg, sdk_scan_status_t status)
     {
         strncpy(_ssidList[_ssidCount], (char*)bss->ssid, MAX_SSID_LEN);
         _ssidList[_ssidCount][MAX_SSID_LEN] = 0; // zero terminate to be sure
+        _ssidRssi[_ssidCount] = bss->rssi;
 
         // printf("%32s (" MACSTR ") RSSI: %02d, security: %s\n", _ssidList[_ssidCount],
         //    MAC2STR(bss->bssid), bss->rssi, auth_modes[bss->authmode]);
         bss = bss->next.stqe_next;
         _ssidCount++;
+    }
+    // bubblesort the list
+    bool done=false;
+    char tmp[MAX_SSID_LEN];
+    while (!done) {
+        done = true;
+        for (int i = 0; i < _ssidCount - 1; i++) {
+            if (_ssidRssi[i] < _ssidRssi[i+1]) {
+                // swap them
+                strncpy(tmp, _ssidList[i], MAX_SSID_LEN);
+                strncpy(_ssidList[i], _ssidList[i + 1], MAX_SSID_LEN);
+                strncpy(_ssidList[i + 1], tmp, MAX_SSID_LEN);
+                int8_t t = _ssidRssi[i];
+                _ssidRssi[i] = _ssidRssi[i+1];
+                _ssidRssi[i+1] = t;
+                done = false;
+            }
+        }
     }
     xSemaphoreGive(wifi_networks_mutex);
     printf("Updated WiFi network names\n");
@@ -788,11 +808,11 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // FW update port
         wificfg_write_string(s, http_hw_cfg_content[++idx]);
         if (wificfg_write_string(s, g_settings.otaFwPort) < 0) return;
-	 // FW update Type
-	for (int i = 0; i < 2; i++) {
-	    if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
-	    if (g_settings.otaFwType == i) wificfg_write_string(s, "selected");
-	}
+        // FW update Type
+        for (int i = 0; i < 2; i++) {
+            if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+            if (g_settings.otaFwType == i) wificfg_write_string(s, "selected");
+        }
 
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
 

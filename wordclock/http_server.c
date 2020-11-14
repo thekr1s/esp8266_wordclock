@@ -663,13 +663,6 @@ static void handle_clock_cfg(int s, wificfg_method method,
         wificfg_write_string(s,AnimationGetMessageText());
 
         if (wificfg_write_string(s, http_clock_cfg_content[++idx]) < 0) return;
-        wificfg_write_string(s, _ad);
-        wificfg_write_string(s, "<br/>build: ");
-        wificfg_write_string(s, buildDate);
-        
-        wificfg_write_string(s, "<br/>rev. : ");
-        wificfg_write_string(s, version);
-        printf("svn:%s\n", version);
     }
 }
 
@@ -802,6 +795,14 @@ static void handle_hw_cfg(int s, wificfg_method method,
 	}
 
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+
+        wificfg_write_string(s, _ad);
+        wificfg_write_string(s, "<br/>build: ");
+        wificfg_write_string(s, buildDate);
+        
+        wificfg_write_string(s, "<br/>rev. : ");
+        wificfg_write_string(s, version);
+        printf("svn:%s\n", version);
     }
 }
 

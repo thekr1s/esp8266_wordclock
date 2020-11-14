@@ -22,21 +22,38 @@
 #include "settings.h"
 
 /* TFTP client will request this image filenames from this server */
-#define TFTP_IMAGE_FILENAME1 "woordklok.bin"
+#define TFTP_IMAGE_FILENAME_RELEASE "woordklok.bin"
+#define TFTP_IMAGE_FILENAME_DEBUG   "woordklok_dbg.bin"
 
 static bool _isBusy = false;
+
+static const char* get_fw_filename(bool prepend_slash) {
+    if (g_settings.otaFwType == OTA_FW_RELEASE) {
+        if (prepend_slash) {
+            return "/" TFTP_IMAGE_FILENAME_RELEASE;
+
+        } else {
+            return TFTP_IMAGE_FILENAME_RELEASE;
+        }
+    } else {
+        if (prepend_slash) {
+            return "/" TFTP_IMAGE_FILENAME_DEBUG;
+        } else {
+            return TFTP_IMAGE_FILENAME_DEBUG;
+        }
+    }
+}
 
 /* Example function to TFTP download a firmware file and verify its SHA256 before
    booting into it.
 */
 static void tftpclient_download_and_verify_file1(int slot, rboot_config *conf)
 {
-    printf("Downloading %s to slot %d...\n", TFTP_IMAGE_FILENAME1, slot);
     int res;
-    
 
-    res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), TFTP_IMAGE_FILENAME1, 1000, slot, NULL);
-    printf("ota_tftp_download %s result %d\n", TFTP_IMAGE_FILENAME1, res);
+    printf("Downloading %s to slot %d...\n", get_fw_filename(false), slot);
+    res = ota_tftp_download(g_settings.otaFwUrl, atoi(g_settings.otaFwPort), get_fw_filename(false), 1000, slot, NULL);
+    printf("ota_tftp_download %s result %d\n", get_fw_filename(false), res);
 
     if (res != 0) {
         return;
@@ -96,6 +113,89 @@ bool OtaIsBusy(void){
 	return _isBusy;
 }
 
+#include "http_client_ota.h"
+
+static inline void ota_error_handling(OTA_err err) {
+    printf("OTA update done\r\nstatus: ");
+
+    switch(err) {
+    case OTA_DNS_LOOKUP_FALLIED:
+        printf("DNS lookup has fallied\n");
+        break;
+    case OTA_SOCKET_ALLOCATION_FALLIED:
+        printf("Impossible allocate required socket\n");
+        break;
+    case OTA_SOCKET_CONNECTION_FALLIED:
+        printf("Server unreachable, impossible connect\n");
+        break;
+    case OTA_SHA_DONT_MATCH:
+        printf("Sha256 sum does not fit downloaded sha256\n");
+        break;
+    case OTA_REQUEST_SEND_FALLIED:
+        printf("Impossible send HTTP request\n");
+        break;
+    case OTA_DOWLOAD_SIZE_NOT_MATCH:
+        printf("Dowload size don't match with server declared size\n");
+        break;
+    case OTA_ONE_SLOT_ONLY:
+        printf("rboot has only one slot configured, impossible switch it\n");
+        break;
+    case OTA_FAIL_SET_NEW_SLOT:
+        printf("rboot cannot switch between rom\n");
+        break;
+    case OTA_IMAGE_VERIFY_FALLIED:
+        printf("Dowloaded image binary checsum is fallied\n");
+        break;
+    case OTA_UPDATE_DONE:
+        printf("Ota has completed upgrade process, all ready for system software reset\n");
+        break;
+    case OTA_HTTP_OK:
+        printf("HTTP server has response 200, Ok\n");
+        break;
+    case OTA_HTTP_NOTFOUND:
+        printf("HTTP server has response 404, file not found\n");
+        break;
+    }
+}
+
+static void ota_http_task(void *PvParameter)
+{
+    ota_info* pInfo = (ota_info *)PvParameter;
+    _isBusy = true;
+    int tryCount = 2;
+
+    while (tryCount > 0) {
+        OTA_err err;
+        tryCount--;
+        // Remake this task until ota work
+        printf("HTTP OTA start download %s:%s%s\r\n", pInfo->server, pInfo->port, pInfo->binary_path);
+        err = ota_update(pInfo);
+
+        ota_error_handling(err);
+
+        if(err != OTA_UPDATE_DONE) {
+            Sleep(1000);
+            printf("\n\n\n");
+            continue;
+        } 
+
+        Sleep(1000);
+        printf("Reset\n");
+        sdk_system_restart();
+    }
+
+    _isBusy = false;
+     vTaskDelete( NULL );
+
+
+}
+static ota_info info = {
+    .server      = "",
+    .port        = "",
+    .binary_path = TFTP_IMAGE_FILENAME_DEBUG,
+    .sha256_path = NULL,
+};
+
 void OtaUpdateInit(void)
 {
 	if (_isBusy) return;
@@ -109,5 +209,14 @@ void OtaUpdateInit(void)
         printf("%c%d: offset 0x%08x\r\n", i == conf.current_rom ? '*':' ', i, conf.roms[i]);
     }
 
-    xTaskCreate(&tftp_client_task, "tftp_client", 2048, NULL, 2, NULL);
+    if (strncmp("http://", g_settings.otaFwUrl, 7) == 0) {
+        // retrieve via http
+        info.server = &g_settings.otaFwUrl[7]; // strip the http://
+        info.port = g_settings.otaFwPort;
+        info.binary_path = get_fw_filename(true);
+        xTaskCreate(&ota_http_task, "http_ota_client", 4096, &info, 2, NULL);
+    } else {
+        // Use TFTP
+        xTaskCreate(&tftp_client_task, "tftp_ota_client", 2048, NULL, 2, NULL);
+    }
 }

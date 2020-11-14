@@ -89,6 +89,6 @@ The NodeMcu Lolin V3 is needed because the Lolin has a 3v reference voltage for 
 - Resistor 10Kohm: €0.1
 - LED strip: €10.0/€12.0
 - Ikea RIBBA: €5.99/€9.99 
-- MDF: €10.0
+- MDF 12mm: €10.0
 - letterplate
     - lasercutting: €24.0/€45.0

@@ -14,7 +14,7 @@
 #include "settings.h"
 #include "esp_glue.h"
 
-
+static TColorIdx _colorIdx = COLOR_WHITE;
 static const uint8_t _buttondownGpio = 4;   // NodeMCU pin D2
 static const uint8_t _buttonModeGpio = 14;  //             D5
 static const uint8_t _buttonUpGpio = 12;    //             D6
@@ -26,13 +26,13 @@ void interrupt_handler(uint8_t gpio_num){
 void ButtonsInit(void){
     gpio_enable(_buttondownGpio, GPIO_INPUT);
     gpio_set_pullup(_buttondownGpio, true, true);
-    gpio_set_interrupt(_buttondownGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
+    //gpio_set_interrupt(_buttondownGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
     gpio_enable(_buttonModeGpio, GPIO_INPUT);
     gpio_set_pullup(_buttonModeGpio, true, true);
-    gpio_set_interrupt(_buttonModeGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
+    //gpio_set_interrupt(_buttonModeGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
     gpio_enable(_buttonUpGpio, GPIO_INPUT);
     gpio_set_pullup(_buttonUpGpio, true, true);
-    gpio_set_interrupt(_buttonUpGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
+    //gpio_set_interrupt(_buttonUpGpio, GPIO_INTTYPE_EDGE_ANY, interrupt_handler);
 
 }
 
@@ -68,10 +68,6 @@ void ButtonShowMode(ButtonMode mode)
     case BUTTONMODE_HOURS:
         F5x7WriteChar(1,0,'U', g_brightness, g_brightness, g_brightness);
         F5x7WriteChar(1,6,'U', g_brightness, g_brightness, g_brightness);
-        break;
-
-    case BUTTONMODE_DST:
-        DisplayTimeZone();
         break;
 
 //  case BUTTONMODE_BRIGHTNESS:
@@ -151,12 +147,6 @@ void ButtonHandleUpDown(ButtonMode mode, bool up)
 //      TimeSet(h, m, s, false);
 //      break;
 
-    case BUTTONMODE_DST:
-        g_settings.isSummerTime = ! g_settings.isSummerTime;
-        DisplayTimeZone();
-        SleepNI(1000);
-        break;
-
 //  case BUTTONMODE_BRIGHTNESS:
 //      _brightnessIdx = up ? _brightnessIdx + 1 : _brightnessIdx - 1;
 //      if (_brightnessIdx == BRIGHTNESS_COUNT) {
@@ -172,13 +162,14 @@ void ButtonHandleUpDown(ButtonMode mode, bool up)
 //      break;
 
     case BUTTONMODE_COLOR:
-        g_settings.colorIdx = up ? g_settings.colorIdx + 1: g_settings.colorIdx - 1;
-        if (g_settings.colorIdx == COLOR_COUNT) {
-            g_settings.colorIdx = COLOR_COUNT - 1;
+        _colorIdx = up ? _colorIdx + 1: _colorIdx - 1;
+        if (_colorIdx == COLOR_COUNT) {
+            _colorIdx = COLOR_COUNT - 1;
         }
-        if (g_settings.colorIdx == -1) {
-            g_settings.colorIdx = 0;
+        if (_colorIdx == -1) {
+            _colorIdx = 0;
         }
+        g_settings.color = GetColorFromIdx(_colorIdx);
         AlsFill(0,0,0);
         F5x7WriteChar(1,0,'K', RGB_FROM_SETTING);
         F5x7WriteChar(1,6,'L', RGB_FROM_SETTING);
@@ -201,15 +192,15 @@ void ButtonHandleUpDown(ButtonMode mode, bool up)
         break;
 
     case BUTTONMODE_RED:
-        g_settings.aColors[g_settings.colorIdx].r = up ? g_settings.aColors[g_settings.colorIdx].r + 10 : g_settings.aColors[g_settings.colorIdx].r - 10;
+        g_settings.color.r = up ? g_settings.color.r + 10 : g_settings.color.r - 10;
         break;
 
     case BUTTONMODE_GREEN:
-        g_settings.aColors[g_settings.colorIdx].g = up ? g_settings.aColors[g_settings.colorIdx].g + 10 : g_settings.aColors[g_settings.colorIdx].g - 10;
+        g_settings.color.g = up ? g_settings.color.g + 10 : g_settings.color.g - 10;
         break;
 
     case BUTTONMODE_BLUE:
-        g_settings.aColors[g_settings.colorIdx].b = up ? g_settings.aColors[g_settings.colorIdx].b + 10 : g_settings.aColors[g_settings.colorIdx].b - 10;
+        g_settings.color.b = up ? g_settings.color.b + 10 : g_settings.color.b - 10;
         break;
 
     case BUTTONMODE_ANIMATION:

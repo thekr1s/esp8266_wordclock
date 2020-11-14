@@ -41,9 +41,9 @@
 static void ShowSome(uint32_t delayMS)
 {
 	uint8_t r,g,b;
-	r = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].r);
-	g = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].g);
-	b = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].b);
+	r = ApplyBrightness(g_settings.color.r);
+	g = ApplyBrightness(g_settings.color.g);
+	b = ApplyBrightness(g_settings.color.b);
 
 	AlsFill(0, 0, 0);
 	switch (rand() % 3) {
@@ -76,19 +76,6 @@ static void DisplayTimeSyncStatus()
 	}
 }
 
-void DisplayTimeZone() {
-	AlsFill(0,0,0);
-	if (g_settings.isSummerTime) {
-		F5x7WriteChar(1,0,'Z', g_brightness, g_brightness, g_brightness);
-		F5x7WriteChar(1,6,'T', g_brightness, g_brightness, g_brightness);
-	} else {
-		F5x7WriteChar(1,0,'W', g_brightness, g_brightness, g_brightness);
-		F5x7WriteChar(1,6,'T', g_brightness, g_brightness, g_brightness);
-		
-	}
-	AlsRefresh(ALSEFFECT_NONE);
-}
-
 static void ShowDist(int dist)
 {
 	uint8_t r = 0;
@@ -106,7 +93,7 @@ static void ShowDist(int dist)
 		g = 255 - (t2 * 255) / t1;
 		r = 255 - g;
 	} else {
-		TColor c = g_settings.aColors[g_settings.colorIdx];
+		TColor c = g_settings.color;
 		if (c.g > (c.r + c.b)) {
 			b = 255;
 		} else {
@@ -132,16 +119,16 @@ static void ShowDist(int dist)
 	AlsSetLed(t1, 10 - t2, r, g, b);
 }
 
+
+
 void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s){
 	time_t ts = time(NULL);
-	if (g_settings.isSummerTime) {
-		ts += 3600;
-	}
+	
 	struct tm *pTM = localtime(&ts);
+
 	*h = pTM->tm_hour;
     *m = pTM->tm_min;
     *s = pTM->tm_sec;
-
 }
 /**
  *
@@ -190,9 +177,7 @@ void ShowTime(int delayMS) {
 			}
 			DisplayTimeSyncStatus();
 
-			if (g_settings.colorIdx == COLOR_INDEX_RAINBOW) {
-				AlsApplyFilter(ALSFILTER_RAINBOW);
-			} 
+			AlsApplyTextEffect(g_settings.textEffect);
 
 //			ShowLdr();
 			HbiGetDistAndAge(&dist, &age);
@@ -228,12 +213,6 @@ void WordclockMain(void* p)
 
 	ShowSplash();
 
-	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		DisplayWord("No WiFi!");
-		DisplayWord("Connect to Wordclock WiFi, then browse to: 192.168.1.1");
-		Sleep(3000);
-	}
-
 	// Wait for time set
 	int count = 10;
 	while (!sntp_client_time_valid() && (count-- > 0)) {
@@ -242,6 +221,12 @@ void WordclockMain(void* p)
 	    AlsRefresh(ALSEFFECT_NONE);
 		SleepNI(1000);
 		printf("time: %u\n",(uint32_t)time(NULL));
+	}
+
+	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+		DisplayWord("No WiFi!");
+		DisplayWord("Connect to Wordclock WiFi, then browse to: 192.168.1.1");
+		Sleep(3000);
 	}
 	
 	ShowIpAddress();

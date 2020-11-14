@@ -139,9 +139,9 @@ static void ShowWord(char* word, uint8_t r, uint8_t g, uint8_t b, uint32_t delay
 void TestAllWords(void)
 {
 	uint8_t r,g,b;
-	r = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].r);
-	g = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].g);
-	b = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].b);
+	r = ApplyBrightness(g_settings.color.r);
+	g = ApplyBrightness(g_settings.color.g);
+	b = ApplyBrightness(g_settings.color.b);
 
 	if (g_settings.perfectImperfections == 1) { //for now use this setting but we need to find a better solution.
 
@@ -240,17 +240,17 @@ void DoCharacters()
 	uint8_t r,g,b;
 	uint32_t col = 17;
 	uint32_t loop = 0;
-	uint32_t colorIdx = rand() % COLOR_COUNT;
+	TColorIdx colorIdx = rand() % COLOR_COUNT;
+	TColor c;
 
-	
 	char ch = (rand() % (130 - 32) ) + 32;
 	
 	while (loop != 3) {
 		AlsFill(0,0,0);
-
-		r = ApplyBrightness(g_settings.aColors[colorIdx].r);
-		g = ApplyBrightness(g_settings.aColors[colorIdx].g);
-		b = ApplyBrightness(g_settings.aColors[colorIdx].b);
+		c = GetColorFromIdx(colorIdx);
+		r = ApplyBrightness(c.r);
+		g = ApplyBrightness(c.g);
+		b = ApplyBrightness(c.b);
 
 		F5x7WriteChar(2, col - 5, ch, r, g, b);
 		col--;
@@ -353,9 +353,9 @@ void DisplayWord(char* str) {
 	int8_t offset = 6;
 	char c1 = ' ', c2 = ' ', c3 = ' ';
 	int i;
-	uint8_t r = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].r);
-	uint8_t g = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].g);
-	uint8_t b = ApplyBrightness(g_settings.aColors[g_settings.colorIdx].b);
+	uint8_t r = ApplyBrightness(g_settings.color.r);
+	uint8_t g = ApplyBrightness(g_settings.color.g);
+	uint8_t b = ApplyBrightness(g_settings.color.b);
 
 	for (i = 0; i < strlen(str) + 2; i++) {
 		if (Interrupted()) return;
@@ -474,9 +474,10 @@ static const uint8_t _explode[][5] =
 void fireworksExplode(int32_t row, int32_t col) {
 	int i;
 	uint8_t colorIdx = rand() % COLOR_COUNT;
-	uint8_t r = (g_settings.aColors[colorIdx].r);
-	uint8_t g = (g_settings.aColors[colorIdx].g);
-	uint8_t b = (g_settings.aColors[colorIdx].b);
+	TColor c = GetColorFromIdx(colorIdx);
+	uint8_t r = (c.r);
+	uint8_t g = (c.g);
+	uint8_t b = (c.b);
 	row -= 3;
 	col -= 3;
 	
@@ -498,9 +499,10 @@ void fireworks() {
 	uint8_t row = 0;
 	uint8_t col = start;
 	uint8_t colorIdx = rand() % COLOR_COUNT;
-	uint8_t r = ApplyBrightness(g_settings.aColors[colorIdx].r);
-	uint8_t g = ApplyBrightness(g_settings.aColors[colorIdx].g);
-	uint8_t b = ApplyBrightness(g_settings.aColors[colorIdx].b);
+	TColor c = GetColorFromIdx(colorIdx);
+	uint8_t r = ApplyBrightness(c.r);
+	uint8_t g = ApplyBrightness(c.g);
+	uint8_t b = ApplyBrightness(c.b);
 	int i;
 	
 	for (i = 0; i < 7; i++) {

@@ -22,12 +22,18 @@ $(shell touch version.c)
 CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
 EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2
 
-PROGRAM=woordklok
-EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls
+PROGRAM=woordklok_dbg
+EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls  extras/http_client_ota
 LIBS += m
 include ../esp-open-rtos/common.mk
 
+all:
+	# strip CRC from the end of the file. The Wordclocks software rejects the file size.
+	$(shell cp $(FW_FILE) $(FW_FILE)_crc)
+	$(shell truncate -s -4 $(FW_FILE))
+	echo stripped CRC from $(FW_FILE)
+
 do_flash:
-	../esp-open-sdk/esptool/esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 40m -fs 32m -fm dio
-	../esp-open-sdk/esptool/esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 40m -fs 32m -fm dio
-	../esp-open-sdk/esptool/esptool.py --baud 115200 write_flash 0x02000 firmware/woordklok.bin -ff 40m -fs 32m -fm dio
+	esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 40m -fs 32m -fm dio
+	esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 40m -fs 32m -fm dio
+	esptool.py --baud 115200 write_flash 0x02000 $(FW_FILE) -ff 40m -fs 32m -fm dio

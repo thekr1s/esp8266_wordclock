@@ -582,14 +582,14 @@ static void handle_wifi_station_post(int s, wificfg_method method,
                     if (ssid[0] != '\0' && password[0] != '\0') {
                         wificfg_write_string(s, "Rebooting with new WIFI settings\r\n");
                         closesocket(s);
-                        Sleep(1000);
                         struct sdk_station_config config = {"", "", 0, {0}};
                         strncpy((char*)config.ssid, ssid, sizeof(config.ssid));
                         strncpy((char*)config.password, password, sizeof(config.password));
-                        sdk_wifi_set_opmode(STATION_MODE);
+                        // sdk_wifi_set_opmode(STATION_MODE);
                         if (!sdk_wifi_station_set_config(&config)) {
                             printf("ERROR sdk_wifi_station_set_config\n");
                         }
+                        Sleep(1000);
                         sdk_system_restart();
                     } else if (strcmp(buf, "Refresh") == 0) {
                         printf("Refresh page !!!\n");

@@ -225,7 +225,7 @@ void WordclockMain(void* p)
 
 	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
 		DisplayWord("No WiFi!");
-		DisplayWord("Connect to Wordclock WiFi, then browse to: 192.168.1.1");
+		DisplayWord(" Connect to woordklok WiFi and sign in");
 		Sleep(3000);
 	}
 	

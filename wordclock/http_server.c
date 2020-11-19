@@ -527,7 +527,7 @@ static void handle_wifi_station(int s, wificfg_method method,
         static char line[100];
         xSemaphoreTake(wifi_networks_mutex, portMAX_DELAY);
         for (int i = 0; i < _ssidCount; i++) {
-            snprintf(line, sizeof(line), "<option value=\"%d\">%s</option>", i, _ssidList[i]);
+            snprintf(line, sizeof(line), "<option value=\"%s\">%s</option>", _ssidList[i], _ssidList[i]);
             if (wificfg_write_string(s, line) < 0) {
                 break;
             }
@@ -577,12 +577,8 @@ static void handle_wifi_station_post(int s, wificfg_method method,
             printf("handle_wifi_station_post %d %s\n", name, buf);
             switch (name) {
             case FORM_NAME_STA_SSID_DROPDOWN:
-                selected = atoi(buf);
-                if (selected < _ssidCount) {
-                    strncpy(ssid, _ssidList[selected], sizeof(ssid) - 1);
-                    printf("Selected ssid: %s\r\n", ssid);
-                }
-
+                strncpy(ssid, buf, sizeof(ssid) - 1);
+                printf("Selected ssid: %s\r\n", ssid);
                 break;
             case FORM_NAME_STA_SSID:
                 sysparam_set_string("wifi_sta_ssid", buf);

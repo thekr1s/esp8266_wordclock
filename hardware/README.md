@@ -85,7 +85,7 @@ The big clock can be made with 12mm or 15mm MDF plate.
     - Use a speed drill or a countersink bit
     - For the normal clock the hole is 12mm
     - For the big clock the hole is 30mm
-- For the frameless clock the bottom, right and left side can be shorted so the letterplate will floating from the wall
+- For the frameless clock the bottom, right and left side can be shorted so the letterplate will floating from the wall ~15mm(aluminium strip width) + 2mm spare
     - The top side is used to hang the clock
 - The result should look like the cnc light-divider
 
@@ -133,7 +133,7 @@ The big clock can be made with 12mm or 15mm MDF plate.
 - Close the frame
 ### frameless
 - Center the light-divider on the letterplate and drill the LDR hole
-- Draw the outer line from the light-divider
+- Draw the outer line from the light-divider on theletterplates back
 - Cut the aluminium strip so it fits nicely around the light-divider (left, right and bottom)
 - Make both the letterplate and the aluminium strip rough with sanding paper
 - drill 3 holes in all aluminium strips (used for connecting the letterplate to the light-divider)

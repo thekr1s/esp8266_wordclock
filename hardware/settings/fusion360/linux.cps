@@ -662,7 +662,11 @@ function onSection() {
       warning(localize("Tool number exceeds maximum value."));
     }
 
-    writeBlock("T" + toolFormat.format(tool.number), mFormat.format(6));
+    
+    //RHU the tool change also calibrates the Z axis,
+    //RHU for now just disable the toolchange.
+    //RHU Better solution is to first select the WCS (G54) then change the tool
+    //RHU writeBlock("T" + toolFormat.format(tool.number), mFormat.format(6));
     if (tool.comment) {
       writeComment(tool.comment);
     }

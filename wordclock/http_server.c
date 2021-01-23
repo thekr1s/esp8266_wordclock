@@ -48,8 +48,8 @@
 #include "esp_glue.h"
 #include "hier_ben_ik.h"
 
-#define MAX_SSID_LEN 32 
-#define MAX_SSID_COUNT 50
+#define MAX_SSID_LEN 20 
+#define MAX_SSID_COUNT 25
 
 static char _ad[] = "robert@wssns.nl";
 
@@ -545,7 +545,6 @@ static void handle_wifi_station_post(int s, wificfg_method method,
 {
 	static char ssid[50] = "";
 	static char password[50] = "";
-    int selected;
 
     if (content_type != HTTP_CONTENT_TYPE_WWW_FORM_URLENCODED) {
         wificfg_write_string(s, "HTTP/1.0 400 \r\nContent-Type: text/html\r\n\r\n");

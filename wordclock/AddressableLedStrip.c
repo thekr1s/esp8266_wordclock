@@ -21,9 +21,20 @@ static uint8_t _greenIdx = 1;
 static uint8_t _blueIdx  = 2;
 static bool    _flipCols = FALSE;
 
+#define FLAG_IS_BG 0x1
 
-uint8_t _nextFrame[ALS_MAX_LED_COUNT ][ALS_BYTES_PER_LED];
-uint8_t _currFrame[ALS_MAX_LED_COUNT ][ALS_BYTES_PER_LED];
+typedef uint8_t TPixel[ALS_BYTES_PER_LED];
+static TPixel _bgColor;
+
+typedef struct TFrame {
+	TPixel buff[ALS_MAX_LED_COUNT];
+	uint8_t flags[ALS_MAX_LED_COUNT];
+} TFrame;
+
+// Array of two frames holding the pixels and the flags per pixel
+static TFrame _frames[2];
+#define CURRFAME_IDX 0
+#define NEXTFAME_IDX 1
 
 static uint32_t _rows = 0;
 static uint32_t _cols = 0;
@@ -54,20 +65,53 @@ uint32_t AlsGetCols(){
 	return _cols;
 }
 
+static void DisplayFrame(int frameIdx) {
+	TPixel* frame = _frames[frameIdx].buff;
+	uint8_t* flags = _frames[frameIdx].flags;
+
+	for (int idx = 0; idx < _cols * _rows; idx++) {
+		if (flags[idx] & FLAG_IS_BG) {
+			frame[idx][_redIdx] = _bgColor[_redIdx];
+			frame[idx][_greenIdx] = _bgColor[_greenIdx];
+			frame[idx][_blueIdx] = _bgColor[_blueIdx];
+		} 
+	}
+	_writeFunction((uint8_t*)frame, _cols * _rows * ALS_BYTES_PER_LED);
+
+	if (frameIdx == NEXTFAME_IDX) {
+		memcpy(_frames[CURRFAME_IDX].buff, _frames[NEXTFAME_IDX].buff, sizeof(_frames[0].buff));
+		memcpy(_frames[CURRFAME_IDX].flags, _frames[NEXTFAME_IDX].flags, sizeof(_frames[0].flags));
+	}
+}
+
+void AlsSetBackgroundColor(uint8_t red, uint8_t green, uint8_t blue) {
+	_bgColor[_redIdx] = red;
+	_bgColor[_greenIdx] = green;
+	_bgColor[_blueIdx] = blue;
+
+}
+
 void AlsFill(uint8_t red, uint8_t green, uint8_t blue){
 	int idx;
 	for (idx = 0; idx < _cols * _rows; idx++) {
 	
-		_nextFrame[idx][_redIdx] = red;
-		_nextFrame[idx][_greenIdx] = green;
-		_nextFrame[idx][_blueIdx] = blue;
+		_frames[NEXTFAME_IDX].buff[idx][_redIdx] = red;
+		_frames[NEXTFAME_IDX].buff[idx][_greenIdx] = green;
+		_frames[NEXTFAME_IDX].buff[idx][_blueIdx] = blue;
+		if (red == 0 && green == 0 && blue == 0) {
+			_frames[NEXTFAME_IDX].flags[idx] |= FLAG_IS_BG;
+		} else {
+			_frames[NEXTFAME_IDX].flags[idx] &= ~FLAG_IS_BG;
+		}
 	}	
 }
 
-static void SetLedInFrame(uint8_t frame[][ALS_BYTES_PER_LED], uint32_t row, uint32_t col, uint8_t r, uint8_t g, uint8_t b)
+static void SetLedInFrame(int frame_idx, uint32_t row, uint32_t col, uint8_t r, uint8_t g, uint8_t b)
 {
 	uint32_t idx;
-	
+	TPixel* frame = _frames[frame_idx].buff;
+	uint8_t* flags = _frames[frame_idx].flags;
+
 	if (_flipCols) {
 		col = _cols - 1 - col;
 	}
@@ -85,16 +129,25 @@ static void SetLedInFrame(uint8_t frame[][ALS_BYTES_PER_LED], uint32_t row, uint
 	frame[idx][_redIdx] = r;
 	frame[idx][_greenIdx] = g;
 	frame[idx][_blueIdx] = b;
+	if (r + g + b <= _bgColor[_redIdx] + _bgColor[_greenIdx] + _bgColor[_blueIdx]){
+		// pixel is set to black. set it as background pixel
+		flags[idx] |=  FLAG_IS_BG; 
+	} else {
+		flags[idx] &= ~ FLAG_IS_BG; // clear the background flag.
+	}
 
 }
 
 void AlsSetLed(uint32_t row, uint32_t col, uint8_t red, uint8_t green, uint8_t blue)
 {
-	SetLedInFrame(_nextFrame, row, col, red, green, blue);
+	SetLedInFrame(NEXTFAME_IDX, row, col, red, green, blue);
 }
 
-static void GetLedFromFrame(uint8_t frame[][ALS_BYTES_PER_LED], uint32_t row, uint32_t col, uint8_t* r, uint8_t* g, uint8_t* b)
+static void GetLedFromFrame(int frame_idx, uint32_t row, uint32_t col, uint8_t* r, uint8_t* g, uint8_t* b)
 {
+	TPixel* frame = _frames[frame_idx].buff;
+	uint8_t* flags = _frames[frame_idx].flags;
+
 	if (row >= _rows || col >= _cols) {
 		//Ignore calls when index out of range
 		return; 
@@ -111,14 +164,18 @@ static void GetLedFromFrame(uint8_t frame[][ALS_BYTES_PER_LED], uint32_t row, ui
 	} else {
 		idx += _cols - 1 - col;		
 	}
-	*r = frame[idx][_redIdx];
-	*g = frame[idx][_greenIdx];
-	*b = frame[idx][_blueIdx];	
+	if (flags[idx] & FLAG_IS_BG) {
+		*r = *g = *b = 0;
+	} else {
+		*r = frame[idx][_redIdx];
+		*g = frame[idx][_greenIdx];
+		*b = frame[idx][_blueIdx];
+	}	
 }
 
 void AlsGetLed(uint32_t row, uint32_t col, uint8_t* pRed, uint8_t* pGreen, uint8_t* pBlue)
 {
-	GetLedFromFrame(_nextFrame, row, col, pRed, pGreen, pBlue);
+	GetLedFromFrame(NEXTFAME_IDX, row, col, pRed, pGreen, pBlue);
 }
 
 static void ShiftHorizontal(bool shiftRight)
@@ -129,10 +186,10 @@ static void ShiftHorizontal(bool shiftRight)
 	for (col = _cols - 1; col >= 0; col--) {
 		for(row = 0; row < _rows; row++) {
 			if (col >= 0){
-				GetLedFromFrame(_currFrame, row, col - 1, &r, &g, &b);
-				SetLedInFrame(_currFrame, row, col, r, g, b);
+				GetLedFromFrame(CURRFAME_IDX, row, col - 1, &r, &g, &b);
+				SetLedInFrame(CURRFAME_IDX, row, col, r, g, b);
 			} else {
-				SetLedInFrame(_currFrame, row, col, BGRGB_FROM_SETTING);
+				SetLedInFrame(CURRFAME_IDX, row, col, BGRGB_FROM_SETTING);
 			}
 		}
 	}
@@ -147,10 +204,10 @@ static void ShiftVertical(bool shiftDown)
 	for (row = 0; row < _rows; row++) {
 		for(col = 0; col < _cols; col++) {
 			if (row < _rows - 1){
-				GetLedFromFrame(_currFrame, row + 1, col, &r, &g, &b);
-				SetLedInFrame(_currFrame, row, col, r, g, b);
+				GetLedFromFrame(CURRFAME_IDX, row + 1, col, &r, &g, &b);
+				SetLedInFrame(CURRFAME_IDX, row, col, r, g, b);
 			} else {
-				SetLedInFrame(_currFrame, row, col, BGRGB_FROM_SETTING);
+				SetLedInFrame(CURRFAME_IDX, row, col, BGRGB_FROM_SETTING);
 			}
 		}
 	}
@@ -166,12 +223,12 @@ static void RefreshRight(bool displayNext, uint32_t delay)
 		ShiftHorizontal(TRUE);
 		if (displayNext) {
 			for (row = 0; row < _rows; row++){		
-				GetLedFromFrame(_nextFrame, row, _cols - i - 1, &r, &g, &b);
-				SetLedInFrame(_currFrame, row, 0, r, g, b);
+				GetLedFromFrame(NEXTFAME_IDX, row, _cols - i - 1, &r, &g, &b);
+				SetLedInFrame(CURRFAME_IDX, row, 0, r, g, b);
 				
 			}
 		}
-		_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		DisplayFrame(CURRFAME_IDX);
 		Sleep(delay);
 	}
 	
@@ -186,12 +243,12 @@ static void RefreshUp(bool displayNext, uint32_t delay)
 		ShiftVertical(TRUE);
 		if (displayNext) {
 			for (col = 0; col < _cols; col++){		
-				GetLedFromFrame(_nextFrame, i, col, &r, &g, &b);
-				SetLedInFrame(_currFrame, _rows - 1, col, r, g, b);
+				GetLedFromFrame(NEXTFAME_IDX, i, col, &r, &g, &b);
+				SetLedInFrame(CURRFAME_IDX, _rows - 1, col, r, g, b);
 				
 			}
 		}
-		_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		DisplayFrame(CURRFAME_IDX);
 		Sleep(delay);
 	}
 	
@@ -217,16 +274,16 @@ static void FadeOut() {
 		done = TRUE;
 		for (row = 0; row < _rows; row++) {
 			for (col = 0; col < _cols; col++) {
-				GetLedFromFrame(_currFrame, row, col, &r, &g, &b);
+				GetLedFromFrame(CURRFAME_IDX, row, col, &r, &g, &b);
 				r /= 2;
 				g /= 2;
 				b /= 2;
 				if (r != 0 || g != 0 || b != 0) {
 					done = FALSE;
 				}
-				SetLedInFrame(_currFrame, row, col, r, g, b);
+				SetLedInFrame(CURRFAME_IDX, row, col, r, g, b);
 			}
-			_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+			DisplayFrame(CURRFAME_IDX);
 		}
 		Sleep(100);
 	}
@@ -242,52 +299,52 @@ static void RefreshZip(bool displayNext, uint32_t delay)
 	for (c = 0; c < (_rows / 2); c++) {
 		for (col = 0; col < _cols; col++) {
 			row = c;
-			GetLedFromFrame(_currFrame, row, col, &r, &g, &b);
-			GetLedFromFrame(_currFrame, row + 1, col, &r1, &g1, &b1);
+			GetLedFromFrame(CURRFAME_IDX, row, col, &r, &g, &b);
+			GetLedFromFrame(CURRFAME_IDX, row + 1, col, &r1, &g1, &b1);
 			r = Zip(r, r1);
 			g = Zip(g, g1);
 			b = Zip(b, b1);
-			SetLedInFrame(_currFrame, row + 1, col, r, g, b);
-			SetLedInFrame(_currFrame, row, col, 0, 0, 0);
+			SetLedInFrame(CURRFAME_IDX, row + 1, col, r, g, b);
+			SetLedInFrame(CURRFAME_IDX, row, col, 0, 0, 0);
 			row = _rows - c - 1;
 			
-			GetLedFromFrame(_currFrame, row, col, &r, &g, &b);
-			GetLedFromFrame(_currFrame, row - 1, col, &r1, &g1, &b1);
+			GetLedFromFrame(CURRFAME_IDX, row, col, &r, &g, &b);
+			GetLedFromFrame(CURRFAME_IDX, row - 1, col, &r1, &g1, &b1);
 			r = Zip(r, r1);
 			g = Zip(g, g1);
 			b = Zip(b, b1);
-			SetLedInFrame(_currFrame, row - 1, col, r, g, b);
-			SetLedInFrame(_currFrame, row, col, 0, 0, 0);
+			SetLedInFrame(CURRFAME_IDX, row - 1, col, r, g, b);
+			SetLedInFrame(CURRFAME_IDX, row, col, 0, 0, 0);
 		}
-		_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		DisplayFrame(CURRFAME_IDX);
 		Sleep(delay);
 		if (delay > 120) {
 			delay /= 2;
 		}
 	}
 	for (col = 0; col < _cols; col++) {
-		GetLedFromFrame(_currFrame, centre, col, &r, &g, &b);
+		GetLedFromFrame(CURRFAME_IDX, centre, col, &r, &g, &b);
 		r = r < 64 ? r * 4 : 255;
 		g = g < 64 ? g * 4 : 255;
 		b = b < 64 ? b * 4 : 255;
-		SetLedInFrame(_currFrame, centre, col, r, g, b);
+		SetLedInFrame(CURRFAME_IDX, centre, col, r, g, b);
 	}
-	_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+	DisplayFrame(CURRFAME_IDX);
 	Sleep(100);
 
 	for (c = 0; c < 10; c++) {
 		for (col = 0; col < _cols; col++) {
-			GetLedFromFrame(_currFrame, centre, col, &r, &g, &b);
+			GetLedFromFrame(CURRFAME_IDX, centre, col, &r, &g, &b);
 			r /= 2;
 			g /= 2;
 			b /= 2;
-			SetLedInFrame(_currFrame, centre, col, r, g, b);
+			SetLedInFrame(CURRFAME_IDX, centre, col, r, g, b);
 		}
-		_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		DisplayFrame(CURRFAME_IDX);
 		Sleep(100);	    	
 	}
 	if(displayNext) {
-		_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		DisplayFrame(NEXTFAME_IDX);
 		
 	}
 }
@@ -300,7 +357,7 @@ static void RefreshBlend(void)
 static void RefreshFade(void)
 {
 	FadeOut();
-	_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+	DisplayFrame(NEXTFAME_IDX);
 
 }
 
@@ -314,13 +371,13 @@ static void RefreshWipe(void)
 		if (i > 0) {
 			// restore previous wiped line
 			for (int yy = 0; yy < _rows; yy++) {
-				SetLedInFrame(_currFrame, yy, i-1, wipedR[yy], wipedG[yy], wipedB[yy]);
+				SetLedInFrame(CURRFAME_IDX, yy, i-1, wipedR[yy], wipedG[yy], wipedB[yy]);
 			}
 		}
 		for (int x = 0; x < _cols; x++) {
 			for (int y = 0; y < _rows; y++){
 				uint8_t r, g, b;
-				GetLedFromFrame(_currFrame, y, x, &r, &g, &b);
+				GetLedFromFrame(CURRFAME_IDX, y, x, &r, &g, &b);
 				if (x == i) {
 					uint32_t maxcol = r > g ? r : g;
 					maxcol = maxcol > b ? maxcol : b;
@@ -329,25 +386,25 @@ static void RefreshWipe(void)
 						wipedR[y] = (r * factor) / 1000;
 						wipedG[y] = (g * factor) / 1000;
 						wipedB[y] = (b * factor) / 1000;
-						SetLedInFrame(_currFrame, y, x, wipedR[y], wipedG[y], wipedB[y]);
+						SetLedInFrame(CURRFAME_IDX, y, x, wipedR[y], wipedG[y], wipedB[y]);
 					} else {
 						wipedR[y] = 0;
 						wipedG[y] = 0;
 						wipedB[y] = 0;
-						SetLedInFrame(_currFrame, y, x, RGB_FROM_SETTING);
+						SetLedInFrame(CURRFAME_IDX, y, x, RGB_FROM_SETTING);
 					}
 				} else if (x < i) {
 					r /= 2;
 					g /= 2;
 					b /= 2;
-					SetLedInFrame(_currFrame, y, x, r, g, b);
+					SetLedInFrame(CURRFAME_IDX, y, x, r, g, b);
 				}
 			}
 		}
-		_writeFunction(&_currFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		DisplayFrame(CURRFAME_IDX);
 		Sleep(50);
 	}
-	_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+	DisplayFrame(NEXTFAME_IDX);
 
 }
 
@@ -399,7 +456,7 @@ static uint16_t getNrOfActiveLeds(void)
 
     for (row = 0; row < _rows; row++) {
         for (col = 0; col < _cols; col++) {
-            GetLedFromFrame(_nextFrame, row, col, &r, &g, &b);
+            GetLedFromFrame(NEXTFAME_IDX, row, col, &r, &g, &b);
             if ((r + g + b) > 0) {
                 nrOfLedsOn ++;
             }
@@ -416,10 +473,10 @@ static void FilterRainbow(void)
     uint16_t currentLed = 0;
     for (row = 0; row < _rows; row++) {
         for (col = 0; col < _cols; col++) {
-            GetLedFromFrame(_nextFrame, _rows - 1 - row, col, &r, &g, &b);
+            GetLedFromFrame(NEXTFAME_IDX, _rows - 1 - row, col, &r, &g, &b);
             if ((r + g + b) > 0) {
                 RainbowSetColor(nrOfActiveLeds, currentLed, &r, &g, &b);
-                SetLedInFrame(_nextFrame, _rows - 1 - row, col, r, g, b);
+                SetLedInFrame(NEXTFAME_IDX, _rows - 1 - row, col, r, g, b);
                 currentLed ++;
             }
         }
@@ -453,7 +510,7 @@ void AlsRefresh(TAlsEffects effect)
 	switch(effect) {
 	case ALSEFFECT_NONE:
 		// skip write when no change
-		_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		DisplayFrame(NEXTFAME_IDX);
 		break;
 				
 	case ALSEFFECT_SHIFTRIGHT:
@@ -486,10 +543,10 @@ void AlsRefresh(TAlsEffects effect)
 
 	
 	default:
-		_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
+		DisplayFrame(NEXTFAME_IDX);
 		break;
 	}
-	memcpy(_currFrame, _nextFrame, sizeof(_currFrame));
+	// memcpy(_currFrame, _nextFrame, sizeof(_currFrame));
 }
 
 

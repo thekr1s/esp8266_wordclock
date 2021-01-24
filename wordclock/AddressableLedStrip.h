@@ -37,6 +37,7 @@ void AlsInit(uint32_t rows, uint32_t cols, TAlsWriteFunction writeFunction,
 		uint8_t redIdx, uint8_t greenIdx, uint8_t blueIdx, bool flipCols); 
 uint32_t AlsGetRows();
 uint32_t AlsGetCols();
+void AlsSetBackgroundColor(uint8_t red, uint8_t green, uint8_t blue);
 void AlsFill(uint8_t red, uint8_t green, uint8_t blue);
 void AlsSetLed(uint32_t row, uint32_t col, uint8_t red, uint8_t green, uint8_t blue);
 void AlsGetLed(uint32_t row, uint32_t col, uint8_t* pRed, uint8_t* pGreen, uint8_t* pBlue);

@@ -72,7 +72,7 @@ static void DisplayTimeSyncStatus()
 {
 	if (!sntp_client_time_valid()) {
 		printf("timesync too old: red\n");
-		AlsSetLed(_displaySize[0] - 1, 0, g_brightness, 0, 0);
+		AlsSetLed(_displaySize[0] - 1, _displaySize[1] - 1, g_brightness, 0, 0);
 	}
 }
 
@@ -176,7 +176,6 @@ void ShowTime(int delayMS) {
 			} else {
 				CWDisplayTime(h, m, RGB_FROM_SETTING);
 			}
-			DisplayTimeSyncStatus();
 
 			AlsApplyTextEffect(g_settings.textEffect);
 
@@ -186,6 +185,8 @@ void ShowTime(int delayMS) {
 				ShowDist(dist);
 			}
 			
+			DisplayTimeSyncStatus();
+
 			if (g_settings.perfectImperfections == 1) {
 				if (rand() % 50 == 0) {
 					AlsSetRandom(g_brightness);

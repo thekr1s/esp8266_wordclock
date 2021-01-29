@@ -369,7 +369,7 @@ void DisplayWord(char* str) {
 		pos = 0;
 
 		for (pos = 0; pos > -6; pos--) {
-			AlsFill(BGRGB_FROM_SETTING);
+			AlsFill(0,0,0);
 			F5x7WriteChar(2, pos, c1, r, g, b);
 			F5x7WriteChar(2, pos + offset, c2, r, g, b);
 			F5x7WriteChar(2, pos + 2 * offset, c3, r, g, b);

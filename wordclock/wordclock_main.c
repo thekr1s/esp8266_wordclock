@@ -72,7 +72,7 @@ static void DisplayTimeSyncStatus()
 {
 	if (!sntp_client_time_valid()) {
 		printf("timesync too old: red\n");
-		AlsSetLed(_displaySize[0] - 1, 0, g_brightness, 0, 0);
+		AlsSetLed(_displaySize[0] - 1, _displaySize[1] - 1, g_brightness, 0, 0);
 	}
 }
 
@@ -169,13 +169,13 @@ void ShowTime(int delayMS) {
 		}
 
 		if (DoReDisplay) {
-			AlsFill(BGRGB_FROM_SETTING);
+			AlsFill(0,0,0);
+			AlsSetBackgroundColor(BGRGB_FROM_SETTING);
 			if (g_settings.hardwareType == HARDWARE_13_13) {
 				CWDisplayAccurateTime(h, m, s, RGB_FROM_SETTING);
 			} else {
 				CWDisplayTime(h, m, RGB_FROM_SETTING);
 			}
-			DisplayTimeSyncStatus();
 
 			AlsApplyTextEffect(g_settings.textEffect);
 
@@ -185,6 +185,8 @@ void ShowTime(int delayMS) {
 				ShowDist(dist);
 			}
 			
+			DisplayTimeSyncStatus();
+
 			if (g_settings.perfectImperfections == 1) {
 				if (rand() % 50 == 0) {
 					AlsSetRandom(g_brightness);
@@ -212,6 +214,8 @@ void WordclockMain(void* p)
 	uint32_t timeShowDuration = 5000;
 
 	ShowSplash();
+
+	AlsSetBackgroundColor(BGRGB_FROM_SETTING);
 
 	// Wait for time set
 	int count = 10;

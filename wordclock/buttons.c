@@ -251,8 +251,8 @@ bool ButtonHandleButtons(void) {
             mode += 3;
         }
         if (sntp_client_time_valid() && mode == BUTTONMODE_MINUTES) {
-            // Skip the minutes and hour setting as the clock is already set;
-            mode += 2;
+            // Skip the minutes, hour and DST setting as the clock is already set;
+            mode += 3;
         }
         mode %= BUTTONMODE_LAST;
         ButtonShowMode(mode);

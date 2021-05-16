@@ -496,11 +496,11 @@ void AlsApplyTextEffect(ETextEffect filter)
         FilterRainbow();
         break;
     case TEXTEFFECT_RANDOM:
-		TimeGet(&h, &m, &s);
-		if (h != rnd_last) {
-			rnd_last = h;
-			SettingRandomColors();
-		}
+        TimeGet(&h, &m, &s);
+        if (h != rnd_last) {
+            rnd_last = h;
+            SettingRandomColors();
+        }
         break;
     default:
         break;

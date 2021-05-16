@@ -98,9 +98,7 @@ void SettingsClockReset(){
     SleepNI(2000);
     sdk_system_restart();
 }
-#ifndef MAX
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#endif
+
 static TColor RndCol() {
     TColor c = {rand()%256,rand()%256,rand()%256};
     uint8_t m = MAX(c.r, c.g);

@@ -486,15 +486,21 @@ static void FilterRainbow(void)
 
 void AlsApplyTextEffect(ETextEffect filter)
 {
-    if (filter == TEXTEFFECT_RANDOM) {
-        //currently only 1 filter so this will not do anything
-        filter = rand() % TEXTEFFECT_RANDOM;
-    }
+	static int rnd_last = 0;
+	uint32_t h, m, s;		
+
     switch(filter) {
     case TEXTEFFECT_NONE:
         break;
     case TEXTEFFECT_RAINBOW:
         FilterRainbow();
+        break;
+    case TEXTEFFECT_RANDOM:
+		TimeGet(&h, &m, &s);
+		if (h != rnd_last) {
+			rnd_last = h;
+			SettingRandomColors();
+		}
         break;
     default:
         break;

@@ -15,6 +15,7 @@ void SetInterrupted(bool isInterrupted);
 bool Interrupted();
 uint32_t Sleep(uint32_t ms);
 void SleepNI(uint32_t ms);
+void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s);
 
 void user_init(void);
 

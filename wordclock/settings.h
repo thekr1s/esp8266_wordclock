@@ -72,5 +72,7 @@ void SettingsScheduleStore();
 void SettingsCheckStore();
 void SettingsClockReset();
 
+void SettingRandomColors();
+
 
 #endif //SETTINGS_H_

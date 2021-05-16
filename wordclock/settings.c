@@ -98,3 +98,27 @@ void SettingsClockReset(){
     SleepNI(2000);
     sdk_system_restart();
 }
+#ifndef MAX
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+#endif
+static TColor RndCol() {
+    TColor c = {rand()%256,rand()%256,rand()%256};
+    uint8_t m = MAX(c.r, c.g);
+    m = MAX(c.b, m);
+    float f = 1.0*255/m;
+    printf("%d %f\n", m, f);
+    c.r = c.r * f;
+    c.g = c.g * f;
+    c.b = c.b * f;
+    
+    return c;
+}
+
+void SettingRandomColors(){
+    g_settings.color = RndCol();
+    TColor bgc = RndCol();
+    bgc.r /= 10;
+    bgc.g /= 10;
+    bgc.b /= 10;
+    g_settings.bgColor = bgc;
+}

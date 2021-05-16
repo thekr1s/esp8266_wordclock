@@ -75,7 +75,7 @@ void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s){
 	
 	struct tm *pTM = localtime(&ts);
 
-	*h = pTM->tm_hour;
+    *h = pTM->tm_hour;
     *m = pTM->tm_min;
     *s = pTM->tm_sec;
 }

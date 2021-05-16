@@ -14,7 +14,6 @@
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #endif
 
-
 uint32_t GetTicksDiffMs(uint32_t start, uint32_t end);
 void SetInterrupted(bool isInterrupted);
 bool Interrupted();

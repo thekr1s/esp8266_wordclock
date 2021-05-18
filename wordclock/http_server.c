@@ -746,6 +746,10 @@ static void handle_clock_cfg_post(int s, wificfg_method method,
             }
         }
     }
+    if (g_settings.textEffect == TEXTEFFECT_RANDOM) {
+        SettingRandomColors();
+    }
+
     SettingsScheduleStore();
     wificfg_write_string(s, http_redirect_header_clockcfg);
     SetInterrupted(true);

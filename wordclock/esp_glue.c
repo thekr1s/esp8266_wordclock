@@ -70,6 +70,17 @@ uint32_t Sleep(uint32_t ms) {
     return ms;
 }
 
+void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s){
+	time_t ts = time(NULL);
+	
+	struct tm *pTM = localtime(&ts);
+
+    *h = pTM->tm_hour;
+    *m = pTM->tm_min;
+    *s = pTM->tm_sec;
+}
+
+
 void test_sysparam() {
     char test[20];
     char *pTtest = test;

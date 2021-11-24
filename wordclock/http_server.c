@@ -773,11 +773,16 @@ static void handle_hw_cfg(int s, wificfg_method method,
     if (method != HTTP_METHOD_HEAD) {
     	if (wificfg_write_string(s, http_hw_cfg_content[idx]) < 0) return;
     	// Hardware Version
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i <= NR_OF_HARDWARE; i++) {
 			if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
 			if (g_settings.hardwareType == i) wificfg_write_string(s, "selected");
 		}
 
+        // Pixel Types
+		for (int i = 0; i <= NR_OF_PIXEL_TYPES; i++) {
+			if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+			if (g_settings.pixelType == i) wificfg_write_string(s, "selected");
+		}
         // Perfect Imperfections
         wificfg_write_string(s, http_hw_cfg_content[++idx]);
         if (g_settings.perfectImperfections == 1) wificfg_write_string(s, "checked");
@@ -863,6 +868,8 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             printf("%s %s %s\n", __FUNCTION__, name, buf);
             if (strcmp(name, "hw_hardwaretype") == 0) {
                 g_settings.hardwareType = atoi(buf);
+            } else if (strcmp(name, "hw_pixeltype") == 0) {
+                g_settings.pixelType = atoi(buf);
             } else if (strcmp(name, "hw_imperfections") == 0) {
                 if (strstr(buf, "CheckOn") != NULL) {
                     g_settings.perfectImperfections = 1;

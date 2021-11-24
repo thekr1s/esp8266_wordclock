@@ -4,6 +4,7 @@
  *  Created on: May 9, 2015
  *      Author: robert.wassens
  */
+#include <stdio.h> // printf
 #include "stdlib.h"
 #include "string.h"
 #include "assert.h"
@@ -11,19 +12,13 @@
 #include "AddressableLedStrip.h"
 #include "displaySettings.h"
 #include "settings.h"
+#include "rgb2.h"
 
 
-#define ALS_BYTES_PER_LED  4
 #define ALS_MAX_LED_COUNT  (WORDCLOCK_ROWS_MAX * WORDCLOCK_COLLS_MAX)
-
-static uint8_t _redIdx   = 0;
-static uint8_t _greenIdx = 1;
-static uint8_t _blueIdx  = 2;
-static bool    _flipCols = FALSE;
 
 #define FLAG_IS_BG 0x1
 
-typedef uint8_t TPixel[ALS_BYTES_PER_LED];
 static TPixel _bgColor;
 
 typedef struct TFrame {
@@ -43,18 +38,11 @@ TAlsWriteFunction _writeFunction = NULL;
 extern uint32_t TimerTickCount;
 extern uint8_t g_brightness;
 
-void AlsInit(uint32_t rows, uint32_t cols, TAlsWriteFunction writeFunction, 
-		uint8_t redIdx, uint8_t greenIdx, uint8_t blueIdx, bool flipCols) 
+void AlsInit(uint32_t rows, uint32_t cols, TAlsWriteFunction writeFunction) 
 {
 	_writeFunction = writeFunction;
 	_rows = rows;
 	_cols = cols;
-
-	_redIdx   = redIdx;
-	_greenIdx = greenIdx;
-	_blueIdx  = blueIdx;
-	_flipCols = flipCols;
-
 }
 
 uint32_t AlsGetRows() {
@@ -69,13 +57,20 @@ static void DisplayFrame(int frameIdx) {
 	TPixel* frame = _frames[frameIdx].buff;
 	uint8_t* flags = _frames[frameIdx].flags;
 
+	
 	for (int idx = 0; idx < _cols * _rows; idx++) {
 		if (flags[idx] & FLAG_IS_BG) {
-			frame[idx][_redIdx] = _bgColor[_redIdx];
-			frame[idx][_greenIdx] = _bgColor[_greenIdx];
-			frame[idx][_blueIdx] = _bgColor[_blueIdx];
-		} 
+			frame[idx][RED_IDX] = _bgColor[RED_IDX];
+			frame[idx][GREEN_IDX] = _bgColor[GREEN_IDX];
+			frame[idx][BLUE_IDX] = _bgColor[BLUE_IDX];
+		}
+		if (g_settings.pixelType != PIXEL_TYPE_RGB) {
+			rgb2rgbw(frame[idx], g_settings.pixelType);
+		}
 	}
+	// int dbgidx = _cols * _rows - 1;
+	// printf("After: %d ; %d ; %d ; %d\n", frame[dbgidx][RED_IDX], frame[dbgidx][GREEN_IDX], frame[dbgidx][BLUE_IDX], frame[dbgidx][WHITE_IDX]);
+	
 	_writeFunction((uint8_t*)frame, _cols * _rows * ALS_BYTES_PER_LED);
 
 	if (frameIdx == NEXTFAME_IDX) {
@@ -85,9 +80,9 @@ static void DisplayFrame(int frameIdx) {
 }
 
 void AlsSetBackgroundColor(uint8_t red, uint8_t green, uint8_t blue) {
-	_bgColor[_redIdx] = red;
-	_bgColor[_greenIdx] = green;
-	_bgColor[_blueIdx] = blue;
+	_bgColor[RED_IDX] = red;
+	_bgColor[GREEN_IDX] = green;
+	_bgColor[BLUE_IDX] = blue;
 
 }
 
@@ -95,9 +90,9 @@ void AlsFill(uint8_t red, uint8_t green, uint8_t blue){
 	int idx;
 	for (idx = 0; idx < _cols * _rows; idx++) {
 	
-		_frames[NEXTFAME_IDX].buff[idx][_redIdx] = red;
-		_frames[NEXTFAME_IDX].buff[idx][_greenIdx] = green;
-		_frames[NEXTFAME_IDX].buff[idx][_blueIdx] = blue;
+		_frames[NEXTFAME_IDX].buff[idx][RED_IDX] = red;
+		_frames[NEXTFAME_IDX].buff[idx][GREEN_IDX] = green;
+		_frames[NEXTFAME_IDX].buff[idx][BLUE_IDX] = blue;
 		if (red == 0 && green == 0 && blue == 0) {
 			_frames[NEXTFAME_IDX].flags[idx] |= FLAG_IS_BG;
 		} else {
@@ -112,10 +107,6 @@ static void SetLedInFrame(int frame_idx, uint32_t row, uint32_t col, uint8_t r, 
 	TPixel* frame = _frames[frame_idx].buff;
 	uint8_t* flags = _frames[frame_idx].flags;
 
-	if (_flipCols) {
-		col = _cols - 1 - col;
-	}
-	
 	idx =  (_rows - 1 - row) * _cols;
 	if (row >= _rows || col >= _cols) {
 		//Ignore calls when index out of range
@@ -126,10 +117,10 @@ static void SetLedInFrame(int frame_idx, uint32_t row, uint32_t col, uint8_t r, 
 	} else {
 		idx += _cols - 1 - col;		
 	}
-	frame[idx][_redIdx] = r;
-	frame[idx][_greenIdx] = g;
-	frame[idx][_blueIdx] = b;
-	if (r + g + b <= _bgColor[_redIdx] + _bgColor[_greenIdx] + _bgColor[_blueIdx]){
+	frame[idx][RED_IDX] = r;
+	frame[idx][GREEN_IDX] = g;
+	frame[idx][BLUE_IDX] = b;
+	if (r + g + b <= _bgColor[RED_IDX] + _bgColor[GREEN_IDX] + _bgColor[BLUE_IDX]){
 		// pixel is set to black. set it as background pixel
 		flags[idx] |=  FLAG_IS_BG; 
 	} else {
@@ -153,10 +144,6 @@ static void GetLedFromFrame(int frame_idx, uint32_t row, uint32_t col, uint8_t* 
 		return; 
 	}
 
-	if (_flipCols) {
-		col = _cols - 1 - col;
-	}
-
 	uint32_t idx =  (_rows - 1 - row) * _cols;
 
 	if (row % 2 == 0) {
@@ -167,9 +154,9 @@ static void GetLedFromFrame(int frame_idx, uint32_t row, uint32_t col, uint8_t* 
 	if (flags[idx] & FLAG_IS_BG) {
 		*r = *g = *b = 0;
 	} else {
-		*r = frame[idx][_redIdx];
-		*g = frame[idx][_greenIdx];
-		*b = frame[idx][_blueIdx];
+		*r = frame[idx][RED_IDX];
+		*g = frame[idx][GREEN_IDX];
+		*b = frame[idx][BLUE_IDX];
 	}	
 }
 
@@ -481,7 +468,6 @@ static void FilterRainbow(void)
             }
         }
     }
-    //_writeFunction(&_nextFrame[0][0], _cols * _rows * ALS_BYTES_PER_LED);
 }
 
 void AlsApplyTextEffect(ETextEffect filter)

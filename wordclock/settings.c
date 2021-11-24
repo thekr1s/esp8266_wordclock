@@ -25,6 +25,7 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      ANIMATION_TRANSITION,
      TEXTEFFECT_NONE, // textEffect
      HARDWARE_11_11,
+     PIXEL_TYPE_RGB,
 #ifdef BUILD_BY_RUTGER
      0,   // perfectImperfections
 #else

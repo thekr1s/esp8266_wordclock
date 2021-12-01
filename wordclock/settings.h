@@ -26,18 +26,18 @@ typedef enum {
 
 typedef enum {
     HARDWARE_11_11 = 0,
-    HARDWARE_13_13 = 1,
-    HARDWARE_9_8 = 2,
-    HARDWARE_13_13_V2 = 3,
-    NR_OF_HARDWARE = HARDWARE_13_13_V2,
+    HARDWARE_13_13,
+    HARDWARE_9_8,
+    HARDWARE_13_13_V2,
+    NR_OF_HARDWARE_TYPES,
 } EHardwareType;
 
 typedef enum {
     PIXEL_TYPE_RGB = 0,
-    PIXEL_TYPE_RGBW = 1,
-    PIXEL_TYPE_RGBNW = 2,
-    PIXEL_TYPE_RGBWW = 3,
-    NR_OF_PIXEL_TYPES = PIXEL_TYPE_RGBWW,
+    PIXEL_TYPE_RGBW,
+    PIXEL_TYPE_RGBNW,
+    PIXEL_TYPE_RGBWW,
+    NR_OF_PIXEL_TYPES,
 } EPixelType;
 
 typedef struct {

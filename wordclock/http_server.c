@@ -773,13 +773,13 @@ static void handle_hw_cfg(int s, wificfg_method method,
     if (method != HTTP_METHOD_HEAD) {
     	if (wificfg_write_string(s, http_hw_cfg_content[idx]) < 0) return;
     	// Hardware Version
-		for (int i = 0; i <= NR_OF_HARDWARE; i++) {
+		for (int i = 0; i < NR_OF_HARDWARE_TYPES; i++) {
 			if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
 			if (g_settings.hardwareType == i) wificfg_write_string(s, "selected");
 		}
 
         // Pixel Types
-		for (int i = 0; i <= NR_OF_PIXEL_TYPES; i++) {
+		for (int i = 0; i < NR_OF_PIXEL_TYPES; i++) {
 			if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
 			if (g_settings.pixelType == i) wificfg_write_string(s, "selected");
 		}

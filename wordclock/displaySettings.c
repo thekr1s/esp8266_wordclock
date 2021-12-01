@@ -132,7 +132,7 @@ uint8_t ApplyBgBrightness(uint8_t color)
 
 static void WS2812_I2S_WriteData(uint8_t* p, uint32_t length){  
     if (g_settings.pixelType == PIXEL_TYPE_RGB) {
-    ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGB);
+        ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGB);
     } else {
         ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGBW);
     }

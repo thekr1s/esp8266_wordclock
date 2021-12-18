@@ -1,0 +1,113 @@
+﻿solidworks 2014
+
+LED strip van 30 leds per meter ==> Aafstand tussen leds 3,33cm
+led hoek is 120 grade ==> na 0,71cm de lichtbundel een diameter heeft van 3,33cm
+
+wordclock wordt 13 x 13 leds ==> 43,29 * 43,29cm
+dit past in de ikea lijst van 50*50
+
+
+// WORDKLOCK ZINNEN:
+-------- 1 --> 15 --------
+Het Is een over vier
+Het Is twee over vier
+Het Is drie over vier
+Het Is vier over vier
+Het Is vijf over vier
+Het Is zes over vier
+Het Is zeven over vier
+Het Is acht over vier (acht moet ook wacht kunnen zijn)
+Het Is negen over vier
+Het Is tien over vier
+Het Is elf over vier
+Het Is twaalf over vier
+Het Is dertien over vier
+Het Is viertien over vier
+Het Is kwart over vier
+
+-------- 16 --> 19 --------
+Het Is zestien over vier
+Het Is zeventien over vier
+Het Is achttien over vier
+Het Is negentien over vier
+
+-------- 20 --------
+Het Is tien voor half vijf (tien voor half vijf)
+
+-------- 21 --> 29 --------
+Het Is negen voor half vijf
+Het Is acht voor half vijf
+Het Is zeven voor half vijf
+Het Is zes voor half vijf
+Het Is vijf voor half vijf
+Het Is vier voor half vijf
+Het Is drie voor half vijf
+Het Is twee voor half vijf
+Het Is een voor half vijf
+
+-------- 30 --------
+Het Is half vijf
+
+-------- 31 --> 44 --------
+Het Is een over half vijf
+Het Is twee over half vijf
+Het Is drie over half vijf
+Het Is vier over half vijf
+Het Is vijf over half vijf
+Het Is zes over half vijf
+Het Is zeven over half vijf
+Het Is acht over half vijf
+Het Is negen over half vijf
+Het Is tien over half vijf
+Het Is elf over half vijf
+Het Is twaalf over half vijf
+Het Is dertien over half vijf
+Het Is viertien over half vijf
+
+-------- 45 --------
+Het Is kwart voor vijf
+
+-------- 46 --> 59 --------
+Het Is viertien voor vijf
+Het Is dertien voor vijf
+Het Is twaalf voor vijf
+Het Is elf voor vijf
+Het Is tien voor vijf
+Het Is negen voor vijf
+Het Is acht voor vijf
+Het Is zeven voor vijf
+Het Is zes voor vijf
+Het Is vijf voor vijf
+Het Is vier voor vijf
+Het Is drie voor vijf
+Het Is twee voor vijf
+Het Is een voor vijf
+
+optie 2: (hier is zes tien -> zestien, zeventien, achttien, negentien
+Twee en een kan je schrijven als tween
+
+H,E,T,#,I,S,#,N,U,#,E,L,F
+B,I,J,N,A,#,D,E,R,T,I,E,N
+D,R,I,E,N,E,G,E,N,T,I,E,N
+Z,E,V,E,N,T,I,E,N,V,I,J,F
+T,W,E,E,N,V,I,E,R,T,I,E,N
+A,C,H,T,T,I,E,N,K,W,A,R,T
+Z,E,S,T,I,E,N,T,W,A,A,L,F
+O,V,E,R,V,O,O,R,#,H,A,L,F
+V,I,J,F,W,A,C,H,T,D,R,I,E
+T,W,E,E,N,Z,E,S,Z,E,V,E,N
+T,I,E,N,T,W,A,A,L,F,E,L,F
+B,V,I,E,R,N,E,G,E,N,R,W,A
+#,U,U,R,#,G,E,W,E,E,S,T,#
+
+van letters naar Excel werkelijk formaat:
+Open excel
+view -> page layout
+select all columns
+right mous -> column with: 3.3cm
+select all rows
+right mous -> rowscolumn with: 3.3cm
+view -> normal
+
+
+verbeteringen:

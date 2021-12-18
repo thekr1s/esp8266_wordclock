@@ -47,6 +47,7 @@
 #include "controller.h"
 #include "esp_glue.h"
 #include "hier_ben_ik.h"
+#include "ldr.h"
 
 #define MAX_SSID_LEN 20 
 #define MAX_SSID_COUNT 25
@@ -493,6 +494,10 @@ static const char http_redirect_header_hwcfg[] = "HTTP/1.0 302 \r\n"
     "Location: /wificfg/hwcfg.html\r\n"
     "\r\n";
 
+static const char http_redirect_header_debug[] = "HTTP/1.0 302 \r\n"
+    "Location: /wificfg/debug.html\r\n"
+    "\r\n";
+
 static const char http_redirect_header_controller[] = "HTTP/1.0 302 \r\n"
     "Location: /wificfg/controller.html\r\n"
     "\r\n";
@@ -826,7 +831,7 @@ static void handle_hw_cfg(int s, wificfg_method method,
         
         wificfg_write_string(s, "<br/>rev. : ");
         wificfg_write_string(s, version);
-        printf("svn:%s\n", version);
+        printf("git:%s\n", version);
     }
 }
 
@@ -1021,6 +1026,35 @@ static void handle_controller_post(int s, wificfg_method method,
     // close(s);
 }
 
+static const char *http_debug_content[] = {
+#include "content/wificfg/debug.html"
+};
+
+static void handle_debug(int s, wificfg_method method,
+                                uint32_t content_length,
+                                wificfg_content_type content_type,
+                                char *buf, size_t len)
+{
+    int idx = 0;
+    uint16_t ldr_value;
+    char tempStr[100];
+	printf("%s %d\n", __FUNCTION__, __LINE__);
+    if (wificfg_write_string(s, http_success_header) < 0) return;
+	printf("%s %d\n", __FUNCTION__, __LINE__);
+
+    if (method != HTTP_METHOD_HEAD) {
+    	if (wificfg_write_string(s, http_debug_content[idx++]) < 0) return;
+        LdrGetValue16(&ldr_value);
+        printf("LDR:%u\n", ldr_value);
+        snprintf(tempStr, sizeof(tempStr), "<dt>LDR :</dt> <dd>%d</dd>", ldr_value);
+        wificfg_write_string(s, tempStr);
+        
+        printf("bright:%u\n", ldr_value);
+        snprintf(tempStr, sizeof(tempStr), "<dt>Brightness :</dt> <dd>%d</dd>", g_brightness);
+        wificfg_write_string(s, tempStr);
+        if (wificfg_write_string(s, http_debug_content[idx++]) < 0) return;
+    }
+}
 
 
 /* Minimal not-found response. */
@@ -1108,6 +1142,8 @@ static const wificfg_dispatch wificfg_dispatch_list[] = {
     {"/wificfg/hwcfg.html", HTTP_METHOD_POST, handle_hw_cfg_post, true},
     {"/wificfg/controller.html", HTTP_METHOD_GET, handle_controller, true},
     {"/wificfg/controller.html", HTTP_METHOD_POST, handle_controller_post, true},
+    {"/wificfg/debug.html", HTTP_METHOD_GET, handle_debug, true},
+    // {"/wificfg/debug.html", HTTP_METHOD_POST, handle_debug_post, true},
 #if configUSE_TRACE_FACILITY
     {"/tasks", HTTP_METHOD_GET, handle_tasks, false},
     {"/tasks.html", HTTP_METHOD_GET, handle_tasks, false},

@@ -163,7 +163,7 @@ void wordClockDisplay_init(void)
 
     CWInit(_displaySize[0],_displaySize[1]);
     if (g_settings.pixelType == PIXEL_TYPE_RGB) {
-    ws2812_i2s_init(_displaySize[0] *_displaySize[1], PIXEL_RGB);
+        ws2812_i2s_init(_displaySize[0] *_displaySize[1], PIXEL_RGB);
     } else {
         ws2812_i2s_init(_displaySize[0] *_displaySize[1], PIXEL_RGBW);
     }

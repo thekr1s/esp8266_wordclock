@@ -37,6 +37,7 @@ typedef enum {
     PIXEL_TYPE_RGBW,
     PIXEL_TYPE_RGBNW,
     PIXEL_TYPE_RGBWW,
+    PIXEL_TYPE_RGB_N_W,
     NR_OF_PIXEL_TYPES,
 } EPixelType;
 

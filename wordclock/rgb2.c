@@ -26,6 +26,8 @@ void rgb2rgbw(TPixel pixel, EPixelType ledstripType) {
     case PIXEL_TYPE_RGBWW:
       whiteLedRGBDef = WARM_WHITE_3000K;
     break;
+    case PIXEL_TYPE_RGB_N_W:
+      pixel[WHITE_IDX] = 0; //don't use  the white led
     case PIXEL_TYPE_RGB:
     default:
       return; //This ledstrip doesn't need converstion

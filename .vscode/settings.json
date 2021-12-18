@@ -3,5 +3,5 @@
         "*.h": "c",
         "*.c": "c",
     },
-    "C_Cpp.default.compilerPath": "/esp-open-sdk/xtensa-lx106-elf/bin"
+    "C_Cpp.default.compilerPath": "${workspaceFolder}/esp-open-sdk/xtensa-lx106-elf/bin"
 }

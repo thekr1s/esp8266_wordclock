@@ -28,6 +28,7 @@ typedef enum {
     HARDWARE_11_11 = 0,
     HARDWARE_13_13,
     HARDWARE_9_8,
+    HARDWARE_13_13_NOT_ACCURATE,
     HARDWARE_13_13_V2,
     NR_OF_HARDWARE_TYPES,
 } EHardwareType;

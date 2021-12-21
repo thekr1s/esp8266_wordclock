@@ -19,7 +19,7 @@ $(shell touch version.c)
 # enable debugging for the sntp server
 #EXTRA_CFLAGS += -DSNTP_LOGD -DSNTP_LOGD_WITH_PRINTF
 
-CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
+CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE) -DBUILD_BY_RUTGER
 EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2
 
 PROGRAM=woordklok_dbg
@@ -37,3 +37,6 @@ do_flash:
 	esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 40m -fs 32m -fm dio
 	esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 40m -fs 32m -fm dio
 	esptool.py --baud 115200 write_flash 0x02000 $(FW_FILE) -ff 40m -fs 32m -fm dio
+
+deploy:
+	scp firmware/woordklok_dbg.bin_crc rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin

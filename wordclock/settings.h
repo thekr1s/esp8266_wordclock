@@ -15,7 +15,7 @@
 #include "displaySettings.h"
 #include "AddressableLedStrip.h"
 
-#define FLASH_MAGIC 0xBABEBAB3
+#define FLASH_MAGIC 0xBABEBAB4
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
 
@@ -26,16 +26,28 @@ typedef enum {
 
 typedef enum {
     HARDWARE_11_11 = 0,
-    HARDWARE_13_13 = 1,
-    HARDWARE_9_8 = 2,
+    HARDWARE_13_13,
+    HARDWARE_9_8,
+    HARDWARE_13_13_NOT_ACCURATE,
+    HARDWARE_13_13_V2,
+    NR_OF_HARDWARE_TYPES,
 } EHardwareType;
 
+typedef enum {
+    PIXEL_TYPE_RGB = 0,
+    PIXEL_TYPE_RGBW,
+    PIXEL_TYPE_RGBNW,
+    PIXEL_TYPE_RGBWW,
+    PIXEL_TYPE_RGB_N_W,
+    NR_OF_PIXEL_TYPES,
+} EPixelType;
 
 typedef struct {
     uint32_t magic;
     EAnimationType animation;
     ETextEffect textEffect;
     EHardwareType hardwareType;
+    EPixelType pixelType;
     uint32_t perfectImperfections;
     char hierbenikUrl[MAX_URL_SIZE];
     char hierbenikPort[MAX_PORT_SIZE];

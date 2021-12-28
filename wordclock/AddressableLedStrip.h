@@ -31,10 +31,19 @@ typedef enum {
     TEXTEFFECT_MAX,
 } ETextEffect;
 
+
+// See the definition of "ws2812_pixel_t"
+#define ALS_BYTES_PER_LED  4
+#define BLUE_IDX 	0
+#define GREEN_IDX 	1
+#define RED_IDX 	2
+#define WHITE_IDX 	3
+
+typedef uint8_t TPixel[ALS_BYTES_PER_LED];
+
 typedef void (*TAlsWriteFunction)(uint8_t* pData, uint32_t byteCount);
 
-void AlsInit(uint32_t rows, uint32_t cols, TAlsWriteFunction writeFunction, 
-		uint8_t redIdx, uint8_t greenIdx, uint8_t blueIdx, bool flipCols); 
+void AlsInit(uint32_t rows, uint32_t cols, TAlsWriteFunction writeFunction); 
 uint32_t AlsGetRows();
 uint32_t AlsGetCols();
 void AlsSetBackgroundColor(uint8_t red, uint8_t green, uint8_t blue);

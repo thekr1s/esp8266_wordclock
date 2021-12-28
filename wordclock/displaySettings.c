@@ -131,16 +131,15 @@ uint8_t ApplyBgBrightness(uint8_t color)
 }
 
 static void WS2812_I2S_WriteData(uint8_t* p, uint32_t length){  
-    ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGB);
+    if (g_settings.pixelType == PIXEL_TYPE_RGB) {
+        ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGB);
+    } else {
+        ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGBW);
+    }
 }
 
 void wordClockDisplay_init(void)
 {
-    uint8_t _redIdx   = 2;
-    uint8_t _greenIdx = 1;
-    uint8_t _blueIdx  = 0;
-    bool _flipCols = false;
-
     //Set the brightness on boot
     g_brightness = 70;
 
@@ -163,8 +162,12 @@ void wordClockDisplay_init(void)
     }
 
     CWInit(_displaySize[0],_displaySize[1]);
-    ws2812_i2s_init(_displaySize[0] *_displaySize[1], PIXEL_RGB);
-    AlsInit(_displaySize[0], _displaySize[1], WS2812_I2S_WriteData, _redIdx, _greenIdx, _blueIdx, _flipCols);
+    if (g_settings.pixelType == PIXEL_TYPE_RGB) {
+        ws2812_i2s_init(_displaySize[0] *_displaySize[1], PIXEL_RGB);
+    } else {
+        ws2812_i2s_init(_displaySize[0] *_displaySize[1], PIXEL_RGBW);
+    }
+    AlsInit(_displaySize[0], _displaySize[1], WS2812_I2S_WriteData);
 
     FontInit(AlsSetLed);
 }

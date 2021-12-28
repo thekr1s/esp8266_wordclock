@@ -11,6 +11,7 @@
 "<li><a href=\"/wificfg/clockcfg.html\">Clock Config</a></li>"
 "<li><a href=\"/wificfg/controller.html\">Controller</a></li>"
 "<li><a href=\"/wificfg/hwcfg.html\">System Config</a></li>"
+"<li><a href=\"/wificfg/debug.html\">Debug Info</a></li>"
 "<li class=\"icon\">"
 "<a href=\"javascript:void(0);\" onclick=\"myFunction()\">&#8801;</a>"
 "</li>"
@@ -24,6 +25,16 @@
 "<option value=\"0\"",">11*11</option>"
 "<option value=\"1\"",">13*13</option>"
 "<option value=\"2\"",">9*8</option>"
+"<option value=\"3\"",">13*13 not Accurate</option>"
+"<option value=\"4\"",">13*13 V2</option>"
+"</select></dd>"
+"<dt><label for=\"pt\">Pixel type</label></dt>"
+"<dd><select id=\"pt\" name=\"hw_pixeltype\">"
+"<option value=\"0\"",">RGB</option>"
+"<option value=\"1\"",">RGBW</option>"
+"<option value=\"2\"",">RGBNW</option>"
+"<option value=\"3\"",">RGBWW</option>"
+"<option value=\"4\"",">RGB(!W)</option>"
 "</select></dd>"
 "<dt><label for=\"imperfections\">Perfect Imperfections</label></dt>"
 "<dd><input id=\"imperfections\" type=\"checkbox\" name=\"hw_imperfections\" value=\"CheckOn\" ",
@@ -36,14 +47,14 @@
 "<input id=\"hierbenik\" type=\"text\" maxlength=\"99\" size=\"10\" name=\"hw_hierbenik_req\" placeholder=\"request\" value=\"",
 "\"></dd>"
 "<dt><label for=\"hierbenik\">Home lat / lon:</label></dt>"
-"<dd><input id=\"hierbenik\" type=\"text\" maxlength=\"10\" size=\"3\" name=\"home_lat\" placeholder=\"lat\" value=\"",
+"<dd><input id=\"hierbenik\" type=\"text\" maxlength=\"10\" size=\"5\" name=\"home_lat\" placeholder=\"lat\" value=\"",
 "\">"
-"<input id=\"hierbenik\" type=\"text\" maxlength=\"10\" size=\"3\" name=\"home_lon\" placeholder=\"lon\" value=\"",
+"<input id=\"hierbenik\" type=\"text\" maxlength=\"10\" size=\"5\" name=\"home_lon\" placeholder=\"lon\" value=\"",
 "\">" 
 "<button name=\"cl_command\" type=\"submit\" value=\"SetHome\">Set current location as home</button>"
 "</dd>"
 "<dt><label for=\"otafw\">OTA fw Server:</label></dt>"
-"<dd><input id=\"otafw\" type=\"text\" maxlength=\"99\" size=\"10\" name=\"hw_otafw_url\" placeholder=\"url\" value=\"",
+"<dd><input id=\"otafw\" type=\"text\" maxlength=\"99\" size=\"18\" name=\"hw_otafw_url\" placeholder=\"url\" value=\"",
 "\">"
 "<input id=\"otafw\" type=\"text\" maxlength=\"5\"  size=\"3\"name=\"hw_otafw_port\" placeholder=\"port\" value=\"",
 "\">"

@@ -24,7 +24,12 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      FLASH_MAGIC,
      ANIMATION_TRANSITION,
      TEXTEFFECT_NONE, // textEffect
+#ifdef BUILD_BY_RUTGER
+     HARDWARE_13_13,
+#else
      HARDWARE_11_11,
+#endif
+     PIXEL_TYPE_RGB,
 #ifdef BUILD_BY_RUTGER
      0,   // perfectImperfections
 #else

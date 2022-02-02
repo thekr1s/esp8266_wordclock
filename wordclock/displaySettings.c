@@ -147,7 +147,7 @@ void wordClockDisplay_init(void)
     gpio_enable(LEDSTRIP_GPIO_NR, GPIO_OUTPUT);
 
     printf("###ws2812##hardwareTyp is %d\n", g_settings.hardwareType);
-    if (g_settings.hardwareType == HARDWARE_13_13) {
+    if (g_settings.hardwareType == HARDWARE_13_13 || g_settings.hardwareType == HARDWARE_13_13_V2 || g_settings.hardwareType == HARDWARE_13_13_NOT_ACCURATE) {
         _displaySize[0] = 13;
         _displaySize[1] = 13;
     } else if (g_settings.hardwareType == HARDWARE_11_11) {

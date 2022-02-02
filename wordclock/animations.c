@@ -283,9 +283,9 @@ void DisplaySmiley2() {
 }
 
 void Fire(uint32_t ms) {
-	const uint8_t HEIGHT = 11;
-	const uint8_t WIDTH = 11;
-	uint8_t scn[ 11][ 11] = { { 0, }, };
+	const uint8_t HEIGHT = _displaySize[0];
+	const uint8_t WIDTH = _displaySize[1];
+	uint8_t scn[WORDCLOCK_ROWS_MAX][WORDCLOCK_COLLS_MAX] = { { 0, }, };
 	uint8_t r, c, t;
 	uint32_t start = xTaskGetTickCount();
 

@@ -1,11 +1,17 @@
 import FreeCAD, Draft
 
+import os
+import sys
+work_dir = os.path.split(os.path.abspath(os.getcwd()))[0]
+sys.path.append(work_dir)
+
 import LightDivider
 import FrontPlate
 from LetterPlateText import *
 
-GENERATE_RIBBA_13_13 = False 
-GENERATE_RIBBA_11_11 = True
+GENERATE_RIBBA_13_13 = False
+GENERATE_RIBBA_13_13_V2 = True
+GENERATE_RIBBA_11_11 = False
 
 INSERT_FRONT_PLATE = True
 INSERT_SCOTS = False
@@ -13,15 +19,22 @@ INSERT_SCOTS_BIG = False
 
 ########################################################
 ########################################################
-if GENERATE_RIBBA_13_13:
-	FONT = "C:/Users/Rutger/Dropbox/Hobby/wordclock_git/hardware/lettering_plates/fonts/LiberationMono-Regular-stencil.ttf"
+if GENERATE_RIBBA_13_13 or GENERATE_RIBBA_13_13_V2:
+	FONT = "C:/tmp/FreeCAD macros/fonts/LiberationMono-Regular-stencil.ttf"
 	FONT_SCALE = 0.90
 	LED_OFFSET = 1000.0/30.0	#1 meter / 30 leds
 	FRONT_PLATE_SIZE = 500.0
 	LDR_DIAMETER = 5.0	
 	SCOTS_DEPTH = 12.0
 	SCOTS_MATERIAL_THICKNESS = 5.0
-	WORDCLOCK_TEXT = WORDCLOCK_TEXT_13_13
+	if GENERATE_RIBBA_13_13:
+		FRONT_PLATE_SIZE = 500.0
+		FONT = "C:/tmp/FreeCAD macros/fonts/LiberationMono-Regular-stencil.ttf"
+		WORDCLOCK_TEXT = WORDCLOCK_TEXT_13_13
+	if GENERATE_RIBBA_13_13_V2:
+		FONT = "C:/tmp/FreeCAD macros/fonts/LiberationMono-V2.ttf"
+		FRONT_PLATE_SIZE = 550.0
+		WORDCLOCK_TEXT = WORDCLOCK_TEXT_13_13_V2
 	NUMBER_OF_LEDS = len(WORDCLOCK_TEXT[0]) #TODO we expect a even X and Y nr of leds
 
 ########################################################

@@ -49,12 +49,6 @@
 #include "controller.h"
 #include "esp_glue.h"
 
-typedef enum {
-    INVALID,
-    CONNECTED,
-    SOFT_AP,
-} wifiState_t;
-
 static char* _wifi_ap_ip_addr = "192.168.1.1";
 TaskHandle_t _http_task_handle;
 TaskHandle_t _dns_task_handle;
@@ -201,23 +195,34 @@ static void wifi_monitor_task(void *pvParameters) {
     }
     
     http_server_start(); //socket is reused for soft AP and normal mode
-    
-    wifiState_t state = INVALID;
+    uint8_t prvStatus = STATION_IDLE;
+
     while (true) {
-        if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-            if (state != SOFT_AP) { //only do something on a state change
-                printf("Woordclock is unable to connect to Wifi\n");
-                wificfg_start_softAP();
-                state = SOFT_AP;
-            }
-        } else {
-            if (state != CONNECTED) { 
-                printf("Woordclock is now connected to the Wifi\n");
-                wificfg_stop_soft_AP();
-                state = CONNECTED;
-            }
+        uint8_t status = sdk_wifi_station_get_connect_status();
+        if (status == prvStatus) {
+            SleepNI(10 * 1000); // Do nothing, wait for state change
+            continue;
         }
-        SleepNI(10 * 1000);
+        printf("Connect status changed from: %d, to: %d\n", prvStatus, status);
+        switch (status) {
+            case STATION_IDLE:
+                wificfg_start_softAP();
+            break;
+            case STATION_CONNECTING:
+            break;
+            case STATION_WRONG_PASSWORD:
+                wificfg_start_softAP();
+            break;
+            case STATION_NO_AP_FOUND:
+                wificfg_start_softAP();
+            break;
+            case STATION_CONNECT_FAIL:
+            break;
+            case STATION_GOT_IP:
+                wificfg_stop_soft_AP();
+            break;
+        }
+        prvStatus = status;
     }
 }
 

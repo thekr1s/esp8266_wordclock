@@ -39,4 +39,7 @@ do_flash:
 	esptool.py --baud 115200 write_flash 0x02000 $(FW_FILE) -ff 40m -fs 32m -fm dio
 
 deploy:
-	scp firmware/woordklok_dbg.bin_crc rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin
+	scp firmware/woordklok_dbg.bin rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin
+	sleep 10
+	python ../tools/fw_update_cmd.py
+

@@ -186,9 +186,8 @@ static void ota_http_task(void *PvParameter)
 
     _isBusy = false;
      vTaskDelete( NULL );
-
-
 }
+
 static ota_info info = {
     .server      = "",
     .port        = "",

@@ -20,6 +20,7 @@
 #define FLAG_IS_BG 0x1
 
 static TPixel _bgColor;
+static TPixel _frameCopy[ALS_MAX_LED_COUNT];
 
 typedef struct TFrame {
 	TPixel buff[ALS_MAX_LED_COUNT];
@@ -57,21 +58,20 @@ static void DisplayFrame(int frameIdx) {
 	TPixel* frame = _frames[frameIdx].buff;
 	uint8_t* flags = _frames[frameIdx].flags;
 
-	
 	for (int idx = 0; idx < _cols * _rows; idx++) {
 		if (flags[idx] & FLAG_IS_BG) {
 			frame[idx][RED_IDX] = _bgColor[RED_IDX];
 			frame[idx][GREEN_IDX] = _bgColor[GREEN_IDX];
 			frame[idx][BLUE_IDX] = _bgColor[BLUE_IDX];
 		}
-		if (g_settings.pixelType != PIXEL_TYPE_RGB) {
-			rgb2rgbw(frame[idx], g_settings.pixelType);
-		}
+		// For the RGBW leds the white LED is used to show shared value,
+		// The calculated RGBW value should not be stored in the frame, therefor make a copy
+		rgb2rgbw(_frameCopy[idx], frame[idx], g_settings.pixelType);
 	}
 	// int dbgidx = _cols * _rows - 1;
 	// printf("After: %d ; %d ; %d ; %d\n", frame[dbgidx][RED_IDX], frame[dbgidx][GREEN_IDX], frame[dbgidx][BLUE_IDX], frame[dbgidx][WHITE_IDX]);
 	
-	_writeFunction((uint8_t*)frame, _cols * _rows * ALS_BYTES_PER_LED);
+	_writeFunction((uint8_t*)_frameCopy, _cols * _rows * ALS_BYTES_PER_LED);
 
 	if (frameIdx == NEXTFAME_IDX) {
 		memcpy(_frames[CURRFAME_IDX].buff, _frames[NEXTFAME_IDX].buff, sizeof(_frames[0].buff));

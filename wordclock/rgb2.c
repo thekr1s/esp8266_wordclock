@@ -52,5 +52,5 @@ void rgb2rgbw(TPixel dstPixel, TPixel srcPixel, EPixelType ledstripType) {
   dstPixel[RED_IDX]   = (uint8_t)((double)srcPixel[RED_IDX]   - minWhiteValue * whiteLedRGBDef[0] / 255.0);
   dstPixel[GREEN_IDX] = (uint8_t)((double)srcPixel[GREEN_IDX] - minWhiteValue * whiteLedRGBDef[1] / 255.0);
   dstPixel[BLUE_IDX]  = (uint8_t)((double)srcPixel[BLUE_IDX]  - minWhiteValue * whiteLedRGBDef[2] / 255.0); 
-  dstPixel[WHITE_IDX] = (minWhiteValue <= 255 ? (uint8_t) minWhiteValue : 255);
+  dstPixel[WHITE_IDX] = (minWhiteValue <= 255.0 ? (uint8_t) minWhiteValue : 255);
 }

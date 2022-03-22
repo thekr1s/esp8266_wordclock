@@ -12,15 +12,12 @@
 #include "AddressableLedStrip.h"
 #include "displaySettings.h"
 #include "settings.h"
-#include "rgb2.h"
-
 
 #define ALS_MAX_LED_COUNT  (WORDCLOCK_ROWS_MAX * WORDCLOCK_COLLS_MAX)
 
 #define FLAG_IS_BG 0x1
 
 static TPixel _bgColor;
-static TPixel _frameCopy[ALS_MAX_LED_COUNT];
 
 typedef struct TFrame {
 	TPixel buff[ALS_MAX_LED_COUNT];
@@ -64,14 +61,11 @@ static void DisplayFrame(int frameIdx) {
 			frame[idx][GREEN_IDX] = _bgColor[GREEN_IDX];
 			frame[idx][BLUE_IDX] = _bgColor[BLUE_IDX];
 		}
-		// For the RGBW leds the white LED is used to show shared value,
-		// The calculated RGBW value should not be stored in the frame, therefor make a copy
-		rgb2rgbw(_frameCopy[idx], frame[idx], g_settings.pixelType);
 	}
 	// int dbgidx = _cols * _rows - 1;
 	// printf("After: %d ; %d ; %d ; %d\n", frame[dbgidx][RED_IDX], frame[dbgidx][GREEN_IDX], frame[dbgidx][BLUE_IDX], frame[dbgidx][WHITE_IDX]);
 	
-	_writeFunction((uint8_t*)_frameCopy, _cols * _rows * ALS_BYTES_PER_LED);
+	_writeFunction(frame, _cols * _rows);
 
 	if (frameIdx == NEXTFAME_IDX) {
 		memcpy(_frames[CURRFAME_IDX].buff, _frames[NEXTFAME_IDX].buff, sizeof(_frames[0].buff));

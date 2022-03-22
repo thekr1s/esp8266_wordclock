@@ -62,9 +62,7 @@ static void DisplayFrame(int frameIdx) {
 			frame[idx][BLUE_IDX] = _bgColor[BLUE_IDX];
 		}
 	}
-	// int dbgidx = _cols * _rows - 1;
-	// printf("After: %d ; %d ; %d ; %d\n", frame[dbgidx][RED_IDX], frame[dbgidx][GREEN_IDX], frame[dbgidx][BLUE_IDX], frame[dbgidx][WHITE_IDX]);
-	
+
 	_writeFunction(frame, _cols * _rows);
 
 	if (frameIdx == NEXTFAME_IDX) {

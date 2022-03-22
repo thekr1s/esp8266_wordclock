@@ -132,14 +132,14 @@ uint8_t ApplyBgBrightness(uint8_t color)
     return (uint8_t)(t / 255);
 }
 
-static void WS2812_I2S_WriteData(TPixel* p, uint32_t length){  
+static void WS2812_I2S_WriteData(TPixel* pixels, uint32_t nrOfPixels){  
     if (g_settings.pixelType == PIXEL_TYPE_RGB) {
-        ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGB);
+        ws2812_i2s_update((ws2812_pixel_t*) pixels, PIXEL_RGB);
     } else {
         // For the RGBW leds the white LED is used to show common value,
-		// The calculated RGBW value should not be stored in the frame, therefor make a copy
-		for (int i = 0; i< length; i++) {
-            rgb2rgbw(_frameCopy[i], p[i], g_settings.pixelType);
+        // The calculated RGBW value should not be stored in the frame, therefor make a copy
+        for (int i = 0; i < nrOfPixels; i++) {
+            rgb2rgbw(_frameCopy[i], pixels[i], g_settings.pixelType);
         }
         ws2812_i2s_update((ws2812_pixel_t*) _frameCopy, PIXEL_RGBW);
     }

@@ -12,6 +12,6 @@
 #include "settings.h"
 #include "AddressableLedStrip.h"
 
-void rgb2rgbw(TPixel pixel, EPixelType ledstripType);
+void rgb2rgbw(TPixel dstPixel, TPixel srcPixel, EPixelType ledstripType);
 
 #endif

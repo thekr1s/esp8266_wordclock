@@ -160,7 +160,7 @@ void ShowTime(int delayMS) {
 		if (DoReDisplay) {
 			AlsFill(0,0,0);
 			AlsSetBackgroundColor(BGRGB_FROM_SETTING);
-			if (g_settings.hardwareType == HARDWARE_13_13) {
+			if (g_settings.hardwareType == HARDWARE_13_13 || g_settings.hardwareType == HARDWARE_13_13_V2) {
 				CWDisplayAccurateTime(h, m, s, RGB_FROM_SETTING);
 			} else {
 				CWDisplayTime(h, m, RGB_FROM_SETTING);

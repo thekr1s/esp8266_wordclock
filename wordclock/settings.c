@@ -25,7 +25,7 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      ANIMATION_TRANSITION,
      TEXTEFFECT_NONE, // textEffect
 #ifdef BUILD_BY_RUTGER
-     HARDWARE_13_13,
+     HARDWARE_13_13_V2,
 #else
      HARDWARE_11_11,
 #endif
@@ -41,8 +41,8 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      0.0, // home lat
      0.0, // home lon
 #ifdef BUILD_BY_RUTGER
-     "rutger798.mynetgear.com",  // otaFwUrl
-     "6912",   // otaFwPort
+     "http://rutger798.mynetgear.com",  // otaFwUrl
+     "8090",   // otaFwPort
 #else
      "http://download.wssns.nl",  // otaFwUrl
      "80",   // otaFwPort

@@ -10,7 +10,7 @@
 
 #include "stdbool.h"
 
-void CWInit(uint32_t rows, uint32_t cols);
+void CWInit();
 void CWSet(const char* word, uint8_t r, uint8_t g, uint8_t b);
 void CWDisplayTime(uint32_t hours, uint32_t minutes, uint8_t r, uint8_t g, uint8_t b);
 void CWDisplayAccurateTime(uint32_t hours, uint32_t minutes,  uint32_t seconds, uint8_t r, uint8_t g, uint8_t b);

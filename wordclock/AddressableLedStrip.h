@@ -41,7 +41,7 @@ typedef enum {
 
 typedef uint8_t TPixel[ALS_BYTES_PER_LED];
 
-typedef void (*TAlsWriteFunction)(uint8_t* pData, uint32_t byteCount);
+typedef void (*TAlsWriteFunction)(TPixel* pixels, uint32_t nrOfPixels);
 
 void AlsInit(uint32_t rows, uint32_t cols, TAlsWriteFunction writeFunction); 
 uint32_t AlsGetRows();

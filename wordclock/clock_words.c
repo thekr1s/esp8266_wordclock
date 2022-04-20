@@ -18,7 +18,7 @@ typedef enum {
 } TDIRECTION;
 
 typedef struct {
-	char wordText[10];
+	char wordText[11];
 	/* TDIRECTION */ uint8_t dir;
 	uint8_t row;
 	uint8_t col;
@@ -149,9 +149,9 @@ static const TKlocWord _klockWords_13x13_V2[] = {
         {"nu", DIR_HORIZONTAL, 12, 7, 0b11},
 
         {"wacht", DIR_HORIZONTAL, 3, 4, 0b11111},
-        {"even", DIR_HORIZONTAL, 2, 8, 0b1111},
+        {"even", DIR_HORIZONTAL, 2, 9, 0b1111},
 
-        {"by rmw", DIR_HORIZONTAL, 4, 0, 0b110000111},
+        {"by rmw", DIR_HORIZONTAL, 4, 0, 0b110111},
 
         {"",0,0,0}
 };

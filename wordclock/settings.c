@@ -25,7 +25,7 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      ANIMATION_TRANSITION,
      TEXTEFFECT_NONE, // textEffect
 #ifdef BUILD_BY_RUTGER
-     HARDWARE_13_13,
+     HARDWARE_13_13_V2,
 #else
      HARDWARE_11_11,
 #endif

@@ -15,8 +15,6 @@
 #include "espressif/esp_common.h"
 #include "ws2812_i2s/ws2812_i2s.h"
 
-#include <sntp.h>
-
 #include <AddressableLedStrip.h>
 #include <clock_words.h>
 #include <font.h>

@@ -24,6 +24,7 @@
 #include <buttons.h>
 #include <hier_ben_ik.h>
 #include <wificfg.h>
+#include <http_server.h>
 #include <sntp_client.h>
 #include <wordclock_main.h>
 #include <settings.h>
@@ -136,5 +137,6 @@ void user_init(void)
     HbiInit();
     sntp_client_init();
     wificfg_init();
+    http_server_start(); //socket is reused for soft AP and normal mode
 	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 2, NULL);
 }

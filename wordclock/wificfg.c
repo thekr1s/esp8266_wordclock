@@ -49,6 +49,15 @@
 #include "controller.h"
 #include "esp_glue.h"
 
+#define CONNECTION_TIMEOUT_SEC 60
+
+typedef enum {
+    WIFI_STATE_IDLE,
+    WIFI_STATE_SOFT_AP_STARTED,
+    WIFI_STATE_CONNECTED,
+} EWifiState;
+
+static EWifiState _state = WIFI_STATE_IDLE;
 static char* _wifi_ap_ip_addr = "192.168.1.1";
 TaskHandle_t _http_task_handle;
 TaskHandle_t _dns_task_handle;
@@ -121,8 +130,9 @@ static void dns_task(void *pvParameters)
         }
         uint32_t task_value = 0;
         if (xTaskNotifyWait(0, 1, &task_value, 0) == pdTRUE) {
-            if (task_value)
+            if (task_value) {
                 break;
+            }
         }
     }
     printf("Stopping DNS server");
@@ -142,7 +152,11 @@ static void dns_stop() {
 }
 
 static void wificfg_start_softAP() {
+    printf("Starting Soft accesspoint, dhcp server and dns server\r\n");
+
+    sys_lock_tcpip_core();
     sdk_wifi_set_opmode(STATIONAP_MODE);
+    sys_unlock_tcpip_core();
 
     uint32_t chip_id = sdk_system_get_chip_id();
     struct sdk_softap_config ap_config = {
@@ -174,59 +188,73 @@ static void wificfg_start_softAP() {
     
     dns_start();
     wifi_scan_ap_start();
+    _state = WIFI_STATE_SOFT_AP_STARTED;
 }
 
 static void wificfg_stop_soft_AP() {
+    printf("Stopping Soft accesspoint, dhcp server and dns server\r\n");
     dhcpserver_stop();
     dns_stop();
     wifi_scan_ap_stop();
+    
+    sys_lock_tcpip_core();
     sdk_wifi_set_opmode(STATION_MODE);
+    sys_unlock_tcpip_core();
+    _state = WIFI_STATE_IDLE;
 }
 
 static void wifi_monitor_task(void *pvParameters) {
-    // Give the ESP some time to startup.
-    for (int i = 0; i<5; i++) {
-        if (sdk_wifi_station_get_connect_status() != STATION_CONNECTING) {
-            printf("Station is done!\n");
-            break;
-        }
-        printf("Station is busy connecting, wait...\n");
-        Sleep(2000);
-    }
     
-    http_server_start(); //socket is reused for soft AP and normal mode
-    uint8_t prvStatus = STATION_IDLE;
-
+    uint32_t timeout = 0;
     while (true) {
+        SleepNI(5 * 1000);
         uint8_t status = sdk_wifi_station_get_connect_status();
-        if (status == prvStatus) {
-            SleepNI(10 * 1000); // Do nothing, wait for state change
-            continue;
-        }
-        printf("Connect status changed from: %d, to: %d\n", prvStatus, status);
         switch (status) {
             case STATION_IDLE:
-                wificfg_start_softAP();
+                printf("WiFi: idle.\r\n");
+                if (_state != WIFI_STATE_SOFT_AP_STARTED) {
+                    wificfg_start_softAP();
+                }
             break;
             case STATION_CONNECTING:
+                printf("WiFi: connecting.\r\n");
+                if (timeout > CONNECTION_TIMEOUT_SEC) {
+                    printf("WiFi: connecting.\r\n");
+                    wificfg_start_softAP();
+                    timeout = 0;
+                }
+                timeout ++;
             break;
             case STATION_WRONG_PASSWORD:
-                wificfg_start_softAP();
+                printf("WiFi: wrong password.\r\n");
+                if (_state != WIFI_STATE_SOFT_AP_STARTED) {
+                    wificfg_start_softAP();
+                }
             break;
             case STATION_NO_AP_FOUND:
-                wificfg_start_softAP();
+                printf("WiFi: AP not found.\r\n");
+                if (_state != WIFI_STATE_SOFT_AP_STARTED) {
+                    wificfg_start_softAP();
+                }
             break;
             case STATION_CONNECT_FAIL:
+                printf("WiFi: connection failed.\r\n");
+                if (_state != WIFI_STATE_SOFT_AP_STARTED) {
+                    wificfg_start_softAP();
+                }
             break;
             case STATION_GOT_IP:
-                wificfg_stop_soft_AP();
+                if (_state != WIFI_STATE_CONNECTED) {
+                    printf("WiFi: connected.\r\n");
+                    wificfg_stop_soft_AP();
+                }
+                _state = WIFI_STATE_CONNECTED;
             break;
         }
-        prvStatus = status;
     }
 }
 
 void wificfg_init()
 {
-    xTaskCreate(wifi_monitor_task, "WiFi monitor", 256, NULL, 2, NULL);
+    xTaskCreate(wifi_monitor_task, "WiFi monitor", 256, NULL, 3, NULL);
 }

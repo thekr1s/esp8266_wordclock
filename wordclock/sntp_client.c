@@ -19,12 +19,10 @@
 #include <lwip/netdb.h>
 #include <lwip/dns.h>
 
-/* Add extras/sntp component to makefile for this include to work */
+/* SNTP is a extra component, this is inculded in the makefile */
 #include <sntp.h>
 #include <time.h>
 
-#define SNTP_SERVERS 	"0.pool.ntp.org", "1.pool.ntp.org", \
-						"2.pool.ntp.org", "3.pool.ntp.org"
 
 #define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_PERIOD_MS)
 #define UNUSED_ARG(x)	(void)x
@@ -34,7 +32,6 @@ static struct timezone _tz = {1*60, 0};
 static time_t _startSummerTime, _endSummerTime;
 static int _currentYear = 0;
 static volatile uint32_t _rtcTicsPerSec = 0;
-static const char *servers[] = {SNTP_SERVERS};
 
 static void calculateSummertime(time_t* start, time_t* end) {
 	time_t ts = time(NULL);
@@ -88,6 +85,13 @@ static void correctDST() {
 	}
 }
 
+bool sntp_client_time_valid(void) {
+	if (_rtcTicsPerSec == 0) return false;
+
+	uint32_t age = time(NULL) - sntp_last_update_ts();
+	return (age <= (2 * UPDATE_INERVAL) / 1000)? true : false;
+}
+
 void sntp_tsk(void *pvParameters)
 {
 	UNUSED_ARG(pvParameters);
@@ -114,26 +118,19 @@ void sntp_tsk(void *pvParameters)
 		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;	
 		
 		correctDST();
+		if (!sntp_client_time_valid()) {
+			printf("Time is out of sync\r\n");
+		}
 		
 		// time_t ts = time(NULL);
 		// printf("TIME: %s", ctime(&ts));
 	}
 }
 
-bool sntp_client_time_valid(void) {
-	if (_rtcTicsPerSec == 0) return false;
-
-	uint32_t age = time(NULL) - sntp_last_update_ts();
-	return (age <= (2 * UPDATE_INERVAL) / 1000)? true : false;
-}
-
 void sntp_client_init(void)
 {
 	printf("Starting SNTP... \n");
-
 	sntp_set_update_delay(UPDATE_INERVAL/60); //Increase the startup update interval
-	sntp_set_servers(servers, sizeof(servers) / sizeof(char*));
 	sntp_initialize(&_tz);
-    
-	xTaskCreate(sntp_tsk, "SNTP", 256, NULL, 1, NULL);
+	xTaskCreate(sntp_tsk, "SNTP", 256, NULL, 2, NULL);
 }

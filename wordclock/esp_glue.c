@@ -20,8 +20,6 @@
 #include <sysparam.h>
 
 #include <esp_glue.h>
-#include <event_handler.h>
-#include <buttons.h>
 #include <hier_ben_ik.h>
 #include <wificfg.h>
 #include <http_server.h>
@@ -64,7 +62,6 @@ void SleepNI(uint32_t ms) {
 uint32_t Sleep(uint32_t ms) {
 	while ( ms > 0) {
 		if (_isInterrupted) return ms;
-		SetInterrupted(ButtonsAnyPressed());
 		SleepNI(ms > 100 ? 100 : ms);
 		ms = ms > 100 ? ms - 100 : 0;
 	}
@@ -130,10 +127,8 @@ void user_init(void)
 	//Low level init
     SettingsInit();
 	wordClockDisplay_init();
-	ButtonsInit();
 
     //Start tasks
-	//EvtHdlInit(); //This task doesn't do any thing
     HbiInit();
     sntp_client_init();
     wificfg_init();

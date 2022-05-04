@@ -20,7 +20,6 @@
 #include <font.h>
 
 #include <wordclock_main.h>
-#include <buttons.h>
 #include <ldr.h>
 #include <hier_ben_ik.h>
 #include <sntp_client.h>
@@ -28,7 +27,6 @@
 
 #include "esp_glue.h"
 #include <ota_basic.h>
-#include <buttons.h>
 #include "displaySettings.h"
 #include "settings.h"
 #include "controller.h"
@@ -132,13 +130,6 @@ void ShowTime(int delayMS) {
 	endTicks = xTaskGetTickCount() + (delayMS / portTICK_PERIOD_MS);
 	while (xTaskGetTickCount() < endTicks){
 		TimeGet(&h, &m, &s);
-		if (ButtonHandleButtons()) {
-			SetInterrupted(false);
-			DoReDisplay = true;
-			prevMin = m; // Prevent transition effect
-			SettingsScheduleStore();
-			endTicks = xTaskGetTickCount() + 5000/portTICK_PERIOD_MS;
-		}
 		if (Interrupted()) {
 			// Interrupted via WEB interface
 			SetInterrupted(false);
@@ -258,10 +249,6 @@ void WordclockMain(void* p)
 			} else {
 				timeShowDuration = 5000;
 			}
-		}
-		if (ButtonsAnyPressed()) {
-			// ShowTime handles the buttons...
-			ShowTime(5000);
 		}
 
 		SetInterrupted(false);

@@ -18,18 +18,13 @@
 #include <AddressableLedStrip.h>
 
 #define SETTINGS_KEY "wc-cfg"
+#define HW_SETTINGS_KEY "wc-hw-cfg"
 
 static volatile uint32_t g_storeTS = 0;
 static const TSettings g_settings_default __attribute__((aligned(4))) = {
      FLASH_MAGIC,
      ANIMATION_TRANSITION,
      TEXTEFFECT_NONE, // textEffect
-#ifdef BUILD_BY_RUTGER
-     HARDWARE_13_13_V2,
-#else
-     HARDWARE_11_11,
-#endif
-     PIXEL_TYPE_RGB,
 #ifdef BUILD_BY_RUTGER
      0,   // perfectImperfections
 #else
@@ -57,9 +52,21 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
      FLASH_MAGIC
 };
 
+static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
+    FLASH_MAGIC_HW,
+#ifdef BUILD_BY_RUTGER
+    HARDWARE_13_13_V2,
+#else
+    HARDWARE_11_11,
+#endif
+    PIXEL_TYPE_RGB,
+    {0},
+};
+
 void SettingsInit() {
     size_t actual_size;
     g_settings.magic = 0;
+    g_hw_settings.magic = 0;
     sysparam_get_data_static(SETTINGS_KEY, (uint8_t*)&g_settings, sizeof(g_settings), &actual_size, NULL);
     if (actual_size == sizeof(g_settings) && (g_settings.magic == FLASH_MAGIC)) {
         printf("Valid settings read from sysparams flash\r\n");
@@ -68,16 +75,28 @@ void SettingsInit() {
         printf("Use default settings\r\n");
         memcpy((uint8_t*)&g_settings, (uint8_t*)&g_settings_default, sizeof(TSettings));
     }
+
+    sysparam_get_data_static(HW_SETTINGS_KEY, (uint8_t*)&g_hw_settings, sizeof(g_hw_settings), &actual_size, NULL);
+    if (actual_size == sizeof(g_hw_settings) && (g_hw_settings.magic == FLASH_MAGIC_HW)) {
+        printf("Valid hardware settings read from sysparams flash\r\n");
+    } else {
+        printf("No valid hardware settings found, size %d, magic: %08x\r\n", actual_size, g_hw_settings.magic);
+        printf("Use default settings\r\n");
+        memcpy((uint8_t*)&g_hw_settings, (uint8_t*)&g_hw_settings_default, sizeof(TSettings));
+    }
 }
 
 void SettingsWrite(){
-    printf("########## saved config to flash##########\n");
+    printf("########## saved config to flash##########\r\n");
 
     AlsFill(0, ApplyBrightness(100), 0);
     AlsRefresh(ALSEFFECT_NONE);
 
     sysparam_set_string(SETTINGS_KEY, "");
     sysparam_set_data(SETTINGS_KEY, (uint8_t*)&g_settings, sizeof(g_settings), true);
+
+    sysparam_set_string(HW_SETTINGS_KEY, "");
+    sysparam_set_data(HW_SETTINGS_KEY, (uint8_t*)&g_hw_settings, sizeof(g_hw_settings), true);
     SleepNI(300);
 }
 

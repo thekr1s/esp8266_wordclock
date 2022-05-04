@@ -414,7 +414,7 @@ void CWDisplayAccurateTime(uint32_t hours, uint32_t minutes,  uint32_t seconds, 
 
 void CWInit() {
 	
-	switch (g_settings.hardwareType) {
+	switch (g_hw_settings.hardwareType) {
 		case HARDWARE_9_8:
 			_klockWords = _klockWords_9x8;
 		break;

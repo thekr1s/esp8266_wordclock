@@ -22,34 +22,34 @@
 
 static volatile uint32_t g_storeTS = 0;
 static const TSettings g_settings_default __attribute__((aligned(4))) = {
-     FLASH_MAGIC,
-     ANIMATION_TRANSITION,
-     TEXTEFFECT_NONE, // textEffect
+    FLASH_MAGIC,
+    ANIMATION_TRANSITION,
+    TEXTEFFECT_NONE, // textEffect
 #ifdef BUILD_BY_RUTGER
-     0,   // perfectImperfections
+    0,   // perfectImperfections
 #else
-     1,   // perfectImperfections
+    1,   // perfectImperfections
 #endif
-     "",  // hierbenikUrl
-     "80",   // hierbenikPort
-     "/get_with_age.php",  // hierbenikRequest
-     0.0, // home lat
-     0.0, // home lon
+    "",  // hierbenikUrl
+    "80",   // hierbenikPort
+    "/get_with_age.php",  // hierbenikRequest
+    0.0, // home lat
+    0.0, // home lon
 #ifdef BUILD_BY_RUTGER
-     "http://rutger798.mynetgear.com",  // otaFwUrl
-     "8090",   // otaFwPort
+    "http://rutger798.mynetgear.com",  // otaFwUrl
+    "8090",   // otaFwPort
 #else
-     "http://download.wssns.nl",  // otaFwUrl
-     "80",   // otaFwPort
+    "http://download.wssns.nl",  // otaFwUrl
+    "80",   // otaFwPort
 #endif
-     OTA_FW_RELEASE, //otaFwType
-     {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
-     1, // reserved
-     0, // brightnessOffset
-     {255,255,255}, // colorIdx = White
-     {0,0,0},       // bgColorIdx = Black
-     52220, // timerPeriodTicks
-     FLASH_MAGIC
+    OTA_FW_RELEASE, //otaFwType
+    {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
+    1, // reserved
+    0, // brightnessOffset
+    {255,255,255}, // colorIdx = White
+    {0,0,0},       // bgColorIdx = Black
+    52220, // timerPeriodTicks
+    {0}, //reserved[]
 };
 
 static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
@@ -60,7 +60,7 @@ static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
     HARDWARE_11_11,
 #endif
     PIXEL_TYPE_RGB,
-    {0},
+    {0}, //reserved[]
 };
 
 void SettingsInit() {

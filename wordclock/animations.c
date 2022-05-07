@@ -102,7 +102,7 @@ const uint8_t _smiley2[] = {
 
 
 void ShowSplash(){
-	if (g_settings.hardwareType == HARDWARE_13_13) {
+	if (g_hw_settings.hardwareType == HARDWARE_13_13) {
 		DisplayWord("By RMW");
 	} else {
 		AlsFill(5,5,5);

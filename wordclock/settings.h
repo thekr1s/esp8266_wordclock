@@ -62,7 +62,7 @@ typedef struct {
     TColor color;
     TColor bgColor;
     uint32_t timerPeriodTicks;
-    uint32_t magic_end;
+    uint8_t reserved[128];
 } TSettings;
 
 // The HW settings are static for a certain hardware build.
@@ -72,7 +72,7 @@ typedef struct {
     uint32_t magic;
     EHardwareType hardwareType;
     EPixelType pixelType;
-    uint8_t reserved[256];
+    uint8_t reserved[128];
 } THwSettings;
 
 TSettings g_settings __attribute__((aligned(4)));

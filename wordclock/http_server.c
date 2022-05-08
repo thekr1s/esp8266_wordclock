@@ -605,7 +605,6 @@ static void handle_wifi_station_post(int s, wificfg_method method,
                         struct sdk_station_config config = {"", "", 0, {0}};
                         strncpy((char*)config.ssid, ssid, sizeof(config.ssid));
                         strncpy((char*)config.password, password, sizeof(config.password));
-                        sdk_wifi_set_opmode(STATION_MODE);
                         if (!sdk_wifi_station_set_config(&config)) {
                             printf("ERROR sdk_wifi_station_set_config\n");
                         }

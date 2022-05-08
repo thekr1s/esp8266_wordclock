@@ -213,7 +213,7 @@ void OtaUpdateInit(void)
         info.server = &g_settings.otaFwUrl[7]; // strip the http://
         info.port = g_settings.otaFwPort;
         info.binary_path = get_fw_filename(true);
-        xTaskCreate(&ota_http_task, "http_ota_client", 4096, &info, 2, NULL);
+        xTaskCreate(&ota_http_task, "http_ota_client", 2096, &info, 2, NULL);
     } else {
         // Use TFTP
         xTaskCreate(&tftp_client_task, "tftp_ota_client", 2048, NULL, 2, NULL);

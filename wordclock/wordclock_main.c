@@ -215,7 +215,11 @@ void WordclockMain(void* p)
 	}
 
 	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		DisplayWord("No WiFi!");
+		if (sdk_wifi_station_get_connect_status() == STATION_WRONG_PASSWORD) {
+			DisplayWord("Wrong password!!!");
+		} else {
+			DisplayWord("No WiFi!");
+		}
 		DisplayWord(" Connect to woordklok WiFi and sign in");
 		Sleep(3000);
 	}

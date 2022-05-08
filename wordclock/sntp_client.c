@@ -118,9 +118,6 @@ void sntp_tsk(void *pvParameters)
 		_rtcTicsPerSec = (RTC.COUNTER - t) / delaySec;	
 		
 		correctDST();
-		if (!sntp_client_time_valid()) {
-			printf("Time is out of sync\r\n");
-		}
 		
 		// time_t ts = time(NULL);
 		// printf("TIME: %s", ctime(&ts));

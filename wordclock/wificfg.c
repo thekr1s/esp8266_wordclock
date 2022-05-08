@@ -49,13 +49,24 @@
 #include "controller.h"
 #include "esp_glue.h"
 
-#define CONNECTION_TIMEOUT_SEC 60
+#define SLEEP_TIME                  (1000)
+#define RECONNECTING_TIMEOUT_SEC    (30 * 60)
 
 typedef enum {
     WIFI_STATE_IDLE,
     WIFI_STATE_SOFT_AP_STARTED,
     WIFI_STATE_CONNECTED,
+    WIFI_STATE_CONNECTION_LOST,
 } EWifiState;
+
+// NOTE this should match the esp_sta.h STATION enum
+static char *station_status_strings[] =  {"idle", \
+                                "connecting", \
+                                "wrong password", \
+                                "no ap found", \
+                                "connect failed", \
+                                "got IP address"};
+
 
 static EWifiState _state = WIFI_STATE_IDLE;
 static char* _wifi_ap_ip_addr = "192.168.1.1";
@@ -154,9 +165,7 @@ static void dns_stop() {
 static void wificfg_start_softAP() {
     printf("Starting Soft accesspoint, dhcp server and dns server\r\n");
 
-    sys_lock_tcpip_core();
     sdk_wifi_set_opmode(STATIONAP_MODE);
-    sys_unlock_tcpip_core();
 
     uint32_t chip_id = sdk_system_get_chip_id();
     struct sdk_softap_config ap_config = {
@@ -197,58 +206,54 @@ static void wificfg_stop_soft_AP() {
     dns_stop();
     wifi_scan_ap_stop();
     
-    sys_lock_tcpip_core();
     sdk_wifi_set_opmode(STATION_MODE);
-    sys_unlock_tcpip_core();
-    _state = WIFI_STATE_IDLE;
 }
 
-static void wifi_monitor_task(void *pvParameters) {
-    
+static void wifi_monitor_task(void *pvParameters) 
+{
     uint32_t timeout = 0;
+
+    sdk_wifi_set_opmode(STATION_MODE);
+    sdk_wifi_station_set_auto_connect(TRUE);
+    Sleep(5 * 1000); // Let the esp connection settle for 5 seconds
+
     while (true) {
-        SleepNI(5 * 1000);
+        Sleep(SLEEP_TIME);
         uint8_t status = sdk_wifi_station_get_connect_status();
         switch (status) {
             case STATION_IDLE:
-                printf("WiFi: idle.\r\n");
-                if (_state != WIFI_STATE_SOFT_AP_STARTED) {
-                    wificfg_start_softAP();
-                }
-            break;
             case STATION_CONNECTING:
-                printf("WiFi: connecting.\r\n");
-                if (timeout > CONNECTION_TIMEOUT_SEC) {
-                    printf("WiFi: connecting.\r\n");
-                    wificfg_start_softAP();
-                    timeout = 0;
-                }
-                timeout ++;
-            break;
             case STATION_WRONG_PASSWORD:
-                printf("WiFi: wrong password.\r\n");
-                if (_state != WIFI_STATE_SOFT_AP_STARTED) {
-                    wificfg_start_softAP();
-                }
-            break;
             case STATION_NO_AP_FOUND:
-                printf("WiFi: AP not found.\r\n");
-                if (_state != WIFI_STATE_SOFT_AP_STARTED) {
-                    wificfg_start_softAP();
-                }
-            break;
             case STATION_CONNECT_FAIL:
-                printf("WiFi: connection failed.\r\n");
-                if (_state != WIFI_STATE_SOFT_AP_STARTED) {
-                    wificfg_start_softAP();
+                printf("WiFi status: %s.\r\n", station_status_strings[status]);
+                switch (_state) {
+                    case WIFI_STATE_IDLE:
+                        wificfg_start_softAP();
+                    break;
+                    case WIFI_STATE_SOFT_AP_STARTED:
+                        // Do nothing
+                    break;
+                    case WIFI_STATE_CONNECTED:
+                        timeout = 0;
+                        _state = WIFI_STATE_CONNECTION_LOST;
+                    case WIFI_STATE_CONNECTION_LOST:
+                        timeout ++;
+                        printf("Lost connection for %d seconds\r\n", timeout);
+                        if(timeout > RECONNECTING_TIMEOUT_SEC) {
+                            printf("Reconnect timout, Reboot!\r\n");
+                            SleepNI(100);
+                            sdk_system_restart();
+                        }
+                    break;
                 }
             break;
             case STATION_GOT_IP:
-                if (_state != WIFI_STATE_CONNECTED) {
+                if (_state == WIFI_STATE_IDLE || _state == WIFI_STATE_SOFT_AP_STARTED) {
                     printf("WiFi: connected.\r\n");
                     wificfg_stop_soft_AP();
                 }
-                _state = WIFI_STATE_CONNECTED;
+                _state = WIFI_STATE_CONNECTED;   
             break;
         }
     }

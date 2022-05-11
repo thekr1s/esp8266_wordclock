@@ -219,7 +219,9 @@ static void wifi_monitor_task(void *pvParameters)
 {
     uint32_t timeout = 0;
 
+    sys_lock_tcpip_core();
     sdk_wifi_set_opmode(STATION_MODE);
+    sys_unlock_tcpip_core();
     sdk_wifi_station_set_auto_connect(TRUE);
 
     while (true) {
@@ -260,9 +262,16 @@ static void wifi_monitor_task(void *pvParameters)
                 }
             break;
             case STATION_GOT_IP:
-                if (_state == WIFI_STATE_IDLE || _state == WIFI_STATE_SOFT_AP_STARTED) {
-                    printf("WiFi: connected.\r\n");
-                    wificfg_stop_soft_AP();
+                switch (_state) {
+                    case WIFI_STATE_SOFT_AP_STARTED:
+                        wificfg_stop_soft_AP();
+                        // There is no break by design
+                    case WIFI_STATE_IDLE:
+                    case WIFI_STATE_CONNECTION_LOST:
+                        printf("WiFi: connected.\r\n");
+                    break;
+                    case WIFI_STATE_CONNECTED:
+                    break;
                 }
                 _state = WIFI_STATE_CONNECTED;   
             break;

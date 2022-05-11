@@ -52,14 +52,14 @@ static void calculateSummertime(time_t* start, time_t* end) {
 	pTM->tm_mon = 2; 
 	pTM->tm_mday = startDay;
 	*start = mktime(pTM);
-	printf("Start summer time: %s\n", asctime(localtime(start)));
+	printf("Start summer time: %s", asctime(localtime(start)));
 
 	// End summer time is on oktober == month number 9
 	pTM->tm_mon = 9; 
 	pTM->tm_mday = endDay;
 	pTM->tm_hour += 1; //also extra hour becuase we leave summer time
 	*end = mktime(pTM);
-	printf("End summer time: %s\n", asctime(localtime(end)));
+	printf("End summer time: %s", asctime(localtime(end)));
 }
 
 static void correctDST() {

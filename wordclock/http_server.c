@@ -608,7 +608,7 @@ static void handle_wifi_station_post(int s, wificfg_method method,
                         if (!sdk_wifi_station_set_config(&config)) {
                             printf("ERROR sdk_wifi_station_set_config\n");
                         }
-                        Sleep(1000);
+                        SleepNI(1000);
                         sdk_system_restart();
                     } else if (strcmp(buf, "Refresh") == 0) {
                         printf("Refresh page !!!\n");

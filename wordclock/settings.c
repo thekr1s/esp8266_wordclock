@@ -49,7 +49,7 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
     {255,255,255}, // colorIdx = White
     {0,0,0},       // bgColorIdx = Black
     52220, // timerPeriodTicks
-    {0}, //reserved[]
+    {0xff}, //reserved[]
 };
 
 static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
@@ -60,7 +60,7 @@ static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
     HARDWARE_11_11,
 #endif
     PIXEL_TYPE_RGB,
-    {0}, //reserved[]
+    {0xff}, //reserved[]
 };
 
 void SettingsInit() {

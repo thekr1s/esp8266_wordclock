@@ -15,7 +15,7 @@
 #include "task.h"
 #include "esp8266.h"
 #include "mbedtls/sha256.h"
-
+#include "assert.h"
 #include "ota-tftp.h"
 #include "rboot-api.h"
 #include "esp_glue.h"
@@ -76,7 +76,7 @@ static void tftpclient_download_and_verify_file1(int slot, rboot_config *conf)
         return;
     }
     rboot_set_current_rom(slot);
-    Sleep(1000);
+    SleepNI(1000);
     sdk_system_restart();
 }
 
@@ -174,12 +174,11 @@ static void ota_http_task(void *PvParameter)
         ota_error_handling(err);
 
         if(err != OTA_UPDATE_DONE) {
-            Sleep(1000);
+            SleepNI(1000);
             printf("\n\n\n");
             continue;
-        } 
-
-        Sleep(1000);
+        }
+        SleepNI(1000);
         printf("Reset\n");
         sdk_system_restart();
     }
@@ -197,7 +196,9 @@ static ota_info info = {
 
 void OtaUpdateInit(void)
 {
-	if (_isBusy) return;
+	if (_isBusy) {
+        return;
+    }
 
     rboot_config conf = rboot_get_config();
     printf("\r\n\r\nCurrently running on flash slot %d / %d.\r\n\r\n",
@@ -213,9 +214,10 @@ void OtaUpdateInit(void)
         info.server = &g_settings.otaFwUrl[7]; // strip the http://
         info.port = g_settings.otaFwPort;
         info.binary_path = get_fw_filename(true);
-        xTaskCreate(&ota_http_task, "http_ota_client", 2096, &info, 2, NULL);
+        // High water mark still shows ~1600 bytes left after update
+        assert(pdPASS==xTaskCreate(&ota_http_task, "http_ota_client", 2048, &info, 2, NULL));
     } else {
         // Use TFTP
-        xTaskCreate(&tftp_client_task, "tftp_ota_client", 2048, NULL, 2, NULL);
+        assert(pdPASS==xTaskCreate(&tftp_client_task, "tftp_ota_client", 2048, NULL, 2, NULL));
     }
 }

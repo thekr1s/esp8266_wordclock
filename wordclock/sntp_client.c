@@ -129,5 +129,5 @@ void sntp_client_init(void)
 	printf("Starting SNTP... \n");
 	sntp_set_update_delay(UPDATE_INERVAL/60); //Increase the startup update interval
 	sntp_initialize(&_tz);
-	xTaskCreate(sntp_tsk, "SNTP", 256, NULL, 2, NULL);
+	xTaskCreate(sntp_tsk, "SNTP", 256, NULL, 3, NULL);
 }

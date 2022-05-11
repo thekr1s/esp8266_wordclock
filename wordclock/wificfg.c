@@ -50,6 +50,7 @@
 #include "esp_glue.h"
 
 #define SLEEP_TIME                  (1000)
+#define CONNECTING_TIMEOUT_SEC      (1 * 60)
 #define RECONNECTING_TIMEOUT_SEC    (30 * 60)
 
 typedef enum {
@@ -164,8 +165,10 @@ static void dns_stop() {
 
 static void wificfg_start_softAP() {
     printf("Starting Soft accesspoint, dhcp server and dns server\r\n");
-
+    
+    sys_lock_tcpip_core();
     sdk_wifi_set_opmode(STATIONAP_MODE);
+    sys_unlock_tcpip_core();
 
     uint32_t chip_id = sdk_system_get_chip_id();
     struct sdk_softap_config ap_config = {
@@ -206,7 +209,10 @@ static void wificfg_stop_soft_AP() {
     dns_stop();
     wifi_scan_ap_stop();
     
+    sys_lock_tcpip_core();
     sdk_wifi_set_opmode(STATION_MODE);
+    sys_unlock_tcpip_core();
+
 }
 
 static void wifi_monitor_task(void *pvParameters) 
@@ -215,14 +221,18 @@ static void wifi_monitor_task(void *pvParameters)
 
     sdk_wifi_set_opmode(STATION_MODE);
     sdk_wifi_station_set_auto_connect(TRUE);
-    Sleep(5 * 1000); // Let the esp connection settle for 5 seconds
 
     while (true) {
-        Sleep(SLEEP_TIME);
+        SleepNI(SLEEP_TIME);
         uint8_t status = sdk_wifi_station_get_connect_status();
         switch (status) {
-            case STATION_IDLE:
             case STATION_CONNECTING:
+                if(timeout < CONNECTING_TIMEOUT_SEC) {
+                    timeout ++;
+                    continue;
+                }
+            // There is no break by design
+            case STATION_IDLE:
             case STATION_WRONG_PASSWORD:
             case STATION_NO_AP_FOUND:
             case STATION_CONNECT_FAIL:
@@ -237,6 +247,7 @@ static void wifi_monitor_task(void *pvParameters)
                     case WIFI_STATE_CONNECTED:
                         timeout = 0;
                         _state = WIFI_STATE_CONNECTION_LOST;
+                    break;
                     case WIFI_STATE_CONNECTION_LOST:
                         timeout ++;
                         printf("Lost connection for %d seconds\r\n", timeout);

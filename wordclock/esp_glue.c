@@ -15,6 +15,7 @@
 #include <stdio.h> // printf
 #include <stdint.h>
 #include <string.h>
+#include <assert.h>
 #include <time.h>
 #include <sys/types.h>
 #include <sysparam.h>
@@ -81,7 +82,6 @@ void TimeGet(uint32_t* h, uint32_t* m, uint32_t* s){
     *s = pTM->tm_sec;
 }
 
-
 void test_sysparam() {
     char test[20];
     char *pTtest = test;
@@ -133,6 +133,6 @@ void user_init(void)
     HbiInit();
     sntp_client_init();
     wificfg_init();
-    http_server_start(); //socket is reused for soft AP and normal mode
-	xTaskCreate(WordclockMain, "Main task", 1024, NULL, 2, NULL);
+    http_server_start();
+	xTaskCreate(WordclockMain, "Main task", 512, NULL, 2, NULL);
 }

@@ -605,11 +605,10 @@ static void handle_wifi_station_post(int s, wificfg_method method,
                         struct sdk_station_config config = {"", "", 0, {0}};
                         strncpy((char*)config.ssid, ssid, sizeof(config.ssid));
                         strncpy((char*)config.password, password, sizeof(config.password));
-                        sdk_wifi_set_opmode(STATION_MODE);
                         if (!sdk_wifi_station_set_config(&config)) {
                             printf("ERROR sdk_wifi_station_set_config\n");
                         }
-                        Sleep(1000);
+                        SleepNI(1000);
                         sdk_system_restart();
                     } else if (strcmp(buf, "Refresh") == 0) {
                         printf("Refresh page !!!\n");
@@ -780,13 +779,13 @@ static void handle_hw_cfg(int s, wificfg_method method,
     	// Hardware Version
 		for (int i = 0; i < NR_OF_HARDWARE_TYPES; i++) {
 			if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
-			if (g_settings.hardwareType == i) wificfg_write_string(s, "selected");
+			if (g_hw_settings.hardwareType == i) wificfg_write_string(s, "selected");
 		}
 
         // Pixel Types
 		for (int i = 0; i < NR_OF_PIXEL_TYPES; i++) {
 			if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
-			if (g_settings.pixelType == i) wificfg_write_string(s, "selected");
+			if (g_hw_settings.pixelType == i) wificfg_write_string(s, "selected");
 		}
         // Perfect Imperfections
         wificfg_write_string(s, http_hw_cfg_content[++idx]);
@@ -872,9 +871,9 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             wificfg_form_url_decode(buf);
             printf("%s %s %s\n", __FUNCTION__, name, buf);
             if (strcmp(name, "hw_hardwaretype") == 0) {
-                g_settings.hardwareType = atoi(buf);
+                g_hw_settings.hardwareType = atoi(buf);
             } else if (strcmp(name, "hw_pixeltype") == 0) {
-                g_settings.pixelType = atoi(buf);
+                g_hw_settings.pixelType = atoi(buf);
             } else if (strcmp(name, "hw_imperfections") == 0) {
                 if (strstr(buf, "CheckOn") != NULL) {
                     g_settings.perfectImperfections = 1;
@@ -901,7 +900,7 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             } else if (strcmp(name, "image_Type") == 0) {
                 g_settings.otaFwType = atoi(buf);
             } else if (strcmp(name, "cl_command") == 0) {
-                printf("cl_command: %s", buf);
+                printf("cl_command: %s\n", buf);
             	if (strcmp(buf, "SetHome") == 0){
                     HbiGetLatLon(&g_settings.hierbenikHomeLat, &g_settings.hierbenikHomeLon);
                     printf("%f %f\n", g_settings.hierbenikHomeLat, g_settings.hierbenikHomeLon);

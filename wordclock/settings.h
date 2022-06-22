@@ -15,7 +15,8 @@
 #include "displaySettings.h"
 #include "AddressableLedStrip.h"
 
-#define FLASH_MAGIC 0xBABEBAB4
+#define FLASH_MAGIC 0xBABEBAB5
+#define FLASH_MAGIC_HW 0xC0FEC0FE   // THIS MAGIC SHOULD NOT CHANGE
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
 
@@ -46,8 +47,6 @@ typedef struct {
     uint32_t magic;
     EAnimationType animation;
     ETextEffect textEffect;
-    EHardwareType hardwareType;
-    EPixelType pixelType;
     uint32_t perfectImperfections;
     char hierbenikUrl[MAX_URL_SIZE];
     char hierbenikPort[MAX_PORT_SIZE];
@@ -63,10 +62,21 @@ typedef struct {
     TColor color;
     TColor bgColor;
     uint32_t timerPeriodTicks;
-    uint32_t magic_end;
+    uint8_t reserved[128];
 } TSettings;
 
+// The HW settings are static for a certain hardware build.
+// This prevents unreadable clocks when TSettings is updated (13x13 clock is unreadale when set to 11x11)
+// By splitting this settings, TSettings can freely be changed and assigned new defaults,
+typedef struct {
+    uint32_t magic;
+    EHardwareType hardwareType;
+    EPixelType pixelType;
+    uint8_t reserved[128];
+} THwSettings;
+
 TSettings g_settings __attribute__((aligned(4)));
+THwSettings g_hw_settings __attribute__((aligned(4)));
 
 #define COLOR_FROM_SETTING g_settings.color
 #define RGB_FROM_SETTING  ApplyBrightness(COLOR_FROM_SETTING.r), \

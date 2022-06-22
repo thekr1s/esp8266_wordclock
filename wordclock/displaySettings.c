@@ -25,7 +25,9 @@
 #include <clock_words.h>
 #include <font.h>
 #include "settings.h"
+#include "rgb2.h"
 
+TPixel _frameCopy[WORDCLOCK_ROWS_MAX * WORDCLOCK_COLLS_MAX];
 uint16_t _aLdrLevels[] = {808, 800, 700, 550, 300, 100, 50, 30, 10, 5};
 static bool g_inNightMode = false;
 
@@ -130,11 +132,16 @@ uint8_t ApplyBgBrightness(uint8_t color)
     return (uint8_t)(t / 255);
 }
 
-static void WS2812_I2S_WriteData(uint8_t* p, uint32_t length){  
-    if (g_settings.pixelType == PIXEL_TYPE_RGB) {
-        ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGB);
+static void WS2812_I2S_WriteData(TPixel* pixels, uint32_t nrOfPixels){  
+    if (g_hw_settings.pixelType == PIXEL_TYPE_RGB) {
+        ws2812_i2s_update((ws2812_pixel_t*) pixels, PIXEL_RGB);
     } else {
-        ws2812_i2s_update((ws2812_pixel_t*) p, PIXEL_RGBW);
+        // For the RGBW leds the white LED is used to show common value,
+        // The calculated RGBW value should not be stored in the frame, therefor make a copy
+        for (int i = 0; i < nrOfPixels; i++) {
+            rgb2rgbw(_frameCopy[i], pixels[i], g_hw_settings.pixelType);
+        }
+        ws2812_i2s_update((ws2812_pixel_t*) _frameCopy, PIXEL_RGBW);
     }
 }
 
@@ -146,14 +153,14 @@ void wordClockDisplay_init(void)
     // Configure the GPIO
     gpio_enable(LEDSTRIP_GPIO_NR, GPIO_OUTPUT);
 
-    printf("###ws2812##hardwareTyp is %d\n", g_settings.hardwareType);
-    if (g_settings.hardwareType == HARDWARE_13_13 || g_settings.hardwareType == HARDWARE_13_13_V2 || g_settings.hardwareType == HARDWARE_13_13_NOT_ACCURATE) {
+    printf("###ws2812##hardwareTyp is %d\n", g_hw_settings.hardwareType);
+    if (g_hw_settings.hardwareType == HARDWARE_13_13 || g_hw_settings.hardwareType == HARDWARE_13_13_V2 || g_hw_settings.hardwareType == HARDWARE_13_13_NOT_ACCURATE) {
         _displaySize[0] = 13;
         _displaySize[1] = 13;
-    } else if (g_settings.hardwareType == HARDWARE_11_11) {
+    } else if (g_hw_settings.hardwareType == HARDWARE_11_11) {
         _displaySize[0] = 11;
         _displaySize[1] = 11;
-    } else if (g_settings.hardwareType == HARDWARE_9_8) {
+    } else if (g_hw_settings.hardwareType == HARDWARE_9_8) {
         _displaySize[0] = 9;
         _displaySize[1] = 8;
     } else {
@@ -161,8 +168,8 @@ void wordClockDisplay_init(void)
         _displaySize[1] = 11;
     }
 
-    CWInit(_displaySize[0],_displaySize[1]);
-    if (g_settings.pixelType == PIXEL_TYPE_RGB) {
+    CWInit();
+    if (g_hw_settings.pixelType == PIXEL_TYPE_RGB) {
         ws2812_i2s_init(_displaySize[0] *_displaySize[1], PIXEL_RGB);
     } else {
         ws2812_i2s_init(_displaySize[0] *_displaySize[1], PIXEL_RGBW);

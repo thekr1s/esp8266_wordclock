@@ -10,6 +10,7 @@
 #include "c_types.h"
 #include "font.h"
 #include "clock_words.h"
+#include "settings.h"
 
 typedef enum {
 	DIR_HORIZONTAL,
@@ -17,7 +18,7 @@ typedef enum {
 } TDIRECTION;
 
 typedef struct {
-	char wordText[10];
+	char wordText[11];
 	/* TDIRECTION */ uint8_t dir;
 	uint8_t row;
 	uint8_t col;
@@ -102,64 +103,59 @@ static const TKlocWord _klockWords_11x11[] = {
 		
 		{"",0,0,0}
 };
-#if 0
-static const TKlocWord _klockWords_13x13[] = {
+static const TKlocWord _klockWords_13x13_V2[] = {
         {"het", DIR_HORIZONTAL, 12, 0, 0b111},
         {"is", DIR_HORIZONTAL, 12, 4, 0b11},
-        {"vijf_min", DIR_HORIZONTAL, 9, 0, 0b1111},
-        {"tien_min", DIR_HORIZONTAL, 7, 9, 0b1111},
 
-        {"een_min", DIR_HORIZONTAL, 12, 7, 0b111},
-        {"twee_min", DIR_HORIZONTAL, 11, 0, 0b1111},
-        {"drie_min", DIR_HORIZONTAL, 6, 0, 0b1111},
-        {"vier_min", DIR_HORIZONTAL, 9, 9, 0b1111},
-
-        {"zes_min", DIR_HORIZONTAL, 11, 9, 0b111},
-        {"zeven_min", DIR_HORIZONTAL, 7, 0, 0b11111},
-        {"acht_min", DIR_HORIZONTAL, 10, 7, 0b1111},
-        {"negen_min", DIR_HORIZONTAL, 9, 4, 0b11111},
+        {"een_min", DIR_HORIZONTAL, 8, 2, 0b111},
+        {"twee_min", DIR_HORIZONTAL, 8, 0, 0b1111},
+        {"drie_min", DIR_HORIZONTAL, 10, 0, 0b1111},
+        {"vier_min", DIR_HORIZONTAL, 11, 0, 0b1111},
+        {"vijf_min", DIR_HORIZONTAL, 9, 9, 0b1111},
+        {"zes_min", DIR_HORIZONTAL, 6, 0, 0b111},
+        {"zeven_min", DIR_HORIZONTAL, 9, 0, 0b11111},
+        {"acht_min", DIR_HORIZONTAL, 7, 0, 0b1111},
+        {"negen_min", DIR_HORIZONTAL, 10, 4, 0b11111},
+        {"tien_min", DIR_HORIZONTAL, 8, 9, 0b1111},
 
         {"elf_min", DIR_HORIZONTAL, 12, 10, 0b111},
-        {"twaalf_min", DIR_HORIZONTAL, 8, 0, 0b111111},
-        {"dertie_min", DIR_HORIZONTAL, 10, 0, 0b1111111},
-        {"veerti_min", DIR_HORIZONTAL, 7, 5, 0b1111},
+        {"twaalf_min", DIR_HORIZONTAL, 6, 7, 0b111111},
+        {"der_tnm", DIR_HORIZONTAL, 11, 6, 0b1111111},
+        {"veer_tnm", DIR_HORIZONTAL, 8, 5, 0b11111111},
+        {"kwart", DIR_HORIZONTAL, 7, 8, 0b11111},
+        {"zes_tnm", DIR_HORIZONTAL, 6, 0, 0b1111111},
+        {"zeven_tnm", DIR_HORIZONTAL, 9, 0, 0b111111111},
+        {"acht_tnm", DIR_HORIZONTAL, 7, 0, 0b11111111},
+        {"negen_tnm", DIR_HORIZONTAL, 10, 4, 0b111111111},
 
+        {"half", DIR_HORIZONTAL, 4, 9, 0b1111},
+        {"voor", DIR_HORIZONTAL, 5, 8, 0b1111},
+        {"over", DIR_HORIZONTAL, 5, 3, 0b1111},
 
-        {"kwart", DIR_HORIZONTAL, 8, 7, 0b11111},
-        {"half", DIR_HORIZONTAL, 5, 0, 0b1111},
-        {"voor", DIR_HORIZONTAL, 6, 9, 0b1111},
-        {"over", DIR_HORIZONTAL, 6, 5, 0b1111},
+        {"een", DIR_HORIZONTAL, 2, 2, 0b111},
+        {"twee", DIR_HORIZONTAL, 2, 0, 0b1111},
+        {"drie", DIR_HORIZONTAL, 3, 9, 0b1111},
+        {"vier", DIR_HORIZONTAL, 1, 0, 0b1111},
+        {"vijf", DIR_HORIZONTAL, 3, 0, 0b1111},
+        {"zes", DIR_HORIZONTAL, 2, 5, 0b111},
+        {"zeven", DIR_HORIZONTAL, 2, 8, 0b11111},
+        {"acht", DIR_HORIZONTAL, 3, 5, 0b1111},
+        {"negen", DIR_HORIZONTAL, 1, 7, 0b11111},
+        {"tien", DIR_HORIZONTAL, 1, 4, 0b1111},
+        {"elf", DIR_HORIZONTAL, 0, 0, 0b111},
+        {"twaalf", DIR_HORIZONTAL, 0, 3, 0b111111},
 
-        {"een", DIR_HORIZONTAL, 4, 8, 0b111},
-        {"twee", DIR_HORIZONTAL, 5, 5, 0b1111},
-        {"drie", DIR_HORIZONTAL, 2, 8, 0b1111},
-        {"vier", DIR_HORIZONTAL, 1, 5, 0b1111},
-        {"vijf", DIR_HORIZONTAL, 2, 4, 0b1111},
-        {"zes", DIR_HORIZONTAL, 3, 6, 0b111},
-        {"zeven", DIR_HORIZONTAL, 3, 6, 0b11111},
-        {"acht", DIR_HORIZONTAL, 1, 0, 0b1111},
-        {"negen", DIR_HORIZONTAL, 4, 0, 0b11111},
-        {"tien", DIR_HORIZONTAL, 2, 0, 0b1111},
-        {"elf", DIR_HORIZONTAL, 4, 5, 0b111},
-        {"twaalf", DIR_HORIZONTAL, 3, 0, 0b111111},
+        {"uur", DIR_HORIZONTAL, 0, 10, 0b111},
+        {"nu", DIR_HORIZONTAL, 12, 7, 0b11},
 
-        {"uur", DIR_HORIZONTAL, 1, 10, 0b111},
+        {"wacht", DIR_HORIZONTAL, 3, 4, 0b11111},
+        {"even", DIR_HORIZONTAL, 2, 9, 0b1111},
 
-        {"bijna", DIR_HORIZONTAL, 11, 4, 0b11111},
-        {"nu", DIR_HORIZONTAL, 10, 11, 0b11},
-        {"geweest", DIR_HORIZONTAL, 0, 0, 0b1111111},
-
-
-        {"wacht", DIR_HORIZONTAL, 10, 7, 0b11111},
-        {"even", DIR_HORIZONTAL, 3, 7, 0b1111},
-
-        {"am", DIR_HORIZONTAL, 0, 8, 0b11},
-        {"pm", DIR_HORIZONTAL, 0, 10, 0b11},
-
+        {"by rmw", DIR_HORIZONTAL, 4, 0, 0b110111},
 
         {"",0,0,0}
 };
-#else
+
 static const TKlocWord _klockWords_13x13[] = {
         {"het", DIR_HORIZONTAL, 12, 0, 0b111},
         {"is", DIR_HORIZONTAL, 12, 4, 0b11},
@@ -215,7 +211,7 @@ static const TKlocWord _klockWords_13x13[] = {
 
         {"",0,0,0}
 };
-#endif
+
 const char* _hourNames[] = {
 		"twaalf",
 		"een",
@@ -416,14 +412,22 @@ void CWDisplayAccurateTime(uint32_t hours, uint32_t minutes,  uint32_t seconds, 
 	}
 }
 
-void CWInit(uint32_t rows, uint32_t  cols) {
+void CWInit() {
 	
-	if (rows == 11 && cols == 11) {
-		_klockWords = _klockWords_11x11;
-	} else if (rows == 13 && cols == 13) {
-		_klockWords = _klockWords_13x13;
-	} else {
-		_klockWords = _klockWords_9x8;
+	switch (g_hw_settings.hardwareType) {
+		case HARDWARE_9_8:
+			_klockWords = _klockWords_9x8;
+		break;
+		default:
+		case HARDWARE_11_11:
+			_klockWords = _klockWords_11x11;
+		break;
+		case HARDWARE_13_13:
+		case HARDWARE_13_13_NOT_ACCURATE:
+			_klockWords = _klockWords_13x13;
+		break;
+		case HARDWARE_13_13_V2:
+			_klockWords = _klockWords_13x13_V2;
+		break;
 	}
-
 }

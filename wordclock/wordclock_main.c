@@ -15,8 +15,6 @@
 #include "espressif/esp_common.h"
 #include "ws2812_i2s/ws2812_i2s.h"
 
-#include <sntp.h>
-
 #include <AddressableLedStrip.h>
 #include <clock_words.h>
 #include <font.h>
@@ -160,7 +158,7 @@ void ShowTime(int delayMS) {
 		if (DoReDisplay) {
 			AlsFill(0,0,0);
 			AlsSetBackgroundColor(BGRGB_FROM_SETTING);
-			if (g_settings.hardwareType == HARDWARE_13_13) {
+			if (g_hw_settings.hardwareType == HARDWARE_13_13 || g_hw_settings.hardwareType == HARDWARE_13_13_V2) {
 				CWDisplayAccurateTime(h, m, s, RGB_FROM_SETTING);
 			} else {
 				CWDisplayTime(h, m, RGB_FROM_SETTING);
@@ -217,7 +215,11 @@ void WordclockMain(void* p)
 	}
 
 	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		DisplayWord("No WiFi!");
+		if (sdk_wifi_station_get_connect_status() == STATION_WRONG_PASSWORD) {
+			DisplayWord("Wrong password!!!");
+		} else {
+			DisplayWord("No WiFi!");
+		}
 		DisplayWord(" Connect to woordklok WiFi and sign in");
 		Sleep(3000);
 	}

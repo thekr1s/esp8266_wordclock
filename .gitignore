@@ -7,5 +7,6 @@ lettering_plates/freecad_13_13/dxfReader.py
 lettering_plates/freecad_13_13/dxfLibrary.py
 lettering_plates/freecad_13_13/dxfImportObjects.py
 lettering_plates/freecad_13_13/dxfColorMap.py
+hardware/backpannel/pcb_files/Ledstrips_PCB-backups
 tools/Config/*png
 tools/Config/ESP8266MAC.txt

@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name "woordklok_symbol")(type "KiCad")(uri "${KIPRJMOD}/kicad_lib/woordklok_symbol.kicad_sym")(options "")(descr ""))
-)

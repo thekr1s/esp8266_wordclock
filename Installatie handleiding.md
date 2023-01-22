@@ -22,6 +22,9 @@ De klok haalt zijn tijd op vanaf het internet, Dit kan de klok alleen doen zodra
 <img src="images/handleiding/sign_in_popup.png" alt="drawing" width="160"/>
 - Als alles goed is gegaan ziet u nu deze pagina: \
 <img src="images/handleiding/Inlog_pagina.png" alt="drawing" width="160"/>
+- Indien u de Pop-up niet krijgt zoals bij sommige Samsung telefoons. 
+- drukt u lang op de woordklokxxxxxx wifi en daarna op router beheer zoals: \
+<img src="images/handleiding/router_beheer_changes.jpeg" alt="drawing" width="160"/>
 
 ### Stap 3
 - Selecteer uw WiFi Thuis door op de `Select` te klikken

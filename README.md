@@ -2,6 +2,8 @@
 ```
 git clone https://github.com/thekr1s/esp8266_wordclock.git
 cd esp8266_wordclock/esp-open-rtos
+# NOTE Bearssl is outdated, and doesn't support CAfile, therefor disable check
+git config --global http.sslverify false
 git submodule update --init --recursive
 cd ..
 tar -xvf esp-open-sdk.tgz 

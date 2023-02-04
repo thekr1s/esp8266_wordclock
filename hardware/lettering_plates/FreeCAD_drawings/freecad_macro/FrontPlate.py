@@ -57,8 +57,10 @@ class front_plate:
     def make_hole_for_ldr(self):
         TopOfFirstLine = self.posFirstLetterBottemLeft.y + self.ledOffset
         SpaceBeteenTopEnFirstLine = self.length - TopOfFirstLine
-        positionLdr = FreeCAD.Vector(self.frontPlateCenter.x, self.height - ((SpaceBeteenTopEnFirstLine/3.0)*2.0), 0)
-        print("LDR offcet: " + str(((SpaceBeteenTopEnFirstLine/3.0)*2.0)))
+        ldrOffset = ((SpaceBeteenTopEnFirstLine/3.0)*2.0)
+        ldrOffset = 22.22222222222221+25
+        positionLdr = FreeCAD.Vector(self.frontPlateCenter.x, self.height - ldrOffset, 0)
+        print("LDR offcet: " + str(ldrOffset))
         PlaceLdr = FreeCAD.Placement(positionLdr, FreeCAD.Rotation(0,0,0))
         ldrCircle = Draft.makeCircle(self.ldrDiameter/2.0, PlaceLdr)
         self.part.addObject(ldrCircle)

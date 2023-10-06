@@ -380,7 +380,7 @@
       "idf": "",
       "netlist": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "backpannel_pcb_11x11_small.step",
       "vrml": ""
     },
     "page_layout_descr_file": ""

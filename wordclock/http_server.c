@@ -790,6 +790,16 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // Perfect Imperfections
         wificfg_write_string(s, http_hw_cfg_content[++idx]);
         if (g_settings.perfectImperfections == 1) wificfg_write_string(s, "checked");
+
+        // Zomer/Winter tijd correctie
+        wificfg_write_string(s, http_hw_cfg_content[++idx]);
+        if (g_settings.correctDST == 1) wificfg_write_string(s, "checked");
+
+        // Timezone offset (UTC)
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        bzero(tempStr, sizeof(tempStr));
+        snprintf(tempStr, sizeof(tempStr)-1, "%d", g_settings.timeZoneHourUTC);
+        if (wificfg_write_string(s, tempStr) < 0) return;
         
         // HierBenIk url
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
@@ -848,7 +858,9 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
     size_t rem = content_length;
     bool valp = false;
 
-    g_settings.perfectImperfections = 0; //Checkbox don't send anything when unchecked, so first set the value to unset.
+    //Checkbox don't send anything when unchecked, so first set the value to unset.
+    g_settings.perfectImperfections = 0;
+    g_settings.correctDST = 0;
     while (rem > 0) {
         int r = wificfg_form_name_value(s, &valp, &rem, buf, len);
 
@@ -878,6 +890,12 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                 if (strstr(buf, "CheckOn") != NULL) {
                     g_settings.perfectImperfections = 1;
                 }
+            } else if (strcmp(name, "hw_correctdst") == 0) {
+                if (strstr(buf, "CheckOn") != NULL) {
+                    g_settings.correctDST = 1;
+                }
+            } else if (strcmp(name, "hw_timezone") == 0) {
+                sscanf(buf, "%d", &g_settings.timeZoneHourUTC);
             } else if (strcmp(name, "hw_hierbenik_url") == 0) {
                 bzero(g_settings.hierbenikUrl, sizeof(g_settings.hierbenikUrl));
                 strncpy(g_settings.hierbenikUrl, buf, sizeof(g_settings.hierbenikUrl) - 1);

@@ -48,6 +48,8 @@ typedef struct {
     EAnimationType animation;
     ETextEffect textEffect;
     uint32_t perfectImperfections;
+    uint32_t correctDST;
+    int timeZoneHourUTC;
     char hierbenikUrl[MAX_URL_SIZE];
     char hierbenikPort[MAX_PORT_SIZE];
     char hierbenikRequest[MAX_URL_SIZE];

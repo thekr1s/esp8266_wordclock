@@ -77,10 +77,10 @@ static void correctDST() {
 		newDst = 1;
 	}
 	
-	if (newDst != _timeZone.tz_dsttime || _timeZone.tz_minuteswest != g_settings.timeZoneHourUTC * 60) {
-		_timeZone.tz_minuteswest = g_settings.timeZoneHourUTC * 60;
+	if (newDst != _timeZone.tz_dsttime || _timeZone.tz_minuteswest != g_settings.timeZoneOffsetMinuts) {
+		_timeZone.tz_minuteswest = g_settings.timeZoneOffsetMinuts;
 		_timeZone.tz_dsttime = newDst;
-		printf("Changing timezone, timezone offset: %d hours, DST to: %d hour\n", _timeZone.tz_minuteswest/60, _timeZone.tz_dsttime);
+		printf("Changing timezone, timezone offset: %02d:%02d hours, DST is: %d \n", _timeZone.tz_minuteswest/60, _timeZone.tz_minuteswest%60, _timeZone.tz_dsttime);
 		sntp_set_timezone(&_timeZone); //Change is made after NTP update.
 	}
 }

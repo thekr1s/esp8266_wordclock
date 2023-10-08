@@ -31,7 +31,7 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
     1,   // perfectImperfections
 #endif
     1,   // Correct DTS (UTC)
-    1,   // Timezone offset
+    60,  // Timezone offset in minuts
     "",  // hierbenikUrl
     "80",   // hierbenikPort
     "/get_with_age.php",  // hierbenikRequest

@@ -798,7 +798,7 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // Timezone offset (UTC)
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
         bzero(tempStr, sizeof(tempStr));
-        snprintf(tempStr, sizeof(tempStr)-1, "%d", g_settings.timeZoneHourUTC);
+        snprintf(tempStr, sizeof(tempStr)-1, "%02d:%02d", g_settings.timeZoneOffsetMinuts/60, g_settings.timeZoneOffsetMinuts%60);
         if (wificfg_write_string(s, tempStr) < 0) return;
         
         // HierBenIk url
@@ -855,6 +855,8 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
     }
 
     printf("BUF: %s\n", buf);
+    char name[30];
+    int tmp1, tmp2;
     size_t rem = content_length;
     bool valp = false;
 
@@ -869,8 +871,6 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
         }
 
         wificfg_form_url_decode(buf);
-
-        char name[30];
         bzero(name, sizeof(name));
         strncpy(name, buf, sizeof(name) - 1);
 
@@ -895,7 +895,9 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                     g_settings.correctDST = 1;
                 }
             } else if (strcmp(name, "hw_timezone") == 0) {
-                sscanf(buf, "%d", &g_settings.timeZoneHourUTC);
+                if (sscanf(buf, "%d:%d", &tmp1, &tmp2) == 2) {
+                    g_settings.timeZoneOffsetMinuts = (tmp1 * 60) + tmp2;
+                }
             } else if (strcmp(name, "hw_hierbenik_url") == 0) {
                 bzero(g_settings.hierbenikUrl, sizeof(g_settings.hierbenikUrl));
                 strncpy(g_settings.hierbenikUrl, buf, sizeof(g_settings.hierbenikUrl) - 1);

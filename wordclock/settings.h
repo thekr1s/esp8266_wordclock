@@ -15,7 +15,7 @@
 #include "displaySettings.h"
 #include "AddressableLedStrip.h"
 
-#define FLASH_MAGIC 0xBABEBAB5
+#define FLASH_MAGIC 0xBABEBAB6
 #define FLASH_MAGIC_HW 0xC0FEC0FE   // THIS MAGIC SHOULD NOT CHANGE
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
@@ -49,7 +49,7 @@ typedef struct {
     ETextEffect textEffect;
     uint32_t perfectImperfections;
     uint32_t correctDST;
-    int timeZoneHourUTC;
+    int timeZoneOffsetMinuts;
     char hierbenikUrl[MAX_URL_SIZE];
     char hierbenikPort[MAX_PORT_SIZE];
     char hierbenikRequest[MAX_URL_SIZE];

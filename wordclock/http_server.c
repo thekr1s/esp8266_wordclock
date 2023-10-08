@@ -798,7 +798,7 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // Timezone offset (UTC)
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
         bzero(tempStr, sizeof(tempStr));
-        snprintf(tempStr, sizeof(tempStr)-1, "%02d:%02d", g_settings.timeZoneOffsetMinuts/60, g_settings.timeZoneOffsetMinuts%60);
+        snprintf(tempStr, sizeof(tempStr)-1, "%02d:%02d", g_settings.timeZoneOffsetMinuts/60, abs(g_settings.timeZoneOffsetMinuts%60));
         if (wificfg_write_string(s, tempStr) < 0) return;
         
         // HierBenIk url
@@ -896,7 +896,11 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                 }
             } else if (strcmp(name, "hw_timezone") == 0) {
                 if (sscanf(buf, "%d:%d", &tmp1, &tmp2) == 2) {
-                    g_settings.timeZoneOffsetMinuts = (tmp1 * 60) + tmp2;
+                    if (tmp1 > 0) {
+                        g_settings.timeZoneOffsetMinuts = (tmp1 * 60) + tmp2;
+                    } else {
+                        g_settings.timeZoneOffsetMinuts = (tmp1 * 60) - tmp2;
+                    }
                 }
             } else if (strcmp(name, "hw_hierbenik_url") == 0) {
                 bzero(g_settings.hierbenikUrl, sizeof(g_settings.hierbenikUrl));

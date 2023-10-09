@@ -22,13 +22,13 @@
 /* SNTP is a extra component, this is inculded in the makefile */
 #include <sntp.h>
 #include <time.h>
-
+#include "settings.h"
 
 #define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_PERIOD_MS)
 #define UNUSED_ARG(x)	(void)x
 #define UPDATE_INERVAL (5 * 60000)
 
-static struct timezone _tz = {1*60, 0};
+struct timezone _timeZone = {0, 0};
 static time_t _startSummerTime, _endSummerTime;
 static int _currentYear = 0;
 static volatile uint32_t _rtcTicsPerSec = 0;
@@ -63,7 +63,7 @@ static void calculateSummertime(time_t* start, time_t* end) {
 }
 
 static void correctDST() {
-	int newDst;
+	int newDst = 0;
 
 	time_t ts = time(NULL);
 	struct tm *pTM = localtime(&ts);
@@ -73,15 +73,15 @@ static void correctDST() {
 		calculateSummertime(&_startSummerTime, &_endSummerTime);
 	}
 
-	if (ts > _startSummerTime && ts < _endSummerTime) {
+	if (g_settings.correctDST && ts > _startSummerTime && ts < _endSummerTime) {
 		newDst = 1;
-	} else {
-		newDst = 0;
 	}
-	if (newDst != _tz.tz_dsttime) {
-		_tz.tz_dsttime = newDst;
-		printf("Changing DST to: %d hour\n", _tz.tz_dsttime);
-		sntp_set_timezone(&_tz); //Change is made after NTP update.
+	
+	if (newDst != _timeZone.tz_dsttime || _timeZone.tz_minuteswest != g_settings.timeZoneOffsetMinuts) {
+		_timeZone.tz_minuteswest = g_settings.timeZoneOffsetMinuts;
+		_timeZone.tz_dsttime = newDst;
+		printf("Changing timezone, timezone offset: %02d:%02d hours, DST is: %d \n", _timeZone.tz_minuteswest/60, abs(_timeZone.tz_minuteswest%60), _timeZone.tz_dsttime);
+		sntp_set_timezone(&_timeZone); //Change is made after NTP update.
 	}
 }
 
@@ -128,6 +128,6 @@ void sntp_client_init(void)
 {
 	printf("Starting SNTP... \n");
 	sntp_set_update_delay(UPDATE_INERVAL/60); //Increase the startup update interval
-	sntp_initialize(&_tz);
+	sntp_initialize(&_timeZone);
 	xTaskCreate(sntp_tsk, "SNTP", 256, NULL, 3, NULL);
 }

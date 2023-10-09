@@ -790,6 +790,16 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // Perfect Imperfections
         wificfg_write_string(s, http_hw_cfg_content[++idx]);
         if (g_settings.perfectImperfections == 1) wificfg_write_string(s, "checked");
+
+        // Zomer/Winter tijd correctie
+        wificfg_write_string(s, http_hw_cfg_content[++idx]);
+        if (g_settings.correctDST == 1) wificfg_write_string(s, "checked");
+
+        // Timezone offset (UTC)
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        bzero(tempStr, sizeof(tempStr));
+        snprintf(tempStr, sizeof(tempStr)-1, "%02d:%02d", g_settings.timeZoneOffsetMinuts/60, abs(g_settings.timeZoneOffsetMinuts%60));
+        if (wificfg_write_string(s, tempStr) < 0) return;
         
         // HierBenIk url
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
@@ -845,10 +855,14 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
     }
 
     printf("BUF: %s\n", buf);
+    char name[30];
+    int tmp1, tmp2;
     size_t rem = content_length;
     bool valp = false;
 
-    g_settings.perfectImperfections = 0; //Checkbox don't send anything when unchecked, so first set the value to unset.
+    //Checkbox don't send anything when unchecked, so first set the value to unset.
+    g_settings.perfectImperfections = 0;
+    g_settings.correctDST = 0;
     while (rem > 0) {
         int r = wificfg_form_name_value(s, &valp, &rem, buf, len);
 
@@ -857,8 +871,6 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
         }
 
         wificfg_form_url_decode(buf);
-
-        char name[30];
         bzero(name, sizeof(name));
         strncpy(name, buf, sizeof(name) - 1);
 
@@ -877,6 +889,18 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
             } else if (strcmp(name, "hw_imperfections") == 0) {
                 if (strstr(buf, "CheckOn") != NULL) {
                     g_settings.perfectImperfections = 1;
+                }
+            } else if (strcmp(name, "hw_correctdst") == 0) {
+                if (strstr(buf, "CheckOn") != NULL) {
+                    g_settings.correctDST = 1;
+                }
+            } else if (strcmp(name, "hw_timezone") == 0) {
+                if (sscanf(buf, "%d:%d", &tmp1, &tmp2) == 2) {
+                    if (tmp1 > 0) {
+                        g_settings.timeZoneOffsetMinuts = (tmp1 * 60) + tmp2;
+                    } else {
+                        g_settings.timeZoneOffsetMinuts = (tmp1 * 60) - tmp2;
+                    }
                 }
             } else if (strcmp(name, "hw_hierbenik_url") == 0) {
                 bzero(g_settings.hierbenikUrl, sizeof(g_settings.hierbenikUrl));

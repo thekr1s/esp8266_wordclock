@@ -170,6 +170,8 @@ void HbiTask(void *pvParameters){
 		// printf("%s: Wait for connect\n", __FUNCTION__);
 		SleepNI(5000);
 	}
+	// Apparently LWIP needs some time before DNS lookup to work. QaD workaround: sleep....
+	SleepNI(5000);
 	while (true) {
 		GetHierBenIk();
 		if (_age < 300) {

@@ -177,7 +177,7 @@ void HbiTask(void *pvParameters){
 		if (_age < 300) {
 			SleepNI(10000);
 		} else {
-			SleepNI(5 * 60000);
+			SleepNI(60000);
 		}
 
 	}

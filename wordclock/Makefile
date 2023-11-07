@@ -34,9 +34,9 @@ all:
 	echo stripped CRC from $(FW_FILE)
 
 do_flash:
-	esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 40m -fs 32m -fm dio
-	esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 40m -fs 32m -fm dio
-	esptool.py --baud 115200 write_flash 0x02000 $(FW_FILE) -ff 40m -fs 32m -fm dio
+	esptool.py write_flash 0 ../esp-open-rtos/bootloader/firmware_prebuilt/rboot.bin -ff 40m -fs detect -fm dio
+	esptool.py write_flash 0x01000 ../esp-open-rtos/bootloader/firmware_prebuilt/blank_config.bin -ff 40m -fs detect -fm dio
+	esptool.py --baud 921600 write_flash 0x02000 $(FW_FILE) -ff 40m -fs detect -fm dio
 
 deploy: all
 	scp firmware/woordklok_dbg.bin rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin

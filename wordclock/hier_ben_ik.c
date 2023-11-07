@@ -69,23 +69,20 @@ static void ParseResponse(char* pResp){
 	p = strstr(pResp, ageTag);
 	if ( p && sscanf(p, "age:%d", &t) == 1) {
 		_age = t;
-		printf("age: %d\n", t);
 	}
 	p = strstr(pResp, distTag);
 	if (p && sscanf(p, "dist:%d.%3d", &t, &t2) == 2) {
 		_dist = t * 1000 + t2;
-		printf("dist: %d\n", _dist);
 	}
 	p = strstr(pResp, latTag);
 	if (p && sscanf(p, "lat:%f", &f) == 1) {
 		_lat = f;
-		printf("lat: %f\n", _lat);
 	}
 	p = strstr(pResp, lonTag);
 	if (p && sscanf(p, "lon:%f", &f) == 1) {
 		_lon = f;
 		_dist = (1000.0 * CalcDist(_lat, _lon, g_settings.hierbenikHomeLat, g_settings.hierbenikHomeLon));
-		printf("lat: %f, lon: %f, dist: %d\n", _lat, _lon, _dist);
+		printf("lat: %f, lon: %f, dist: %d, age: %d\n", _lat, _lon, _dist, _age);
 	}
 }
 
@@ -133,7 +130,7 @@ static void GetHierBenIk() {
 	}
 
 	char tempRequest[76+MAX_URL_SIZE+MAX_URL_SIZE];
-	sprintf(tempRequest, "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n", g_settings.hierbenikRequest, g_settings.hierbenikUrl);
+	sprintf(tempRequest, "GET %s HTTP/1.1\r\nHost: %s\r\nUser-Agent: Woordklok\r\nAccept: */*\r\n\r\n", g_settings.hierbenikRequest, g_settings.hierbenikUrl);
 	err = lwip_write(s, tempRequest, strlen(tempRequest));
 	
 	if (err < 0) {
@@ -173,12 +170,14 @@ void HbiTask(void *pvParameters){
 		// printf("%s: Wait for connect\n", __FUNCTION__);
 		SleepNI(5000);
 	}
+	// Apparently LWIP needs some time before DNS lookup to work. QaD workaround: sleep....
+	SleepNI(5000);
 	while (true) {
 		GetHierBenIk();
 		if (_age < 300) {
 			SleepNI(10000);
 		} else {
-			SleepNI(5 * 60000);
+			SleepNI(60000);
 		}
 
 	}

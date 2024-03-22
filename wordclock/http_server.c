@@ -112,7 +112,7 @@ static void scan_done_cb(void *arg, sdk_scan_status_t status)
         }
     }
     xSemaphoreGive(wifi_networks_mutex);
-    printf("Updated WiFi network names\n");
+    // printf("Updated WiFi network names\n");
 }
 
 /*

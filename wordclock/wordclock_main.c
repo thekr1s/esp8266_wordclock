@@ -211,7 +211,7 @@ void WordclockMain(void* p)
 	    CWSet("even", 128,128,128);
 	    AlsRefresh(ALSEFFECT_NONE);
 		SleepNI(1000);
-		printf("time: %u\n",(uint32_t)time(NULL));
+		printf("wait for valid time: %u\n",(uint32_t)time(NULL));
 	}
 
 	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {

@@ -68,7 +68,12 @@ cables. Too short of a cable may degrade reception.
 #define LOW  0
 #define HIGH 1
 
-uint16_t si4703_registers[16]; //There are 16 registers, each 16 bits large
+static char rds_text[9];
+
+int si4703_channel;
+char* si4703_rds_text = &rds_text[0] ;
+
+static uint16_t si4703_registers[16]; //There are 16 registers, each 16 bits large
 
 
 static const uint16_t  FAIL = 0;
@@ -200,9 +205,15 @@ static uint8_t updateRegisters() {
 //To get the si4703 inito 2-wire mode, SEN needs to be high and SDIO needs to be low after a reset
 //The breakout board has SEN pulled high, but also has SDIO pulled high. Therefore, after a normal power up
 //The si4703 will be in an unknown state. RST must be controlled
-void si4703_init() 
+bool si4703_init() 
 {
-  i2c_init(I2C_BUS, SCL_PIN, SDA_PIN, I2C_FREQ_100K);
+
+  int res = i2c_init(I2C_BUS, SCL_PIN, SDA_PIN, I2C_FREQ_100K);
+  if (res != 0) {
+    printf("si4703 i2c_init() failed: %d. bail out\n", res);
+    return false;
+  }
+  printf("I2C_init() done\n");
 
   gpio_enable(RST_PIN, GPIO_OUTPUT);
   gpio_enable(SDA_PIN, GPIO_OUTPUT); //SDIO is connected to A4 for I2C
@@ -215,7 +226,9 @@ void si4703_init()
 //   Wire.begin(); //Now that the unit is reset and I2C inteface mode, we need to begin I2C
   i2c_start(I2C_BUS);
 
+  printf("I2C_start() done, go read registers for the first time\n");
   readRegisters(); //Read the current register set
+  printf("si4702 readRegisters done\n");
   //si4703_registers[0x07] = 0xBC04; //Enable the oscillator, from AN230 page 9, rev 0.5 (DOES NOT WORK, wtf Silicon Labs datasheet?)
   si4703_registers[0x07] = 0x8100; //Enable the oscillator, from AN230 page 9, rev 0.61 (works)
   updateRegisters(); //Update
@@ -236,8 +249,13 @@ void si4703_init()
 
   SleepNI(120); //Max powerup time, from datasheet page 13
   readRegisters(); //Read the current register set
-}
+  if (si4703_registers[0] != 0x1242) {
+    printf("si4703 register[0](0x%04x) != 0x1242. Exit si4703_init\n", si4703_registers[0]);
+    return false;
+  }
 
+  return true;
+}
 
 void si4703_powerOn()
 {
@@ -302,6 +320,7 @@ static int seek(uint8_t seekDirection){
   while(1) {
     readRegisters();
     if((si4703_registers[STATUSRSSI] & (1<<STC)) != 0) break; //Tuning complete!
+    Sleep(11);
   }
 
   readRegisters();
@@ -350,17 +369,16 @@ uint32_t getBits(uint16_t word1, uint16_t word2, size_t starting_at, size_t nr_b
 
 void handle_group0(uint16_t b, uint16_t c, uint16_t d){
   static char text[9];
-  static char prevtext[9];
   int offset = b & 0x3;
 
   offset *=2;
   text[offset] = d >> 8 & 0xff;
   text[offset + 1] = d & 0xff;
 
-  if (offset == 6 && memcmp(text, prevtext,8) != 0) {
+  if (offset == 6 && memcmp(text, si4703_rds_text,8) != 0) {
     text[8]=0;
     printf("RADIO test: %s\n", text);
-    memcpy(prevtext, text,8);
+    memcpy(si4703_rds_text, text,9);
     bzero(text,9);
   }
 
@@ -370,6 +388,10 @@ void handle_group0(uint16_t b, uint16_t c, uint16_t d){
 // message should be at least 9 chars
 // result will be null terminated
 // timeout in milliseconds
+// Returns:
+//    0: NO valid RDS received
+//    1: Valid RDS data received but no clock time
+//    > 1: RDS clock time received, returns seconds since EPOCH
 uint32_t si4703_waitRDSTime(long timeout)
 { 
   long endTime = millis() + timeout;
@@ -481,7 +503,8 @@ void si4703_task(void* p) {
     int no_time_count = 0;
     // si4703_setChannel(968);
     si4703_seekUp();
-    printf("Radio channel: %d\n", getChannel());
+    si4703_channel = getChannel();
+    printf("Radio channel: %d\n", si4703_channel);
 
     for(;;) {
         no_time_count++;
@@ -501,19 +524,23 @@ void si4703_task(void* p) {
         uint16_t rssi = si4703_registers[STATUSRSSI] >> RSSI & RSSI_MASK;
         printf("RADIO chan: %d, RSSI: %d, res: %d\n", getChannel(), rssi, t);
         // low signal, no RDS data received or more than a minute no time message
-        if (rssi < 20 || t == 0 || no_time_count == MAX_NO_TIME_COUNT) { 
+        if (rssi < 15 || t == 0 || no_time_count == MAX_NO_TIME_COUNT) { 
           no_time_count = 0;
           si4703_seekUp();
           rssi = si4703_registers[STATUSRSSI] >> RSSI & RSSI_MASK;
-          printf("RADIO seek new channel: %d, rssi: %d\n", getChannel(), rssi);
+          si4703_channel = getChannel();
+          rds_text[0]=0;
+          printf("RADIO seek new channel: %d\n", si4703_channel);
         }
     }
 }
 
 void si4703_task_init() {
-
- 	si4703_init();
-	xTaskCreate(si4703_task, "SI4703", 256, NULL, 3, NULL);
-
+  Sleep(2000);
+ 	if (si4703_init()){
+  	xTaskCreate(si4703_task, "SI4703", 256, NULL, 3, NULL);
+  } else {
+    printf("si4703_init failed, disable si4703; no RDS clock time available\n");
+  }
 
 }

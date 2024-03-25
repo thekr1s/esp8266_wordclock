@@ -133,8 +133,9 @@ void user_init(void)
 	//EvtHdlInit(); //This task doesn't do any thing
     HbiInit();
     sntp_client_init();
-    si4703_task_init();
     wificfg_init();
     http_server_start();
 	xTaskCreate(WordclockMain, "Main task", 512, NULL, 2, NULL);
+    si4703_task_init();
+
 }

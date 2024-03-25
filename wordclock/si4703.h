@@ -1,7 +1,8 @@
  //Direction used for seeking. Default is down
+extern int si4703_channel;
+extern char* si4703_rds_text;
 
 void si4703_task_init();
-void si4703_init();
 int si4703_seekUp();
 int getChannel();
 void si4703_readRDS(char* buffer, long timeout);

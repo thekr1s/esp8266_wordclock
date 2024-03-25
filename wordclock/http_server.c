@@ -48,6 +48,7 @@
 #include "esp_glue.h"
 #include "hier_ben_ik.h"
 #include "ldr.h"
+#include "si4703.h"
 
 #define MAX_SSID_LEN 20 
 #define MAX_SSID_COUNT 25
@@ -1075,7 +1076,17 @@ static void handle_debug(int s, wificfg_method method,
         printf("bright:%u\n", ldr_value);
         snprintf(tempStr, sizeof(tempStr), "<dt>Brightness :</dt> <dd>%d</dd>", g_brightness);
         wificfg_write_string(s, tempStr);
+
+        printf("Radio frequency:%dMHz\n", si4703_channel);
+        snprintf(tempStr, sizeof(tempStr), "<dt>Radio frequency:</dt> <dd>%.1f MHz</dd>", si4703_channel/10.0);
+        wificfg_write_string(s, tempStr);
+
+        printf("RDS text:%s\n", si4703_rds_text);
+        snprintf(tempStr, sizeof(tempStr), "<dt>RDS text :</dt> <dd>%s</dd>", si4703_rds_text);
+        wificfg_write_string(s, tempStr);
+
         if (wificfg_write_string(s, http_debug_content[idx++]) < 0) return;
+
     }
 }
 

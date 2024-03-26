@@ -69,6 +69,7 @@ cables. Too short of a cable may degrade reception.
 #define HIGH 1
 
 static char rds_text[9];
+static bool is_active = false;
 
 int si4703_channel;
 char* si4703_rds_text = &rds_text[0] ;
@@ -149,7 +150,7 @@ static uint32_t millis() {
 //Read the entire register control set from 0x00 to 0x0F
 static void readRegisters(){
   uint8_t regs[32];
-
+  bzero(regs, sizeof(regs));
   //si4703 begins reading from register upper register of 0x0A and reads to 0x0F, then loops to 0x00.
 //   Wire.requestFrom(SI4703, 32); //We want to read the entire register set from 0x0A to 0x09 = 32 bytes.
   i2c_slave_read(I2C_BUS, SI4703, NULL, (uint8_t*)&regs[0], sizeof(regs));
@@ -166,6 +167,10 @@ static void readRegisters(){
     si4703_registers[x] |= regs[i];
     i++;
     if(x == 0x09) break; //We're done!
+  }
+  if (si4703_registers[0] != 0x1242) {
+    printf("reg[0]: 0x%04x != 0x1242. Go sleep a little\n", si4703_registers[0]);
+    SleepNI(400);
   }
 }
 
@@ -200,6 +205,17 @@ static uint8_t updateRegisters() {
   // }
 
   return(SUCCESS);
+}
+
+//Reads the current channel from READCHAN
+//Returns a number like 973 for 97.3MHz
+static int getChannel() {
+  readRegisters();
+  int channel = si4703_registers[READCHAN] & 0x03FF; //Mask out everything but the lower 10 bits
+  //Freq(MHz) = 0.100(in Europe) * Channel + 87.5MHz
+  //X = 0.1 * Chan + 87.5
+  channel += 875; //98 + 875 = 973
+  return(channel);
 }
 
 //To get the si4703 inito 2-wire mode, SEN needs to be high and SDIO needs to be low after a reset
@@ -486,21 +502,18 @@ uint32_t si4703_waitRDSTime(long timeout)
   return rds_received; 
 }
 
-//Reads the current channel from READCHAN
-//Returns a number like 973 for 97.3MHz
-int getChannel() {
-  readRegisters();
-  int channel = si4703_registers[READCHAN] & 0x03FF; //Mask out everything but the lower 10 bits
-  //Freq(MHz) = 0.100(in Europe) * Channel + 87.5MHz
-  //X = 0.1 * Chan + 87.5
-  channel += 875; //98 + 875 = 973
-  return(channel);
-}
 
 void si4703_task(void* p) {
-    const int RDS_TIMEOUT = 10000;
+    const int RDS_TIMEOUT = 2000;
     const int MAX_NO_TIME_COUNT = 130000/ RDS_TIMEOUT;
     int no_time_count = 0;
+    SleepNI(10000);
+    if (!si4703_init()) {
+      si4703_dump_regs();
+      printf("si4703_init failed, disable si4703; no RDS clock time available\n");
+    }
+    printf("si4703 init done, go seek\n");
+    is_active = true;
     // si4703_setChannel(968);
     si4703_seekUp();
     si4703_channel = getChannel();
@@ -508,7 +521,7 @@ void si4703_task(void* p) {
 
     for(;;) {
         no_time_count++;
-        uint32_t t = si4703_waitRDSTime(10000);
+        uint32_t t = si4703_waitRDSTime(RDS_TIMEOUT);
         if (t > 1000000) { // Dirty dirty dirty, i know.....
           no_time_count = 0;
           if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
@@ -535,12 +548,11 @@ void si4703_task(void* p) {
     }
 }
 
+bool si4703_radio_active() {
+  return is_active;
+}
+
 void si4703_task_init() {
-  Sleep(2000);
- 	if (si4703_init()){
-  	xTaskCreate(si4703_task, "SI4703", 256, NULL, 3, NULL);
-  } else {
-    printf("si4703_init failed, disable si4703; no RDS clock time available\n");
-  }
+ 	xTaskCreate(si4703_task, "SI4703", 512, NULL, 3, NULL);
 
 }

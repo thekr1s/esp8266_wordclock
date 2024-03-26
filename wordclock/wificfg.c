@@ -49,7 +49,7 @@
 #include "controller.h"
 #include "esp_glue.h"
 
-#define SLEEP_TIME                  (1000)
+#define SLEEP_TIME                  (10000)
 #define CONNECTING_TIMEOUT_SEC      (1 * 60)
 #define RECONNECTING_TIMEOUT_SEC    (30 * 60)
 

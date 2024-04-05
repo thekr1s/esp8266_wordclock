@@ -141,7 +141,12 @@ static const uint16_t  BLERB = 14;
 static const uint16_t  BLERC = 12;
 static const uint16_t  BLERD = 10;
 
-
+static int npo_frequencies[] = {
+  918, 984, 989, 1044, 1048, // Radio 1
+  880, 882, 926, 978, 1046,   // Radio 2
+  886, 909, 962, 968,        // 3FM
+  0 // mark last entry
+};
 
 static uint32_t millis() {
   return xTaskGetTickCount() * portTICK_PERIOD_MS;
@@ -224,20 +229,20 @@ static int getChannel() {
 bool si4703_init() 
 {
 
+  gpio_enable(RST_PIN, GPIO_OUTPUT);
+  gpio_write(RST_PIN, LOW); //Put si4703 into reset
+  gpio_enable(SDA_PIN, GPIO_OUTPUT); //SDIO is connected to A4 for I2C
+  gpio_write(SDA_PIN, LOW); //A low SDIO indicates a 2-wire interface
+  SleepNI(100); //Some delays while we allow pins to settle
+  gpio_write(RST_PIN, HIGH); //Bring si4703 out of reset with SDIO set to low and SEN pulled high with on-board resistor
+  SleepNI(100); //Allow si4703 to come out of reset
+
   int res = i2c_init(I2C_BUS, SCL_PIN, SDA_PIN, I2C_FREQ_100K);
   if (res != 0) {
     printf("si4703 i2c_init() failed: %d. bail out\n", res);
     return false;
   }
   printf("I2C_init() done\n");
-
-  gpio_enable(RST_PIN, GPIO_OUTPUT);
-  gpio_enable(SDA_PIN, GPIO_OUTPUT); //SDIO is connected to A4 for I2C
-  gpio_write(SDA_PIN, LOW); //A low SDIO indicates a 2-wire interface
-  gpio_write(RST_PIN, LOW); //Put si4703 into reset
-  SleepNI(100); //Some delays while we allow pins to settle
-  gpio_write(RST_PIN, HIGH); //Bring si4703 out of reset with SDIO set to low and SEN pulled high with on-board resistor
-  SleepNI(100); //Allow si4703 to come out of reset
 
 //   Wire.begin(); //Now that the unit is reset and I2C inteface mode, we need to begin I2C
   i2c_start(I2C_BUS);
@@ -407,7 +412,7 @@ void handle_group0(uint16_t b, uint16_t c, uint16_t d){
 // Returns:
 //    0: NO valid RDS received
 //    1: Valid RDS data received but no clock time
-//    > 1: RDS clock time received, returns seconds since EPOCH
+//    > 1: RDS clock time received, returns seconds since EPOCH UTC
 uint32_t si4703_waitRDSTime(long timeout)
 { 
   long endTime = millis() + timeout;
@@ -488,7 +493,9 @@ uint32_t si4703_waitRDSTime(long timeout)
           
           // sntp_set_timezone(&tzs);
 
-          time_t epoch = mktime(&ts) + local_offset_hour * 3600; 
+          // This is UTC. Timezone and daylight saving time is done via the clock configuration page
+          time_t epoch = mktime(&ts);  
+          // time_t epoch = mktime(&ts) + local_offset_hour * 3600; 
             // 0 + minute_utc*60 + hour_utc*3600 + day_utc*86400 +
             // (year_utc-70)*31536000 + ((year_utc-69)/4)*86400 -
             // ((year_utc-1)/100)*86400 + ((year_utc+299)/400)*86400;
@@ -504,48 +511,53 @@ uint32_t si4703_waitRDSTime(long timeout)
 
 
 void si4703_task(void* p) {
-    const int RDS_TIMEOUT = 2000;
-    const int MAX_NO_TIME_COUNT = 130000/ RDS_TIMEOUT;
-    int no_time_count = 0;
-    SleepNI(10000);
-    if (!si4703_init()) {
-      si4703_dump_regs();
-      printf("si4703_init failed, disable si4703; no RDS clock time available\n");
-    }
-    printf("si4703 init done, go seek\n");
-    is_active = true;
-    // si4703_setChannel(968);
-    si4703_seekUp();
-    si4703_channel = getChannel();
-    printf("Radio channel: %d\n", si4703_channel);
+  int idx = 0;
+  const int RDS_TIMEOUT = 1000;
+  const int MAX_NO_TIME_COUNT = 130000/ RDS_TIMEOUT;
+  int no_time_count = 0;
+  SleepNI(2000);
+  while (!si4703_init()) {
+    si4703_dump_regs();
+    printf("si4703_init failed, disable si4703; no RDS clock time available\n");
+    si4703_powerOff();
+    SleepNI(2000);
+  }
+  printf("si4703 init done, go seek\n");
+  is_active = true;
+  // si4703_setChannel(968);
+  si4703_setChannel(npo_frequencies[idx]);
+  si4703_channel = getChannel();
+  printf("Radio channel: %d\n", si4703_channel);
 
-    for(;;) {
-        no_time_count++;
-        uint32_t t = si4703_waitRDSTime(RDS_TIMEOUT);
-        if (t > 1000000) { // Dirty dirty dirty, i know.....
-          no_time_count = 0;
-          if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-            // We have no wifi, therefore use time from the radio 
-            sntp_update_rtc(t, 0);
-            uint32_t h=0, m =0, s=0;
-            TimeGet(&h, &m, &s);
-            printf("Updated ntp time via RDS: %02d:%02d:%02d\n",h,m,s);
-          }
-          // prevent read same registers twice and no need to read.
-          SleepNI(1000);
+  for(;;) {
+      no_time_count++;
+      uint32_t t = si4703_waitRDSTime(RDS_TIMEOUT);
+      if (t > 1000000) { // Dirty dirty dirty, i know.....
+        no_time_count = 0;
+        if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+          // We have no wifi, therefore use time from the radio 
+          sntp_update_rtc(t, 0);
+          uint32_t h=0, m =0, s=0;
+          TimeGet(&h, &m, &s);
+          printf("Updated ntp time via RDS: %02d:%02d:%02d\n",h,m,s);
         }
-        uint16_t rssi = si4703_registers[STATUSRSSI] >> RSSI & RSSI_MASK;
-        printf("RADIO chan: %d, RSSI: %d, res: %d\n", getChannel(), rssi, t);
-        // low signal, no RDS data received or more than a minute no time message
-        if (rssi < 15 || t == 0 || no_time_count == MAX_NO_TIME_COUNT) { 
-          no_time_count = 0;
-          si4703_seekUp();
-          rssi = si4703_registers[STATUSRSSI] >> RSSI & RSSI_MASK;
-          si4703_channel = getChannel();
-          rds_text[0]=0;
-          printf("RADIO seek new channel: %d\n", si4703_channel);
-        }
-    }
+        // prevent read same registers twice and no need to read.
+        SleepNI(1000);
+      }
+      uint16_t rssi = si4703_registers[STATUSRSSI] >> RSSI & RSSI_MASK;
+      printf("RADIO chan: %d, RSSI: %d, res: %d\n", getChannel(), rssi, t);
+      // low signal, no RDS data received or more than a minute no time message
+      if (rssi < 15 || t == 0 || no_time_count == MAX_NO_TIME_COUNT) { 
+        no_time_count = 0;
+        idx++;
+        if (npo_frequencies[idx] == 0) idx = 0;
+        si4703_setChannel(npo_frequencies[idx]);
+        rssi = si4703_registers[STATUSRSSI] >> RSSI & RSSI_MASK;
+        si4703_channel = getChannel();
+        rds_text[0]=0;
+        printf("RADIO seek new channel: %d\n", si4703_channel);
+      }
+  }
 }
 
 bool si4703_radio_active() {
@@ -553,6 +565,6 @@ bool si4703_radio_active() {
 }
 
 void si4703_task_init() {
- 	xTaskCreate(si4703_task, "SI4703", 512, NULL, 3, NULL);
+ 	xTaskCreate(si4703_task, "SI4703", 700, NULL, 3, NULL);
 
 }

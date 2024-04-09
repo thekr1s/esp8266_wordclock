@@ -72,6 +72,7 @@ static char rds_text[9];
 static bool is_active = false;
 
 int si4703_channel;
+int si4703_rssi;
 char* si4703_rds_text = &rds_text[0] ;
 
 static uint16_t si4703_registers[16]; //There are 16 registers, each 16 bits large
@@ -524,15 +525,18 @@ void si4703_task(void* p) {
   }
   printf("si4703 init done, go seek\n");
   is_active = true;
-  // si4703_setChannel(968);
+  si4703_setVolume(1);
   si4703_setChannel(npo_frequencies[idx]);
   si4703_channel = getChannel();
   printf("Radio channel: %d\n", si4703_channel);
 
+  int rds_wait_time = RDS_TIMEOUT;
+
   for(;;) {
       no_time_count++;
-      uint32_t t = si4703_waitRDSTime(RDS_TIMEOUT);
-      if (t > 1000000) { // Dirty dirty dirty, i know.....
+      uint32_t t = si4703_waitRDSTime(rds_wait_time);
+      if (t > 1000000) { // Dirty dirty dirty, i know..... We got the time!
+        rds_wait_time = RDS_TIMEOUT * 10; // Relax
         no_time_count = 0;
         if (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
           // We have no wifi, therefore use time from the radio 
@@ -545,9 +549,11 @@ void si4703_task(void* p) {
         SleepNI(1000);
       }
       uint16_t rssi = si4703_registers[STATUSRSSI] >> RSSI & RSSI_MASK;
+      si4703_rssi = rssi;
       printf("RADIO chan: %d, RSSI: %d, res: %d\n", getChannel(), rssi, t);
       // low signal, no RDS data received or more than a minute no time message
       if (rssi < 15 || t == 0 || no_time_count == MAX_NO_TIME_COUNT) { 
+        rds_wait_time = RDS_TIMEOUT;
         no_time_count = 0;
         idx++;
         if (npo_frequencies[idx] == 0) idx = 0;

@@ -1077,8 +1077,12 @@ static void handle_debug(int s, wificfg_method method,
         snprintf(tempStr, sizeof(tempStr), "<dt>Brightness :</dt> <dd>%d</dd>", g_brightness);
         wificfg_write_string(s, tempStr);
 
-        printf("Radio frequency:%dMHz\n", si4703_channel);
+        printf("Radio frequency:%.1f MHz\n", si4703_channel/10);
         snprintf(tempStr, sizeof(tempStr), "<dt>Radio frequency:</dt> <dd>%.1f MHz</dd>", si4703_channel/10.0);
+        wificfg_write_string(s, tempStr);
+
+        printf("RSSI:%d\n", si4703_rssi);
+        snprintf(tempStr, sizeof(tempStr), "<dt>RSSI:</dt> <dd>%d</dd>", si4703_rssi);
         wificfg_write_string(s, tempStr);
 
         printf("RDS text:%s\n", si4703_rds_text);

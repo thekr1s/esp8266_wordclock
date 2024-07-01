@@ -22,7 +22,7 @@ OS2Version: 3
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 0
 CreationTime: 1095817380
-ModificationTime: 1582322896
+ModificationTime: 1706962071
 PfmFamily: 17
 TTFWeight: 400
 TTFWidth: 5
@@ -3212,7 +3212,7 @@ NameList: AGL For New Fonts
 DisplaySize: -48
 AntiAlias: 1
 FitToEm: 0
-WinInfo: 38 38 14
+WinInfo: 0 38 14
 BeginChars: 1114115 666
 
 StartChar: .notdef
@@ -8512,7 +8512,7 @@ SplineSet
  353 1349 l 1,23,-1
  353 0 l 1,20,-1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: C
@@ -8535,7 +8535,7 @@ SplineSet
  875.260869565 1190 875.260869565 1190 648 1190 c 0,16,17
  314 1190 314 1190 314 681 c 256,0,1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: D
@@ -8559,7 +8559,7 @@ SplineSet
  355 1349 l 1,13,-1
  355 0 l 1,10,-1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: E
@@ -8799,7 +8799,7 @@ SplineSet
  1101 705 l 1,21,-1
  1101 133 l 1,0,1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: H
@@ -9052,7 +9052,7 @@ SplineSet
  986 1349 l 1,13,-1
  986 420 l 2,0,1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: K
@@ -9389,7 +9389,7 @@ SplineSet
  354 1349 l 1,15,-1
  353 0 l 1,12,-1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: Q
@@ -9605,7 +9605,7 @@ SplineSet
  351 1349 l 1,17,-1
  351 0 l 1,14,-1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: S
@@ -9634,7 +9634,7 @@ SplineSet
  922.948390393 699.718446602 922.948390393 699.718446602 979.5 663.5 c 0,27,28
  1128 568.393258427 1128 568.393258427 1128 370 c 0,0,1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: T
@@ -19031,122 +19031,20 @@ StartChar: ordmasculine
 Encoding: 186 186 122
 Width: 1229
 GlyphClass: 2
-Flags: W
-TtInstrs:
-NPUSHB
- 48
- 122
- 25
- 138
- 25
- 2
- 122
- 21
- 138
- 21
- 2
- 117
- 33
- 133
- 33
- 2
- 117
- 28
- 133
- 28
- 2
- 0
- 227
- 144
- 20
- 160
- 20
- 192
- 20
- 3
- 20
- 20
- 35
- 26
- 227
- 111
- 10
- 1
- 0
- 10
- 16
- 10
- 80
- 10
- 3
- 10
- 23
- 228
- 15
-PUSHW_1
- 277
-PUSHB_3
- 31
- 228
- 5
-PUSHW_1
- 278
-SVTCA[y-axis]
-MIAP[rnd]
-MIRP[min,rnd,black]
-MIAP[rnd]
-MIRP[min,rnd,black]
-SVTCA[x-axis]
-MDAP[rnd]
-DELTAP1
-DELTAP2
-MIRP[min,rnd,black]
-SRP2
-IP
-MDAP[rnd]
-DELTAP1
-MIRP[min,rnd,black]
-IUP[x]
-IUP[y]
-SVTCA[y-axis]
-DELTAP1
-DELTAP1
-DELTAP1
-DELTAP1
-EndTTInstrs
+Flags: WO
 LayerCount: 2
 Fore
 SplineSet
-1002 1042 m 0,0,1
- 1002 955 1002 955 977.5 883.5 c 128,-1,2
- 953 812 953 812 904 760 c 128,-1,3
- 855 708 855 708 782 679.5 c 128,-1,4
- 709 651 709 651 611 651 c 0,5,6
- 518 651 518 651 446 679.5 c 128,-1,7
- 374 708 374 708 325.5 760 c 128,-1,8
- 277 812 277 812 251.5 883.5 c 128,-1,9
- 226 955 226 955 226 1042 c 0,10,11
- 226 1126 226 1126 250 1197.5 c 128,-1,12
- 274 1269 274 1269 322.5 1321 c 128,-1,13
- 371 1373 371 1373 444 1402.5 c 128,-1,14
- 517 1432 517 1432 615 1432 c 0,15,16
- 718 1432 718 1432 791.5 1403 c 128,-1,17
- 865 1374 865 1374 911.5 1322 c 128,-1,18
- 958 1270 958 1270 980 1198.5 c 128,-1,19
- 1002 1127 1002 1127 1002 1042 c 0,0,1
-853 1042 m 0,20,21
- 853 1193 853 1193 793 1260 c 128,-1,22
- 733 1327 733 1327 619 1327 c 0,23,24
- 503 1327 503 1327 440.5 1259 c 128,-1,25
- 378 1191 378 1191 378 1042 c 0,26,27
- 378 966 378 966 395 911.5 c 128,-1,28
- 412 857 412 857 442.5 822.5 c 128,-1,29
- 473 788 473 788 515.5 772 c 128,-1,30
- 558 756 558 756 609 756 c 0,31,32
- 726 756 726 756 789.5 822.5 c 128,-1,33
- 853 889 853 889 853 1042 c 0,20,21
+1020 795 m 128,-1,1
+ 1020 616.5 1020 616.5 922 510.625 c 128,-1,2
+ 824 404.75 824 404.75 637 405.875 c 128,-1,3
+ 450 407 450 407 350 510 c 0,4,5
+ 255 612.5 255 612.5 252 794.75 c 128,-1,6
+ 249 977 249 977 360.5 1080.25 c 128,-1,7
+ 472 1183.5 472 1183.5 647 1186.625 c 128,-1,8
+ 822 1189.75 822 1189.75 921 1081.625 c 128,-1,0
+ 1020 973.5 1020 973.5 1020 795 c 128,-1,1
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: guillemotright
@@ -25563,7 +25461,7 @@ SplineSet
  630 296 l 1,16,17
  657.75862069 135 657.75862069 135 768 135 c 0,4,5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: ij

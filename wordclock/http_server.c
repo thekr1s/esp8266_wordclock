@@ -1041,6 +1041,9 @@ static void handle_controller_post(int s, wificfg_method method,
             	} else if (strcmp(buf, "Pong") == 0){
                     ControllerGameSet(GAME_PONG);
             		SetInterrupted(true);
+                } else if (strcmp(buf, "UDP_Realtime") == 0){
+                    ControllerGameSet(GAME_UDP_REALTIME);
+            		SetInterrupted(true);
             	}
             }
         }

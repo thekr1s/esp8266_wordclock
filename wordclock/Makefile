@@ -20,7 +20,7 @@ $(shell touch version.c)
 #EXTRA_CFLAGS += -DSNTP_LOGD -DSNTP_LOGD_WITH_PRINTF
 
 CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
-EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2
+EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2 -DBUILD_BY_RUTGER
 
 PROGRAM=woordklok_dbg
 EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls extras/http_client_ota

@@ -11,17 +11,13 @@
 uint16_t _nrOfRows;
 uint16_t _nrOfCols;
 uint16_t _ledStripLen;
+//payload is 2 protocol bytes + 13x13 leds with R,G,B value
+uint8_t payload[(WORDCLOCK_ROWS_MAX * WORDCLOCK_COLLS_MAX * 3) +2];
 
 static void SetPixel(int index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) {
     // NOTE frames are stored as RGB show the white is missing, and dropped here
-    int col;
-    int row = index / _nrOfCols;
-    if (row % 2 == 0) {
-        col = _nrOfRows - (index % _nrOfRows);
-    } else {
-        col = index % _nrOfRows;
-    }
-    
+    int row = _nrOfRows - (index / _nrOfCols) - 1;
+    int col = index % _nrOfRows;    
     AlsSetLed(row, col, red, green, blue);
 }
 
@@ -31,15 +27,17 @@ static bool UDPFrameToPixelFrame(uint8_t* udpIn, size_t udpInLen) {
     
 
     if (udpInLen < 2) {
+        printf("Invalid length\n");
         return false; // UDP package will not contain any pixel info
     }
 
     if (udpIn[0] < 0 || udpIn[0] > 5) {
+        printf("Invalid protocol\n");
         return false; // Invalid protocol type
     }
 
     if (udpIn[1] == 0) {
-        // Timeout is set to 0 so stop game
+        printf("Timeout is set to 0 so stop gam\n");
         ControllerGameSet(GAME_NONE);
         return false;
     }
@@ -81,19 +79,13 @@ static bool UDPFrameToPixelFrame(uint8_t* udpIn, size_t udpInLen) {
 
 void DoUdpRealtime() {
     struct sockaddr_in server_addr;
+    struct timeval timeout = {60, 0};
     int socket = -1;
-    uint8_t payload[2000];
-    size_t payloadLen;
+    int payloadLen;
     
     _nrOfRows = _displaySize[0];
     _nrOfCols = _displaySize[1];
-    _ledStripLen = _displaySize[0] * _displaySize[1];
-  
-    // Set port and IP:
-    memset(&server_addr, '0', sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(UDP_POORT);
-    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    _ledStripLen = _displaySize[0] * _displaySize[1];  
     
     socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (socket < 0) {
@@ -102,24 +94,43 @@ void DoUdpRealtime() {
     }
     printf("Realtime UDP Socket created successfully\n");
 
+
+    // Set the timeout for the socket
+    if (setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+        closesocket(socket);
+        return;
+    }
+
+    // Set port and IP:
+    memset(&server_addr, '0', sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(UDP_POORT);
+
     // Bind to the set port and IP:
     if(bind(socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
         printf("Couldn't bind to the port\n");
+        closesocket(socket);
         return;
     }
-    printf("Done with binding Realtime UDP socket\n");
 
-    AlsFill(0,0,0); 
+    printf("Realtime UDP socket listening on port: %d\n", UDP_POORT);
+
+    AlsFill(0,0,0);
+    AlsRefresh(ALSEFFECT_NONE);
     while (ControllerGameGet() == GAME_UDP_REALTIME) {
-        if ((payloadLen = recv(socket, payload, sizeof(payload), 0)) < 0){
-            printf("Couldn't receive\n");
-            return;
+        payloadLen = recv(socket, payload, sizeof(payload), 0);
+        if (payloadLen < 0 ){
+            printf("Couldn't receive; error: %d\n", errno);
+            continue;
         }
+        printf("Realtime UDP, recv frame len: %d\n", payloadLen);
         
         if (UDPFrameToPixelFrame(payload, payloadLen)) {
             ControllerSet(CONTROLLER_NONE); //eatch frame is a contoller action
             AlsRefresh(ALSEFFECT_NONE);
         }
     }
+    printf("Realtime UDP game closed\n");
     closesocket(socket);
 }

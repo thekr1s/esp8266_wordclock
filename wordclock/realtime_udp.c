@@ -16,8 +16,9 @@ uint8_t payload[(WORDCLOCK_ROWS_MAX * WORDCLOCK_COLLS_MAX * 3) +2];
 
 static void SetPixel(int index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) {
     // NOTE frames are stored as RGB show the white is missing, and dropped here
+    // NOTE row 0 on the woordklok is the bottem so invert this
     int row = _nrOfRows - (index / _nrOfCols) - 1;
-    int col = index % _nrOfRows;    
+    int col = index % _nrOfRows;
     AlsSetLed(row, col, red, green, blue);
 }
 

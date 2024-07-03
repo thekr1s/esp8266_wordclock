@@ -53,9 +53,10 @@ class Woordklok:
             self.start_realtime_udp()
 
         data = bytearray([self.WLED_DRGB, self.WLED_TIMEOUT])
-        for col in range(self.COLUMNS):
-            for row in range(self.ROWS):
-                data += bytes(image.getpixel((row, col)))
+        
+        for row in range(self.ROWS):
+            for col in range(self.COLUMNS):
+                data += bytes(image.getpixel((col, row)))
         self.udp_socket.sendto(data, self.host)
 
 

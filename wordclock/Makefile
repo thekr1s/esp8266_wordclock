@@ -20,7 +20,8 @@ $(shell touch version.c)
 #EXTRA_CFLAGS += -DSNTP_LOGD -DSNTP_LOGD_WITH_PRINTF
 
 CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
-EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2 -DBUILD_BY_RUTGER
+EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2 
+#-DBUILD_BY_RUTGER
 
 PROGRAM=woordklok_dbg
 EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls extras/http_client_ota
@@ -39,7 +40,8 @@ do_flash:
 	esptool.py --baud 921600 write_flash 0x02000 $(FW_FILE) -ff 40m -fs detect -fm dio
 
 deploy: all
-	scp firmware/woordklok_dbg.bin rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin
-#	sleep 10
-#	python ../tools/fw_update_cmd.py
+#	Depending on the bootloader the binary needs to contain the CRC or not.....
+	scp firmware/woordklok_dbg.bin_crc rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin
+	sleep 2
+	python ../tools/games/woordklok_api.py
 

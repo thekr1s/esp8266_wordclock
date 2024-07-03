@@ -502,9 +502,18 @@ static const char http_redirect_header_controller[] = "HTTP/1.0 302 \r\n"
     "Location: /wificfg/controller.html\r\n"
     "\r\n";
 
-static const char http_redirect_header_delayed[] = "<html> <head>"
-        "<meta http-equiv=\"refresh\" content=\"10;url=/wificfg/clockcfg.html\" />"
-    "</head> <body> <h1>Resetting, refresh manually when clock is up...</h1> </body></html>";
+static const char http_redirect_header_delayed_start[] = "<html> <head>"
+    "<meta http-equiv=\"refresh\" content=\"10;url=/wificfg/clockcfg.html\" />"
+    "</head> <body> <h1>";
+static const char http_redirect_header_delayed_end[] = ", refresh manually when clock is up...</h1> </body></html>";
+
+static void write_http_delayed_redirect(int s, char* message) {
+    wificfg_write_string(s, http_success_header);
+    wificfg_write_string(s, http_redirect_header_delayed_start);
+    wificfg_write_string(s, "Factory resetting");
+    wificfg_write_string(s, http_redirect_header_delayed_end);
+
+}
 
 static void handle_wificfg_redirect(int s, wificfg_method method,
                                     uint32_t content_length,
@@ -932,16 +941,16 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                     SettingsWrite();
             	} else if (strcmp(buf, "OtaUpdate") == 0){
             		OtaUpdateInit();
-            		wificfg_write_string(s, "OTA UPDATING");
+                    write_http_delayed_redirect(s, "Firmware updating");
             		SetInterrupted(true);
             		return;
             	} else if (strcmp(buf, "Reboot") == 0){
-                    wificfg_write_string(s, "Rebooting\r\n");
+                    write_http_delayed_redirect(s, "Rebooting");
                     closesocket(s);
                     vTaskDelay(1000 / portTICK_PERIOD_MS);
                     sdk_system_restart();
             	} else if (strcmp(buf, "FactoryReset") == 0){
-            	    wificfg_write_string(s, http_redirect_header_delayed);
+                    write_http_delayed_redirect(s, "Factory resetting");
             		SettingsClockReset();
             	}
            		

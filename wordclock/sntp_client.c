@@ -23,6 +23,7 @@
 #include <sntp.h>
 #include <time.h>
 #include "settings.h"
+#include "si4703.h"
 
 #define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_PERIOD_MS)
 #define UNUSED_ARG(x)	(void)x
@@ -96,12 +97,13 @@ void sntp_tsk(void *pvParameters)
 {
 	UNUSED_ARG(pvParameters);
 
-	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		printf("SNTP: Wait for WiFi connection... \n");
+	printf("SNTP: Start waiting for WiFi connection... \n");
+	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP
+	       && !si4703_radio_active()) {
 		vTaskDelayMs(2000);
 	}
 
-	printf("Wait for NTP time...\n");
+	printf("SNTP: We have WiFi or FM radio! Wait for (NTP/RDS) time...\n");
 	while (time(NULL) < 10000) {
 		vTaskDelayMs(1000);
 	}

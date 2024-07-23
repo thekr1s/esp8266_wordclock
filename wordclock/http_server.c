@@ -48,6 +48,7 @@
 #include "esp_glue.h"
 #include "hier_ben_ik.h"
 #include "ldr.h"
+#include "si4703.h"
 
 #define MAX_SSID_LEN 20 
 #define MAX_SSID_COUNT 25
@@ -112,7 +113,7 @@ static void scan_done_cb(void *arg, sdk_scan_status_t status)
         }
     }
     xSemaphoreGive(wifi_networks_mutex);
-    printf("Updated WiFi network names\n");
+    // printf("Updated WiFi network names\n");
 }
 
 /*
@@ -1075,7 +1076,21 @@ static void handle_debug(int s, wificfg_method method,
         printf("bright:%u\n", ldr_value);
         snprintf(tempStr, sizeof(tempStr), "<dt>Brightness :</dt> <dd>%d</dd>", g_brightness);
         wificfg_write_string(s, tempStr);
+
+        printf("Radio frequency:%.1f MHz\n", si4703_channel/10);
+        snprintf(tempStr, sizeof(tempStr), "<dt>Radio frequency:</dt> <dd>%.1f MHz</dd>", si4703_channel/10.0);
+        wificfg_write_string(s, tempStr);
+
+        printf("RSSI:%d\n", si4703_rssi);
+        snprintf(tempStr, sizeof(tempStr), "<dt>RSSI:</dt> <dd>%d</dd>", si4703_rssi);
+        wificfg_write_string(s, tempStr);
+
+        printf("RDS text:%s\n", si4703_rds_text);
+        snprintf(tempStr, sizeof(tempStr), "<dt>RDS text :</dt> <dd>%s</dd>", si4703_rds_text);
+        wificfg_write_string(s, tempStr);
+
         if (wificfg_write_string(s, http_debug_content[idx++]) < 0) return;
+
     }
 }
 

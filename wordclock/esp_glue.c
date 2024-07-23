@@ -21,14 +21,13 @@
 #include <sysparam.h>
 
 #include <esp_glue.h>
-#include <event_handler.h>
-#include <buttons.h>
 #include <hier_ben_ik.h>
 #include <wificfg.h>
 #include <http_server.h>
 #include <sntp_client.h>
 #include <wordclock_main.h>
 #include <settings.h>
+#include "si4703.h"
 
 static volatile bool _isInterrupted = false;
 
@@ -65,7 +64,7 @@ void SleepNI(uint32_t ms) {
 uint32_t Sleep(uint32_t ms) {
 	while ( ms > 0) {
 		if (_isInterrupted) return ms;
-		SetInterrupted(ButtonsAnyPressed());
+		SetInterrupted(false);
 		SleepNI(ms > 100 ? 100 : ms);
 		ms = ms > 100 ? ms - 100 : 0;
 	}
@@ -126,13 +125,13 @@ void user_init(void)
 	//Low level init
     SettingsInit();
 	wordClockDisplay_init();
-	ButtonsInit();
-
+	
     //Start tasks
-	//EvtHdlInit(); //This task doesn't do any thing
     HbiInit();
     sntp_client_init();
     wificfg_init();
     http_server_start();
 	xTaskCreate(WordclockMain, "Main task", 512, NULL, 2, NULL);
+    si4703_task_init();
+
 }

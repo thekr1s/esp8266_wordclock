@@ -20,7 +20,6 @@
 #include <font.h>
 
 #include <wordclock_main.h>
-#include <buttons.h>
 #include <ldr.h>
 #include <hier_ben_ik.h>
 #include <sntp_client.h>
@@ -28,12 +27,12 @@
 
 #include "esp_glue.h"
 #include <ota_basic.h>
-#include <buttons.h>
 #include "displaySettings.h"
 #include "settings.h"
 #include "controller.h"
 #include "breakout.h"
 #include "tetris.h"
+#include "si4703.h"
 
 
 static void ShowSome(uint32_t delayMS)
@@ -132,13 +131,6 @@ void ShowTime(int delayMS) {
 	endTicks = xTaskGetTickCount() + (delayMS / portTICK_PERIOD_MS);
 	while (xTaskGetTickCount() < endTicks){
 		TimeGet(&h, &m, &s);
-		if (ButtonHandleButtons()) {
-			SetInterrupted(false);
-			DoReDisplay = true;
-			prevMin = m; // Prevent transition effect
-			SettingsScheduleStore();
-			endTicks = xTaskGetTickCount() + 5000/portTICK_PERIOD_MS;
-		}
 		if (Interrupted()) {
 			// Interrupted via WEB interface
 			SetInterrupted(false);
@@ -211,10 +203,11 @@ void WordclockMain(void* p)
 	    CWSet("even", 128,128,128);
 	    AlsRefresh(ALSEFFECT_NONE);
 		SleepNI(1000);
-		printf("time: %u\n",(uint32_t)time(NULL));
+		printf("wait for valid time: %u\n",(uint32_t)time(NULL));
 	}
 
-	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
+	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP
+	       && !si4703_radio_active()) {
 		if (sdk_wifi_station_get_connect_status() == STATION_WRONG_PASSWORD) {
 			DisplayWord("Wrong password!!!");
 		} else {
@@ -263,10 +256,7 @@ void WordclockMain(void* p)
 				timeShowDuration = 5000;
 			}
 		}
-		if (ButtonsAnyPressed()) {
-			// ShowTime handles the buttons...
-			ShowTime(5000);
-		}
+
 
 		SetInterrupted(false);
 		SettingsCheckStore();

@@ -1,3 +1,9 @@
 [submodule "esp-open-rtos"]
 	path = esp-open-rtos
 	url = https://github.com/thekr1s/esp-open-rtos.git
+[submodule "tools/kastGames"]
+	path = tools/kastGames
+	url = git@gitlab.com:pixelkast/kastgames.git
+[submodule "tools/pyled"]
+	path = tools/pyled
+	url = git@gitlab.com:pixelkast/wledmx.git

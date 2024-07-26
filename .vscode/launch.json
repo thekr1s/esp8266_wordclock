@@ -14,12 +14,23 @@
             "justMyCode": true
         },
         {
+            "name": "snake_rhu.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "snake_rhu.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/tools/kastGames/kastgames",
+            "args": ["--wled_host", "127.0.0.1", "--columns", "13", "--rows", "13", "--leds_per_pixel", "1"],
+            "justMyCode": true
+        },
+        {
             "name": "snake.py",
             "type": "debugpy",
             "request": "launch",
             "program": "snake.py",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/tools/games",
+            "cwd": "${workspaceFolder}/tools/kastGames/kastgames",
+            "args": ["--wled_host", "127.0.0.1", "--columns", "13", "--rows", "13", "--leds_per_pixel", "1"],
             "justMyCode": true
         }
     ]

@@ -510,7 +510,7 @@ static const char http_redirect_header_delayed_end[] = ", refresh manually when 
 static void write_http_delayed_redirect(int s, char* message) {
     wificfg_write_string(s, http_success_header);
     wificfg_write_string(s, http_redirect_header_delayed_start);
-    wificfg_write_string(s, "Factory resetting");
+    wificfg_write_string(s, message);
     wificfg_write_string(s, http_redirect_header_delayed_end);
 
 }

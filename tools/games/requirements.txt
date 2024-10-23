@@ -1,0 +1,5 @@
+pillow
+requests
+matplotlib
+numpy
+pynput

@@ -34,6 +34,7 @@
 #include "controller.h"
 #include "breakout.h"
 #include "tetris.h"
+#include "realtime_udp.h"
 
 
 static void ShowSome(uint32_t delayMS)
@@ -231,6 +232,7 @@ void WordclockMain(void* p)
 		{
 			case GAME_BREAKOUT: DoBreakout(); break;
 			case GAME_TETRIS: DoTetris(); break;
+			case GAME_UDP_REALTIME: DoUdpRealtime(); break;
 			default: break;
 		}
 

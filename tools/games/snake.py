@@ -104,7 +104,7 @@ def main():
         direction = last_key
         game.change_direction(direction_map[direction])
 
-    print("Game Over")
+    print("Game Over, press key to exit.")
     keyboardHdl.stop()
 
 if __name__ == "__main__":

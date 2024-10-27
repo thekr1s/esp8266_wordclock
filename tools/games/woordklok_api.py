@@ -8,10 +8,10 @@ class Woordklok:
     WLED_DRGB = 2     # Protocol selection
     WLED_TIMEOUT = 5  # Timeout in seconds
 
-    COLUMNS = 13
-    ROWS = 13
-    def __init__(self, host):
+    def __init__(self, host, width, height):
         self.host = host
+        self.width = width
+        self.height = height
         self.urlStart = "http://" + host[0]
         self.udp_socket = None
         
@@ -45,8 +45,8 @@ class Woordklok:
                             and a `getpixel(x, y)` method that returns the RGB value
                             for a pixel at coordinates (x, y).
         """
-        assert image.width == self.COLUMNS
-        assert image.height == self.ROWS
+        assert image.width == self.width
+        assert image.height == self.height
 
         if self.udp_socket == None:
             print("Realtime UDP not started, starting....")
@@ -54,8 +54,8 @@ class Woordklok:
 
         data = bytearray([self.WLED_DRGB, self.WLED_TIMEOUT])
         
-        for row in range(self.ROWS):
-            for col in range(self.COLUMNS):
+        for row in range(self.height):
+            for col in range(self.width):
                 data += bytes(image.getpixel((col, row)))
         self.udp_socket.sendto(data, self.host)
 

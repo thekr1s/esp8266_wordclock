@@ -1,3 +1,4 @@
+#!/bin/python3
 import random
 import time
 from PIL import Image
@@ -7,14 +8,17 @@ from woordklok_api import Woordklok
 last_key = None
 host = ('192.168.2.87', 21324)
 
+WIDTH = 11
+HEIGHT = 11
+
 class SnakeGame:
-    def __init__(self, width=13, height=13):
+    def __init__(self, width, height):
         self.width = width
         self.height = height
         self.reset()
 
     def reset(self):
-        self.snake = [(6, 6)]
+        self.snake = [(int(self.width/2), int(self.height/2))]
         self.direction = (0, 1)  # Start moving to the right
         self.generate_food()
         self.game_over = False
@@ -77,7 +81,7 @@ def main():
     keyboardHdl = keyboard.Listener(on_press=on_press)
     keyboardHdl.start()
 
-    game = SnakeGame()
+    game = SnakeGame(WIDTH, HEIGHT)
     direction_map = {
         'w': (0, -1),  # Up
         's': (0, 1),   # Down
@@ -85,7 +89,7 @@ def main():
         'd': (1, 0)    # Right
     }
     
-    wled = Woordklok(host)
+    wled = Woordklok(host, WIDTH, HEIGHT)
     wled.start_realtime_udp()
     print("Waiting for input (A,S,D,W)")
     while last_key == None:
@@ -100,8 +104,8 @@ def main():
         direction = last_key
         game.change_direction(direction_map[direction])
 
+    print("Game Over, press key to exit.")
     keyboardHdl.stop()
-    print("Game Over")
 
 if __name__ == "__main__":
     main()

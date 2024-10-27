@@ -123,6 +123,7 @@ void DoUdpRealtime() {
         payloadLen = recv(udpSock, payload, sizeof(payload), 0);
         if (payloadLen < 0 ){
             printf("Couldn't receive; error: %d\n", errno);
+            Sleep(60);
             continue;
         }
         printf("Realtime UDP, recv frame len: %d\n", payloadLen);

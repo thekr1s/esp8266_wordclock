@@ -2,6 +2,10 @@
     "files.associations": {
         "*.h": "c",
         "*.c": "c",
+        "typeindex": "c",
+        "typeinfo": "c",
+        "regex": "c",
+        "*.html": "c"
     },
     "C_Cpp.default.compilerPath": "${workspaceFolder}/esp-open-sdk/xtensa-lx106-elf/bin"
 }

@@ -1,3 +1,6 @@
+#!/bin/python3
+
+import argparse
 import socket
 import requests
 
@@ -5,9 +8,9 @@ class Woordklok:
     """
     REST interface of the woordklok
     """
-    def __init__(self, host):
-        self.host = host
-        self.urlStart = "http://" + host[0]
+    def __init__(self, ip):
+        self.ip = ip
+        self.urlStart = "http://" + ip
         
     def start_update(self):
         endpoint = "/wificfg/hwcfg.html"
@@ -30,8 +33,24 @@ class Woordklok:
             print("Realtime udp started")
 
 
-if __name__ == '__main__':
-    api = Woordklok(("192.168.2.87", "80"))
-    api.start_update()
+def get_parsed_args():
+    # Make parser object
+    p = argparse.ArgumentParser(description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     
-    # api.start_realtime_udp()
+    p.add_argument("--ip", default="0.0.0.0",
+                   help="IP-address of the woordklok")
+    p.add_argument("--update", action='store_true',
+                   help="Request the woordklok to fetch new updates")
+    p.add_argument("--realtime_udp",  action='store_true',
+                   help="Set woordklok in realtime udp mode")
+    return(p.parse_args())
+
+if __name__ == '__main__':
+    args = get_parsed_args()
+
+    api = Woordklok(args.ip)
+    if args.update:
+        api.start_update()
+    if args.realtime_udp:
+        api.start_realtime_udp()

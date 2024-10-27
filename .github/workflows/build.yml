@@ -48,7 +48,7 @@ jobs:
         cd wordclock
         make
         
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v4
       with:
         name: wordclock binary
         path: wordclock/firmware/woordklok_dbg.bin

@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "image.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "image.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/tools/games",
+            "justMyCode": true
+        },
+        {
+            "name": "snake.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "snake.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/tools/games",
+            "justMyCode": true
+        }
+    ]
+}

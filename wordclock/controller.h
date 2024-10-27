@@ -14,6 +14,7 @@ typedef enum {
     GAME_TETRIS,
     GAME_BREAKOUT,
     GAME_PONG,
+    GAME_UDP_REALTIME,
 }TControllerGame;
 
 void ControllerSet(TControllerAction action);

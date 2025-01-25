@@ -356,18 +356,6 @@ void CWDisplayAccurateTime(uint32_t hours, uint32_t minutes,  uint32_t seconds, 
 	CWSet("het", r, g, b);
 	CWSet("is", r, g, b);
 
-
-	// dit werkt wel maar wordt erg druk
-	/*
-	if (seconds > 50 && seconds <= 95) {
-		minutes += 1;
-		CWSet("bijna", r, g, b);
-	} else if (seconds < 50 && seconds >= 10) {
-		CWSet("geweest", r, g, b);
-	} else {
-		CWSet("nu", r, g, b);
-	}
-    */
 	// Display the current hour up to quarter past... After that show the next hour
 	if (minutes > 19) {
 		hours += 1;
@@ -396,13 +384,22 @@ void CWDisplayAccurateTime(uint32_t hours, uint32_t minutes,  uint32_t seconds, 
 		CWSet("over", r, g, b);
 		CWSet("half", r, g, b);
 	}
+	if (g_hw_settings.hardwareType == HARDWARE_13_13_V2_1 ) {
+		if (minutes >=41 && minutes <= 44) {
+			//12:41 == 11 over half 1
+			CWSet(_minutesNames[minutes - 30], r, g, b);
+			CWSet("over", r, g, b);
+			CWSet("half", r, g, b);
+		}
+	} else {
+		if (minutes >=41 && minutes <= 44) {
+			//12:41 == 19 voor 1
+			CWSet(_minutesNames[20 - (minutes % 10)], r, g, b);
+			CWSet("voor", r, g, b);
+		}
+	}
 	if (minutes == 45) {
 		CWSet("kwart", r, g, b);
-		CWSet("voor", r, g, b);
-	}
-	if (minutes >=41 && minutes <= 44) {
-		//12:41 == 19 voor 1
-		CWSet(_minutesNames[20 - (minutes % 10)], r, g, b);
 		CWSet("voor", r, g, b);
 	}
 	if (minutes >=46 && minutes <= 59) {
@@ -427,6 +424,7 @@ void CWInit() {
 			_klockWords = _klockWords_13x13;
 		break;
 		case HARDWARE_13_13_V2:
+		case HARDWARE_13_13_V2_1:
 			_klockWords = _klockWords_13x13_V2;
 		break;
 	}

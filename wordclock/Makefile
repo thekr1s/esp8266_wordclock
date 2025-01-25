@@ -43,5 +43,5 @@ deploy: all
 #	Depending on the bootloader the binary needs to contain the CRC or not.....
 	scp firmware/woordklok_dbg.bin_crc rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin
 	sleep 2
-	python ../tools/games/woordklok_api.py --ip 192.168.2.57 --update
+	python ../tools/woordklok_api/woordklok_api.py --ip 192.168.2.57 --update
 

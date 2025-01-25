@@ -1,5 +1,4 @@
 #!/bin/python3
-
 import argparse
 import socket
 import requests

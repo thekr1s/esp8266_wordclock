@@ -11,20 +11,16 @@
                 "cwd": "${workspaceFolder}/wordclock/",
                 "env": {
                     "PATH":"${workspaceFolder}/esp-open-sdk/xtensa-lx106-elf/bin:${env:PATH}",                    
+                },
             },
             "args": [
                 "${env:USERNAME}"
             ],
-            
             "group": "build",
-            "presentation": {
-                // Reveal the output only if unrecognized errors occur.
-                // "reveal": "silent"
-            },
             "problemMatcher": {
                 "base": "$gcc",
                 "fileLocation": ["relative", "${workspaceRoot}/builddir"]
             }
-        }
+        },
     ]
 }

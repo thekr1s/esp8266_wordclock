@@ -1,16 +1,14 @@
-#!/bin/python3
 from PIL import Image
 from io import BytesIO
 import matplotlib.pyplot as plt
 import numpy as np
 from copy import deepcopy
 import time
-from woordklok_api import Woordklok
+from input import get_parsed_args
+from wledmx import WledSend
 
-host = ('192.168.2.87', 21324)
-
-def test_send_image(api):   
-    image = Image.new('RGB', (13, 13), 'Green')  # Default to a white background
+def test_send_image(api, columns, rows):   
+    image = Image.new('RGB', (columns, rows), 'Green')  # Default to a white background
     center_x, center_y = 0, 0  # Center pixel coordinates for a 13x13 image
     image.putpixel((center_x, center_y), (255, 0, 0))  # Set center pixel to red
     image.putpixel((0, 1), (255, 0, 0))  # Set center pixel to red
@@ -23,7 +21,6 @@ def test_send_image(api):
         time.sleep(1)
 
 if __name__ == '__main__':
-    api = Woordklok(host)
-    api.start_realtime_udp()
-    test_send_image(api)
-
+    args = get_parsed_args()
+    wled = WledSend((args.host, args.port), args.columns, args.rows, args.leds_per_pixel)
+    test_send_image(wled, args.columns, args.rows)

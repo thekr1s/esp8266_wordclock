@@ -10,8 +10,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void LdrGetValue16(uint16_t*);
-
-
+uint16_t LdrGetValue16(void);
 
 #endif /* LDR_H_ */

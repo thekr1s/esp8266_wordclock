@@ -15,7 +15,7 @@
 #include "displaySettings.h"
 #include "AddressableLedStrip.h"
 
-#define FLASH_MAGIC 0xBABEBAB6
+#define FLASH_MAGIC 0xBABEBAB7
 #define FLASH_MAGIC_HW 0xC0FEC0FE   // THIS MAGIC SHOULD NOT CHANGE
 #define FLASH_EMPTY 0XFFFFFFFF
 #define FLASH_INVALIDATED 0xB0B0BABE
@@ -59,12 +59,9 @@ typedef struct {
     char otaFwUrl[MAX_URL_SIZE];
     char otaFwPort[MAX_PORT_SIZE];
     EOtaFwType otaFwType;
-    const uint8_t aBrightness[BRIGHTNESS_COUNT];
-    int8_t reserved0;
     int8_t brightnessOffset;
     TColor color;
     TColor bgColor;
-    uint32_t timerPeriodTicks;
     uint8_t reserved[128];
 } TSettings;
 
@@ -75,7 +72,9 @@ typedef struct {
     uint32_t magic;
     EHardwareType hardwareType;
     EPixelType pixelType;
-    uint8_t reserved[128];
+    uint16_t ldrThresholds[BRIGHTNESS_LUT_SIZE];
+    uint8_t brightnessLUT[BRIGHTNESS_LUT_SIZE];
+    uint8_t reserved[128 - (16*2 + 16*1)]; // - ldrThresholds and brightnessLUT
 } THwSettings;
 
 TSettings g_settings __attribute__((aligned(4)));

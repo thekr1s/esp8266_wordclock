@@ -251,9 +251,6 @@ const char* _minutesNames[] = {
 		"negen_tnm"
 };
 
-static const uint8_t _brightness = 80;
-
-
 void CWSet(const char* word, uint8_t r, uint8_t g, uint8_t b) {
 	uint32_t idx = 0;
 	bool found = FALSE;

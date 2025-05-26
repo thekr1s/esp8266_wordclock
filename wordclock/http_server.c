@@ -1079,7 +1079,7 @@ static void handle_debug(int s, wificfg_method method,
 
     if (method != HTTP_METHOD_HEAD) {
     	if (wificfg_write_string(s, http_debug_content[idx++]) < 0) return;
-        LdrGetValue16(&ldr_value);
+        ldr_value = LdrGetValue16();
         printf("LDR:%u\n", ldr_value);
         snprintf(tempStr, sizeof(tempStr), "<dt>LDR :</dt> <dd>%d</dd>", ldr_value);
         wificfg_write_string(s, tempStr);

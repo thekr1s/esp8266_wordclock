@@ -45,12 +45,9 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
     "80",   // otaFwPort
 #endif
     OTA_FW_RELEASE, //otaFwType
-    {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
-    1, // reserved
     0, // brightnessOffset
     {255,255,255}, // colorIdx = White
     {0,0,0},       // bgColorIdx = Black
-    52220, // timerPeriodTicks
     {0xff}, //reserved[]
 };
 
@@ -58,10 +55,13 @@ static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
     FLASH_MAGIC_HW,
 #ifdef BUILD_BY_RUTGER
     HARDWARE_13_13_V2,
+    PIXEL_TYPE_RGBNW,
 #else
     HARDWARE_11_11,
-#endif
     PIXEL_TYPE_RGB,
+#endif
+    {5, 7, 9, 13, 19, 27, 38, 53, 74, 105, 147, 206, 289, 406, 570, 800}, //ldrThresholds;
+    {200, 186, 173, 160, 147, 134, 120, 107, 94, 81, 68, 54, 41, 28, 15, 2}, //brightnessLUT
     {0xff}, //reserved[]
 };
 

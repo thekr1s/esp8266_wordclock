@@ -61,6 +61,14 @@
 "\">" 
 "<button name=\"cl_command\" type=\"submit\" value=\"SetHome\">Set current location as home</button>"
 "</dd>"
+"<dt><label for=\"ldr_csv\">LDR-calibration</label></dt>"
+"<dd><input id=\"ldr_csv\" type=\"text\" maxlength=\"80\" size=\"25\" name=\"hw_ldr_csv\" ",
+"pattern=\"^((102[0-4]|10[0-1][0-9]|[1-9]?[0-9]{1,2}),){16}\" title=\"LDR calibration, 16 values aa,bb,cc....\" value=\"",
+"\"></dd>"
+"<dt><label for=\"led_csv\">LED-calibration</label></dt>"
+"<dd><input id=\"led_csv\" type=\"text\" maxlength=\"64\" size=\"25\" name=\"hw_led_csv\" ",
+"pattern=\"^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9]),){16}\" title=\"LED calibration, 16 values aa,bb,cc....\" value=\"",
+"\"></dd>"
 "<dt><label for=\"otafw\">OTA fw Server:</label></dt>"
 "<dd><input id=\"otafw\" type=\"text\" maxlength=\"99\" size=\"18\" name=\"hw_otafw_url\" placeholder=\"url\" value=\"",
 "\">"

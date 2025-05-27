@@ -79,7 +79,7 @@ void SettingsInit() {
     }
 
     sysparam_get_data_static(HW_SETTINGS_KEY, (uint8_t*)&g_hw_settings, sizeof(g_hw_settings), &actual_size, NULL);
-    if (actual_size == sizeof(g_hw_settings) && (g_hw_settings.magic == FLASH_MAGIC_HW)) {
+    if (actual_size == sizeof(g_hw_settings) && (g_hw_settings.magic == FLASH_MAGIC_HW) && (g_hw_settings.ldrThresholds[15] > 100)) {
         printf("Valid hardware settings read from sysparams flash\r\n");
     } else {
         printf("No valid hardware settings found, size %d, magic: %08x\r\n", actual_size, g_hw_settings.magic);

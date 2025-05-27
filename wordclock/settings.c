@@ -38,7 +38,7 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
     0.0, // home lat
     0.0, // home lon
 #ifdef BUILD_BY_RUTGER
-    "http://rutger798.mynetgear.com",  // otaFwUrl
+    "http://rhu1990.mooo.com",   // otaFwUrl
     "8090",   // otaFwPort
 #else
     "http://download.wssns.nl",  // otaFwUrl

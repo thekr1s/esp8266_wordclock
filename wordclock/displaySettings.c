@@ -98,7 +98,7 @@ bool SetBrightness(void) {
         idx = CLAMP(idx, 0, BRIGHTNESS_LUT_SIZE-1);
 
         targetBrightness = g_hw_settings.brightnessLUT[idx];
-        printf("LDR: %d, idx: %d, br: %d/%d\n", ldrValueAvr, idx, targetBrightness, g_brightness);
+        //printf("LDR: %d, idx: %d, br: %d/%d\n", ldrValueAvr, idx, targetBrightness, g_brightness);
         lastMeasurementTicks = xTaskGetTickCount();
     }
 

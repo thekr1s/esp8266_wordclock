@@ -81,7 +81,7 @@ bool SetBrightness(void) {
     static uint16_t ldrValues[3] = {128, 128, 128};
     static uint32_t lastMeasurementTicks = 0;
 
-    if (GetTicksDiffMs(lastMeasurementTicks, xTaskGetTickCount()) > 333) {
+    if (GetTicksDiffMs(lastMeasurementTicks, xTaskGetTickCount()) > 1000) {
         ldrValues[mafIdx] = LdrGetValue16();
         mafIdx = (mafIdx + 1) % 3;
         ldrValueAvr = (ldrValues[0] + ldrValues[1] + ldrValues[2]) / 3;

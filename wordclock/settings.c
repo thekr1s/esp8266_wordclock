@@ -60,8 +60,8 @@ static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
     HARDWARE_11_11,
     PIXEL_TYPE_RGB,
 #endif
-    {5, 7, 9, 13, 19, 27, 38, 53, 74, 105, 147, 206, 289, 406, 570, 800},       // ldrThresholds, donker -> fel
-    {200, 186, 173, 160, 147, 134, 120, 107, 94, 81, 68, 54, 41, 28, 15, 2},    // brightnessLUT, fel -> donker
+    {2,61,121,181,241,301,361,421,480,540,600,660,720,780,840,900}, // ldrThresholds, donker -> fel
+    {220,189,161,135,112,91,73,57,43,31,21,14,8,5,3,2},             // brightnessLUT, fel -> donker
     {0xff}, //reserved[]
 };
 

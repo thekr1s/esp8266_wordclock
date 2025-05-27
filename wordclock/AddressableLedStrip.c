@@ -34,7 +34,6 @@ static uint32_t _cols = 0;
 TAlsWriteFunction _writeFunction = NULL;
 
 extern uint32_t TimerTickCount;
-extern uint8_t g_brightness;
 
 void AlsInit(uint32_t rows, uint32_t cols, TAlsWriteFunction writeFunction) 
 {

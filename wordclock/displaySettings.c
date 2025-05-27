@@ -27,8 +27,9 @@
 #include "settings.h"
 #include "rgb2.h"
 
+#define CLAMP(x, lo, hi) (((x) < (lo)) ? (lo) : ((x) > (hi)) ? (hi) : (x))
+
 TPixel _frameCopy[WORDCLOCK_ROWS_MAX * WORDCLOCK_COLLS_MAX];
-uint16_t _aLdrLevels[] = {808, 800, 700, 550, 300, 100, 50, 30, 10, 5};
 static bool g_inNightMode = false;
 
 TColor _definedColors[] = {
@@ -47,79 +48,74 @@ TColor _definedColors[] = {
 {000,128,255},        
 {000,000,255}};
 
-TColor GetColorFromIdx(TColorIdx idx)
-{
+TColor GetColorFromIdx(TColorIdx idx) {
     return _definedColors[idx];
 }
 
-bool DisplayInNightMode(void)
-{
+bool DisplayInNightMode(void) {
     return g_inNightMode;
+}
+
+void applyBrightnessTransition(uint8_t target) {
+    if (target > g_brightness) {
+        g_brightness += 1;
+        if (target - g_brightness > 10) {
+            g_brightness += 3;
+        }
+    } else if (target < g_brightness) {
+        g_brightness -= 1;
+        if (g_brightness - target > 10) {
+            g_brightness -= 3;
+        }
+    }
 }
 
 /**
  * @return TRUE if brighness changed, else false
  */
-bool SetBrightness(void)
-{
-    uint32_t i = 0;
-    static uint8_t br = 100;
-    bool res = FALSE;
+bool SetBrightness(void) {
+    int8_t idx;
+    uint16_t ldrValueAvr;
+    static uint8_t targetBrightness = 255;
+    static uint8_t mafIdx = 0;
+    static uint16_t ldrValues[3] = {128, 128, 128};
     static uint32_t lastMeasurementTicks = 0;
 
     if (GetTicksDiffMs(lastMeasurementTicks, xTaskGetTickCount()) > 1000) {
-        uint16_t v;
-        LdrGetValue16(&v);
+        ldrValues[mafIdx] = LdrGetValue16();
+        mafIdx = (mafIdx + 1) % 3;
+        ldrValueAvr = (ldrValues[0] + ldrValues[1] + ldrValues[2]) / 3;
 
-        while ((i < BRIGHTNESS_COUNT) && (v < _aLdrLevels[i])) {
-            i++;
-        }
-        // When the lowest level light is measured, dimm the leds to the max, else use brightness setting.
-        if (i == 0){
-            g_inNightMode = TRUE;
-        } else {
-            i+= g_settings.brightnessOffset;
-            g_inNightMode = FALSE;
-
+        for (idx = 0; idx < BRIGHTNESS_LUT_SIZE; idx++) {
+            if (ldrValueAvr < g_hw_settings.ldrThresholds[idx]) {
+                break;
+            }
         }
 
-        if (i >= BRIGHTNESS_COUNT) {
-            i = BRIGHTNESS_COUNT - 1;
-        }
-        if (v >= _aLdrLevels[i]) {
-            br = g_settings.aBrightness[i];
-        } else {
-            br = 220; // Maximum brightness
-        }
-        //printf("LDR: %d, br: %d %d\n", v, br, g_brightness);
+        // When the lowest level light is measured set night mode
+        g_inNightMode = (idx == 0) ? TRUE : FALSE;
+        idx+= g_settings.brightnessOffset;
+        idx = CLAMP(idx, 0, BRIGHTNESS_LUT_SIZE-1);
+
+        targetBrightness = g_hw_settings.brightnessLUT[idx];
+        //printf("LDR: %d, idx: %d, br: %d/%d\n", ldrValueAvr, idx, targetBrightness, g_brightness);
         lastMeasurementTicks = xTaskGetTickCount();
     }
 
-    if (br > g_brightness){
-        g_brightness += 1;
-        if (br - g_brightness > 10) {
-            g_brightness += 3;
-        }
-        res = TRUE;
-    } else if (br < g_brightness) {
-        g_brightness -= 1;
-        if (g_brightness - br > 10) {
-            g_brightness -= 3;
-        }
-        res = TRUE;
+    if (targetBrightness != g_brightness) {
+        applyBrightnessTransition(targetBrightness);
+        return TRUE;
+    } else {
+        return FALSE; // No change
     }
-    return res;
 }
 
-uint8_t ApplyBrightness(uint8_t color)
-{
+uint8_t ApplyBrightness(uint8_t color) {
     uint32_t t;
     t = color * g_brightness;
     return (uint8_t)(t / 255);
-
 }
-uint8_t ApplyBgBrightness(uint8_t color)
-{
+uint8_t ApplyBgBrightness(uint8_t color) {
     // If backgrondcolor white, then turn led off.
     if (g_settings.bgColor.r == 0 &&
         g_settings.bgColor.g == 0 &&
@@ -127,12 +123,10 @@ uint8_t ApplyBgBrightness(uint8_t color)
     if (g_settings.bgColor.r == 255 &&
         g_settings.bgColor.g == 255 &&
         g_settings.bgColor.b == 255) return 0;
-    uint32_t t;
-    t = color * g_brightness;
-    return (uint8_t)(t / 255);
+    return ApplyBrightness(color);
 }
 
-static void WS2812_I2S_WriteData(TPixel* pixels, uint32_t nrOfPixels){  
+static void WS2812_I2S_WriteData(TPixel* pixels, uint32_t nrOfPixels) {  
     if (g_hw_settings.pixelType == PIXEL_TYPE_RGB) {
         ws2812_i2s_update((ws2812_pixel_t*) pixels, PIXEL_RGB);
     } else {

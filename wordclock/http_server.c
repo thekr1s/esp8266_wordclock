@@ -807,7 +807,7 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // Timezone offset (UTC)
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
         bzero(tempStr, sizeof(tempStr));
-        snprintf(tempStr, sizeof(tempStr)-1, "%02d:%02d", g_settings.timeZoneOffsetMinuts/60, abs(g_settings.timeZoneOffsetMinuts%60));
+        snprintf(tempStr, sizeof(tempStr), "%02d:%02d", g_settings.timeZoneOffsetMinuts/60, abs(g_settings.timeZoneOffsetMinuts%60));
         if (wificfg_write_string(s, tempStr) < 0) return;
         
         // HierBenIk url
@@ -823,11 +823,26 @@ static void handle_hw_cfg(int s, wificfg_method method,
         // HierBenIk home lat
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
         snprintf(tempStr, sizeof(tempStr), "%f", g_settings.hierbenikHomeLat);
-        wificfg_write_string(s, tempStr);
+        if (wificfg_write_string(s, tempStr) < 0) return;
         // HierBenIk home lon
         if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
         snprintf(tempStr, sizeof(tempStr), "%f", g_settings.hierbenikHomeLon);
-        wificfg_write_string(s, tempStr);
+        if (wificfg_write_string(s, tempStr) < 0) return;
+
+        // LDR kalibratie waardes
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        for (int i = 0; i < BRIGHTNESS_LUT_SIZE; i++) {
+            snprintf(tempStr, sizeof(tempStr), "%d,", g_hw_settings.ldrThresholds[i]);
+            if (wificfg_write_string(s, tempStr) < 0) return;
+        }
+        // LED kalibratie waardes
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        if (wificfg_write_string(s, http_hw_cfg_content[++idx]) < 0) return;
+        for (int i = 0; i < BRIGHTNESS_LUT_SIZE; i++) {
+            snprintf(tempStr, sizeof(tempStr), "%d,", g_hw_settings.brightnessLUT[i]);
+            if (wificfg_write_string(s, tempStr) < 0) return;
+        }
 
         // FW update url
         wificfg_write_string(s, http_hw_cfg_content[++idx]);
@@ -924,6 +939,20 @@ static void handle_hw_cfg_post(int s, wificfg_method method,
                 sscanf(buf, "%f", &g_settings.hierbenikHomeLat);
             } else if (strcmp(name, "home_lon") == 0) {
                 sscanf(buf, "%f", &g_settings.hierbenikHomeLon);
+            } else if (strcmp(name, "hw_ldr_csv") == 0) {
+                bzero(g_hw_settings.ldrThresholds, sizeof(g_hw_settings.ldrThresholds));
+                char *token = strtok(buf,",");
+                for (int i = 0; i < BRIGHTNESS_LUT_SIZE; i++) {
+                    g_hw_settings.ldrThresholds[i] = atoi(token);
+                    token = strtok (NULL,",");
+                }
+            } else if (strcmp(name, "hw_led_csv") == 0) {
+                bzero(g_hw_settings.brightnessLUT, sizeof(g_hw_settings.brightnessLUT));
+                char *token = strtok(buf,",");
+                for (int i = 0; i < BRIGHTNESS_LUT_SIZE; i++) {
+                    g_hw_settings.brightnessLUT[i] = atoi(token);
+                    token = strtok (NULL,",");
+                }
             } else if (strcmp(name, "hw_otafw_url") == 0) {
                 bzero(g_settings.otaFwUrl, sizeof(g_settings.otaFwUrl));
                 strncpy(g_settings.otaFwUrl, buf, sizeof(g_settings.otaFwUrl) - 1);
@@ -1079,7 +1108,7 @@ static void handle_debug(int s, wificfg_method method,
 
     if (method != HTTP_METHOD_HEAD) {
     	if (wificfg_write_string(s, http_debug_content[idx++]) < 0) return;
-        LdrGetValue16(&ldr_value);
+        ldr_value = LdrGetValue16();
         printf("LDR:%u\n", ldr_value);
         snprintf(tempStr, sizeof(tempStr), "<dt>LDR :</dt> <dd>%d</dd>", ldr_value);
         wificfg_write_string(s, tempStr);
@@ -1237,7 +1266,7 @@ static void http_server_task(void *pvParameters)
 
             /* Buffer for reading the request and headers and the post method
              * names and values. */
-            char buf[48];
+            char buf[100]; // should match the longest line in the HTML files (maxlength)
 
             /* Read the request line */
             int request_line_size = read_crlf_line(s, buf, sizeof(buf));

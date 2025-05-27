@@ -31,6 +31,26 @@ class Woordklok:
         finally:
             print("Realtime udp started")
 
+def generate_LUT(ldr_min=2, ldr_max=900, led_min=2, led_max=220, gamma=2.2, steps=16):
+    """
+    Generate a lookup table (LUT) for the LED values based on LDR input.
+    The LUT is generated using a gamma correction formula.
+    """
+    import numpy as np
+
+    # Generate LDR input values
+    ldr_values = np.linspace(ldr_min, ldr_max, steps)
+
+    # Normalize and apply gamma correction
+    ldr_normalized = (ldr_values - ldr_min) / (ldr_max - ldr_min)
+    led_values = led_min + (led_max - led_min) * np.power(1 - ldr_normalized, gamma)
+    led_values = np.round(led_values).astype(int)
+
+    # Print formatted output
+    print("LDR values:")
+    print(",".join(str(int(v)) for v in ldr_values) + ",")
+    print("LED values:")
+    print(",".join(str(v) for v in led_values) + ",")
 
 def get_parsed_args():
     # Make parser object
@@ -53,3 +73,4 @@ if __name__ == '__main__':
         api.start_update()
     if args.realtime_udp:
         api.start_realtime_udp()
+    #generate_LUT()

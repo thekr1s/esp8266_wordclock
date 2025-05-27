@@ -38,19 +38,16 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
     0.0, // home lat
     0.0, // home lon
 #ifdef BUILD_BY_RUTGER
-    "http://rutger798.mynetgear.com",  // otaFwUrl
+    "http://rhu1990.mooo.com",   // otaFwUrl
     "8090",   // otaFwPort
 #else
     "http://download.wssns.nl",  // otaFwUrl
     "80",   // otaFwPort
 #endif
     OTA_FW_RELEASE, //otaFwType
-    {2, 4, 7, 10, 15, 25, 40, 60, 90, 120, 150, 170},
-    1, // reserved
     0, // brightnessOffset
     {255,255,255}, // colorIdx = White
     {0,0,0},       // bgColorIdx = Black
-    52220, // timerPeriodTicks
     {0xff}, //reserved[]
 };
 
@@ -58,10 +55,13 @@ static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
     FLASH_MAGIC_HW,
 #ifdef BUILD_BY_RUTGER
     HARDWARE_13_13_V2,
+    PIXEL_TYPE_RGBNW,
 #else
     HARDWARE_11_11,
-#endif
     PIXEL_TYPE_RGB,
+#endif
+    {2,61,121,181,241,301,361,421,480,540,600,660,720,780,840,900}, // ldrThresholds, donker -> fel
+    {220,189,161,135,112,91,73,57,43,31,21,14,8,5,3,2},             // brightnessLUT, fel -> donker
     {0xff}, //reserved[]
 };
 
@@ -79,7 +79,7 @@ void SettingsInit() {
     }
 
     sysparam_get_data_static(HW_SETTINGS_KEY, (uint8_t*)&g_hw_settings, sizeof(g_hw_settings), &actual_size, NULL);
-    if (actual_size == sizeof(g_hw_settings) && (g_hw_settings.magic == FLASH_MAGIC_HW)) {
+    if (actual_size == sizeof(g_hw_settings) && (g_hw_settings.magic == FLASH_MAGIC_HW) && (g_hw_settings.ldrThresholds[15] > 100)) {
         printf("Valid hardware settings read from sysparams flash\r\n");
     } else {
         printf("No valid hardware settings found, size %d, magic: %08x\r\n", actual_size, g_hw_settings.magic);

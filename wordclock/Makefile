@@ -20,8 +20,12 @@ $(shell touch version.c)
 #EXTRA_CFLAGS += -DSNTP_LOGD -DSNTP_LOGD_WITH_PRINTF
 
 CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
-EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2 
-#-DBUILD_BY_RUTGER
+EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2
+
+ifeq ($(BUILD_BY_RUTGER),1)
+$(info Building by Rutger)
+EXTRA_CFLAGS += -DBUILD_BY_RUTGER
+endif
 
 PROGRAM=woordklok_dbg
 EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls extras/http_client_ota
@@ -41,7 +45,7 @@ do_flash:
 
 deploy: all
 #	Depending on the bootloader the binary needs to contain the CRC or not.....
-	scp firmware/woordklok_dbg.bin_crc rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin
+	scp firmware/woordklok_dbg.bin rutger@192.168.2.57:/srv/tftp/woordklok_dbg.bin
 	sleep 2
-	python ../tools/woordklok_api/woordklok_api.py --ip 192.168.2.57 --update
+	python ../tools/woordklok_api/woordklok_api.py --ip 192.168.2.124 --update
 

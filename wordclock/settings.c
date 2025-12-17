@@ -38,7 +38,7 @@ static const TSettings g_settings_default __attribute__((aligned(4))) = {
     0.0, // home lat
     0.0, // home lon
 #ifdef BUILD_BY_RUTGER
-    "http://rutger798.mynetgear.com",  // otaFwUrl
+    "http://rhu1990.mooo.com",  // otaFwUrl
     "8090",   // otaFwPort
 #else
     "http://download.wssns.nl",  // otaFwUrl
@@ -58,10 +58,11 @@ static const THwSettings g_hw_settings_default __attribute__((aligned(4))) = {
     FLASH_MAGIC_HW,
 #ifdef BUILD_BY_RUTGER
     HARDWARE_13_13_V2,
+    PIXEL_TYPE_RGBNW,
 #else
     HARDWARE_11_11,
-#endif
     PIXEL_TYPE_RGB,
+#endif
     {0xff}, //reserved[]
 };
 

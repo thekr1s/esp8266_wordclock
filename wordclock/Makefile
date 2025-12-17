@@ -22,6 +22,12 @@ $(shell touch version.c)
 CPPFLAGS += -DVERSION=$(VERSION) -DBUILD_DATE=$(BUILD_DATE)
 EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2 
 #-DBUILD_BY_RUTGER
+EXTRA_CFLAGS += -DSNTP_CHECK_RESPONSE=2
+
+ifeq ($(BUILD_BY_RUTGER),1)
+$(info Building by Rutger)
+EXTRA_CFLAGS += -DBUILD_BY_RUTGER
+endif
 
 PROGRAM=woordklok_dbg
 EXTRA_COMPONENTS = extras/i2s_dma extras/ws2812_i2s extras/sntp extras/dhcpserver extras/rboot-ota extras/mbedtls extras/http_client_ota
